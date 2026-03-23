@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP 风险分析工具</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+SC:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface2: #f8f8f8;
+  --surface3: #efefef;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --border3: rgba(0,0,0,0.22);
+  --text: #111111;
+  --text2: #555555;
+  --text3: #999999;
+  --accent: #7ec31a;
+  --accent-dim: rgba(126,195,26,0.12);
+  --green: #7ec31a;
+  --green-dim: rgba(126,195,26,0.12);
+  --red: #e53935;
+  --red-dim: rgba(229,57,53,0.08);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.1);
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans SC', system-ui, sans-serif;
+  --logo-filter: none;
+  --btn-text: #ffffff;
+  --ip-color: #2a7a00;
+  --grid-color: rgba(0,0,0,0.03);
+}
+[data-theme="dark"] {
+  --bg: #16181a;
+  --surface: #1e2022;
+  --surface2: #252729;
+  --surface3: #2c2e30;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --border3: rgba(255,255,255,0.18);
+  --text: #ffffff;
+  --text2: #9a9a9a;
+  --text3: #5a5a5a;
+  --accent: #8cd23c;
+  --accent-dim: rgba(140,210,60,0.12);
+  --green: #8cd23c;
+  --green-dim: rgba(140,210,60,0.12);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.1);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.1);
+  --logo-filter: none;
+  --btn-text: #111111;
+  --ip-color: var(--accent);
+  --grid-color: rgba(255,255,255,0.02);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* grid bg */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.layout {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  width: 36px; height: 36px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo svg { width: 18px; height: 18px; color: var(--accent); }
+.header-text h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+.header-text p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.version { margin-left: auto; font-size: 11px; font-family: var(--mono); color: var(--text3); background: var(--surface2); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); }
+
+/* section */
+.section { margin-bottom: 20px; }
+.section-label {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-inner {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+/* inputs */
+label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 6px; font-weight: 500; }
+
+input[type=text], input[type=password], textarea, select {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: var(--mono);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+  border-color: rgba(59,130,246,0.5);
+  background: var(--surface3);
+}
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.7;
+  font-size: 12px;
+}
+input::placeholder, textarea::placeholder { color: var(--text3); }
+
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.input-hint { font-size: 11px; color: var(--text3); margin-top: 5px; line-height: 1.5; }
+.input-hint a { color: var(--accent); text-decoration: none; }
+.input-hint a:hover { text-decoration: underline; }
+
+/* ip preview chip */
+.ip-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; min-height: 0; }
+.ip-chip {
+  font-size: 11px;
+  font-family: var(--mono);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 2px 7px;
+  color: var(--text2);
+}
+
+/* run button */
+.run-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.65s ease;
+  z-index: 0;
+}
+.run-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-101%);
+  transition: transform 0.65s cubic-bezier(0.23,1,0.32,1);
+  z-index: -1;
+  border-radius: 6px;
+}
+.run-btn:hover { color: var(--btn-text); }
+.run-btn:hover::before { transform: translateX(0); }
+.run-btn.btn-leaving::before { transform: translateX(101%); }
+.run-btn.btn-reset::before { transition: none; transform: translateX(-101%); }
+.run-btn:active { transform: scale(0.99); }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.run-btn:disabled::before { display: none; }
+
+/* progress */
+.progress-wrap {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.progress-label { font-size: 12px; color: var(--text2); margin-bottom: 10px; font-family: var(--mono); }
+.progress-track { background: var(--surface3); border-radius: 99px; height: 3px; }
+.progress-fill { height: 3px; border-radius: 99px; background: var(--accent); transition: width 0.3s; }
+.progress-sub { font-size: 11px; color: var(--text3); margin-top: 6px; font-family: var(--mono); }
+
+/* spinner inline */
+.spin {
+  display: inline-block;
+  width: 13px; height: 13px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* error */
+.error-box {
+  background: var(--red-dim);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #fca5a5;
+  margin-bottom: 16px;
+  line-height: 1.6;
+  display: none;
+}
+
+/* results */
+.results { display: none; }
+
+/* metrics row */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.metric {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.metric-label { font-size: 11px; color: var(--text3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.metric-value { font-size: 22px; font-weight: 600; line-height: 1; font-family: var(--mono); }
+.metric-value.ok { color: var(--green); }
+.metric-value.warn { color: var(--amber); }
+.metric-value.danger { color: var(--red); }
+
+/* table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  font-size: 13px;
+}
+tbody tr:last-child td { border-bottom: none; }
+
+.td-ip { font-family: var(--mono); font-size: 12px; color: var(--ip-color); font-weight: 500; }
+.td-time { font-family: var(--mono); font-size: 11px; color: var(--text2); white-space: nowrap; }
+.td-country { font-weight: 500; }
+.td-org { font-size: 11px; color: var(--text2); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+.badge-green { background: #eaf7d0; color: #3a7a00; border: 1px solid rgba(126,195,26,0.3); }
+[data-theme="dark"] .badge-green { background: rgba(140,210,60,0.12); color: #8cd23c; border-color: rgba(140,210,60,0.3); }
+.badge-red { background: #fde8e8; color: #c0392b; border: 1px solid rgba(229,57,53,0.3); }
+[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.12); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+.badge-amber { background: #fff3cd; color: #b45309; border: 1px solid rgba(245,158,11,0.3); }
+[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.12); color: #fbbf24; border-color: rgba(245,158,11,0.3); }
+.badge-blue { background: #eaf7d0; color: #3a7a00; border: 1px solid rgba(126,195,26,0.3); }
+[data-theme="dark"] .badge-blue { background: rgba(140,210,60,0.12); color: #8cd23c; border-color: rgba(140,210,60,0.3); }
+.badge-orange { background: #fff0e0; color: #c2410c; border: 1px solid rgba(251,146,60,0.35); }
+.switch-note { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.switch-detail { font-size: 11px; color: var(--text2); line-height: 1.6; font-family: var(--mono); padding-left: 2px; }
+[data-theme="dark"] .badge-orange { background: rgba(251,146,60,0.12); color: #fb923c; border-color: rgba(251,146,60,0.3); }
+
+/* verdict */
+.verdict {
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-top: 16px;
+  border: 1px solid;
+}
+.verdict-pass { background: #f0fde4; border-color: rgba(126,195,26,0.4); }
+[data-theme="dark"] .verdict-pass { background: var(--green-dim); border-color: rgba(140,210,60,0.3); }
+.verdict-watch { background: #fff8e1; border-color: rgba(245,158,11,0.4); }
+[data-theme="dark"] .verdict-watch { background: var(--amber-dim); border-color: rgba(245,158,11,0.3); }
+.verdict-escalate { background: #fde8e8; border-color: rgba(229,57,53,0.4); }
+[data-theme="dark"] .verdict-escalate { background: var(--red-dim); border-color: rgba(239,68,68,0.3); }
+
+.verdict-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.verdict-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.verdict-pass .verdict-icon { background: rgba(16,185,129,0.15); }
+.verdict-escalate .verdict-icon { background: rgba(239,68,68,0.15); }
+.verdict-watch .verdict-icon { background: rgba(245,158,11,0.15); }
+
+.verdict-title { font-size: 16px; font-weight: 600; }
+.verdict-pass .verdict-title { color: var(--green); }
+.verdict-escalate .verdict-title { color: #b71c1c; }
+[data-theme="dark"] .verdict-escalate .verdict-title { color: #fca5a5; }
+.verdict-watch .verdict-title { color: var(--amber); }
+
+.verdict-body { font-size: 13px; line-height: 1.8; color: var(--text2); }
+.verdict-bar-wrap { margin: 10px 0; }
+.verdict-bar-bg { background: rgba(0,0,0,0.1); border-radius: 99px; height: 4px; }
+[data-theme="dark"] .verdict-bar-bg { background: rgba(255,255,255,0.06); }
+.verdict-bar-fill { height: 4px; border-radius: 99px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+
+.conditions-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.cond-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="dark"] .cond-row {
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.cond-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.cond-dot-on { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.cond-dot-off { background: var(--text3); }
+.cond-dot-manual { background: var(--text3); border: 1px dashed var(--text3); background: transparent; }
+.cond-text { flex: 1; color: var(--text2); line-height: 1.5; }
+.cond-text strong { color: var(--text); }
+.cond-badge-on { color: #fca5a5; font-family: var(--mono); font-size: 11px; }
+.cond-badge-off { color: var(--text3); font-family: var(--mono); font-size: 11px; }
+.cond-badge-manual { color: var(--amber); font-family: var(--mono); font-size: 11px; }
+
+.suggestion-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 6px;
+  border-left: 3px solid;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+[data-theme="dark"] .suggestion-box { background: rgba(0,0,0,0.25); }
+.verdict-pass .suggestion-box { border-color: var(--green); }
+.verdict-escalate .suggestion-box { border-color: var(--red); }
+.verdict-watch .suggestion-box { border-color: var(--amber); }
+.suggestion-box strong { color: var(--text); }
+
+.source-note {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.source-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+/* footer */
+.footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+@media (max-width: 600px) {
+  .input-row { grid-template-columns: 1fr; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .layout { padding: 24px 16px 60px; }
+}
+/* 悬停特效基础 */
+.card { transition: border-color 0.2s ease; }
+.card:hover { border-color: var(--border2); }
+
+@keyframes ripple-out {
+  0%   { transform: scale(0); opacity: 0.9; }
+  40%  { opacity: 0.6; }
+  100% { transform: scale(1); opacity: 0; }
+}
+@keyframes ripple-pulse {
+  0%   { transform: scale(1); opacity: 0.5; }
+  50%  { transform: scale(1.15); opacity: 0.25; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* 表格行悬停特效 */
+#ip_tbody tr {
+  position: relative;
+  cursor: pointer;
+  transition: background 0.5s ease;
+}
+#ip_tbody tr::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+  transform-origin: center;
+}
+#ip_tbody tr:hover { background: var(--surface2); }
+#ip_tbody tr:hover::before { transform: scaleY(1); }
+#ip_tbody tr:hover .td-ip { color: var(--accent) !important; }
+/* 主题按钮 & 导出按钮滑动效果 */
+#theme-toggle {
+  position: relative; overflow: hidden;
+  transition: color 0.3s ease, border-color 0.3s ease; z-index: 0;
+}
+#theme-toggle::before {
+  content: ''; position: absolute; inset: 0; background: var(--accent);
+  border-radius: 5px; transform: translateY(101%);
+  transition: transform 0.7s cubic-bezier(0.23,1,0.32,1); z-index: -1;
+}
+#theme-toggle:hover { color: #111 !important; border-color: var(--accent); }
+#theme-toggle:hover::before { transform: translateY(0); }
+#theme-toggle.btn-leaving::before { transform: translateY(-101%); }
+#theme-toggle.btn-reset::before { transition: none; transform: translateY(101%); }
+#theme-toggle.btn-leaving::before { transform: translateY(-101%); }
+#theme-toggle.btn-reset::before { transition: none; transform: translateY(101%); }
+.export-btn {
+  position: relative; overflow: hidden;
+  transition: color 0.35s ease; z-index: 0;
+}
+.export-btn::before {
+  content: ''; position: absolute; inset: 0; background: var(--accent);
+  transform: translateX(-101%);
+  transition: transform 0.65s cubic-bezier(0.23,1,0.32,1); z-index: -1;
+}
+.export-btn:hover { color: #111 !important; border-color: var(--accent) !important; }
+.export-btn:hover::before { transform: translateX(0); }
+.export-btn.btn-leaving::before { transform: translateX(101%); }
+.export-btn.btn-reset::before { transition: none; transform: translateX(-101%); }
+
+@media print {
+  body { background: white !important; color: black !important; }
+  body::before { display: none; }
+  .run-btn, .card:first-of-type, .section:first-of-type, #progress_wrap,
+  button, .source-note span:last-child { display: none !important; }
+  .layout { max-width: 100%; padding: 10px; }
+  .card { border: 1px solid #ddd !important; }
+  .metric { background: #f5f5f5 !important; }
+  .verdict { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- header -->
+  <div class="header">
+    <div style="display:flex;align-items:center;flex-shrink:0">
+      <img id="site-logo" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADhAOEDASIAAhEBAxEB/8QAHAABAQEAAgMBAAAAAAAAAAAAAAECBAcFBggD/8QAORAAAgEDAwMBBAgGAgIDAAAAAAECAwQFBhExEiFBUQdhcYETFCJCUpHB0SMyYnKhsRUzQ1NVlPD/xAAbAQACAwEBAQAAAAAAAAAAAAAAAQIDBQYEB//EAC8RAAICAQMCBAUDBQEAAAAAAAABAgMEBRExIWEGEkFRInGh0fATI8EyQoGRseH/2gAMAwEAAhEDEQA/AOiix5IVcmicAaNLgyaXAiLIwuQwuRMDYQCERKACLIg1DyZNQ8kGBVyzBtcswJAgbXBg2uCQmAAAAAAgDIVkGAIikQ0CKRlIyTGQACAAAAOOVckKuSwvNGlwZNLgRBkYXIYXImBsAIREoAIsiDUPJk1DyQAeXsZNbrd9zO69UJMEDa4MG1wSEwAAAAAEAZCsgwBEUiGgRTJojJMZAAIAAAA45VyQq5LS40aXBk0uCJFkYXIYXImBsIBCIlAPNaP01kdT5aNhYQ2itpVq0l9ilH1f6LyVzkordlc5xri5SeyR+OmsBlNRZFWOKtnVqczm3tCmvWT8I7n0r7KMFjacKuXbyl1y1LeNGL90V3fxb+SPbtK4DHabxFPHY6ntFd6lRr7dWXmUn/8Atjyxk3ZUp9I9EcZqGt23ScaX5Y/VnGsbCxsaap2Vnb20EtkqVNRX+D9qtOnWg4VacakHzGS3RsHl3Ziucm92z1XUHs/0tmYTdTG07WtLitapU5J/Bdn80dPa79n+V0wpXcH9exu+31iEdnD064+Pjx8OD6LMVadOrSlSqwjUpzTjKMlupJ8povqyJ1v3RpYerX4zSb80fZ/wfIwPefa1o1abyUb2wg/+Mu5PoX/pny4fDyvmvB6Ma0JqcfMjtqL4X1qyHDAAJouDIVkGAIikQ0CKZZojJMZAAIAAAA45Y8kKuSwuNGlwZNLgRFkYXIYXImBsLkh5zRmmcjqjLxsbGPTCO0q9eS+xSj6v3+i8kZSUVuyqyyNcXOb2SLo3TWR1RllY2ENoR2devJfYox9X7/ReT6P0tgMdpvEwx2NpdMF3qVJfz1Zfik/X/Q0vgcdpzE08bjaXTCPec5fz1ZeZSfr/AKPKmLkZDtey4OF1TVJZcvLHpBfXuwADzGSAAAAAAB4fWeGp5/TN7jJwjKpUpt0W/u1F3g/z2+W58uSi4ycZJpp7NPwfXZ8ua4t42mssxbwW0YXtXZe7qbNDBlzE6jw5c/jqfHJ4YAGgjqAyFZBgCIpENAikZSMkxkAAgAAADjlXJCrktLzSNLgyjS4IkGRhchnmdGadvdT5ynjLLaO6661WS3jSguZP152S8tojKSit2QnONcXKT2SP10ZpjI6py8bGxj0U47OvXkvs0o+r9X6LyfSOl8DjtOYinjcbS6ace85v+erLzKT8v/Q0xgsfp3EUsZjaXTTh3nN/zVZeZSfl/wCuDyhiZOS7XsuDg9U1SWZLyx6QX17sAA8xkgAAAAAAAAAA+WtaXUL3V2XuqbThUvKji1w11PZn0Pr7OQ0/pS9yHX01+h07deXVl2j+XPwR8w+992aGDDmR1PhylpTtfy+4ABoI6cMhWQYAiKRDQIpGUjJMZAAIAAAA45VyQq5LS80jS4Mo0uCJBkZ9G+xvTsMHpGjcVaaV5kFGvVlt3UWt4R+Se/xbPn7DWiv8zZWLeyuLiFJv06pJfqfWsIwhBQpxUYRW0UvC9DN1CxpKJzXiPIca41L16v8AwaABlnHgAAAAAAAAAA/K7uKFpa1bq6rQo0KUXOpUm9oxS8sl7c29laVbu7r06FClHqqVJvaMV6s+f/abrqvqe7dnZSqUcRSl9iD7Os19+S/0vHxLqaXa+xoafp88yey6RXL/AD1Pw9p+r56pzCVv1wxttvG3g+zk/M2vV+nhL4nqAOfhcTe5e5+gs6XVt/PN9owXvZrxUa47eh3MIVYtXlXSKOAbp06lT/rpzn/bFs7NwujcXYxjO6j9dr+XUX2F8I/vuex0aVOjBQo04U4pbJRikkUSykuEYl/iKmD2ri5fQ6RqW9xTW9ShVgvWUGj8TvZ91s+6954rKaexGRi/rFlTjN/+SmuiW/xXPz3BZS9UV1eJK29rINfJ7/Y6eIj2XU+krvExdzbSldWi7yko/ah8V6e9f4PWlyeqE1LqjocfIrvh563uikZSMsZcQACAAAAOOVckKuS0vNI0uDJpcESDPK6Pqqjq3EVZbdMb2i3v6daPq0+PVJxlGUXs090z6u0plqWc07Y5Wk0/rFFSml92fEl8pJoy9Ri+kjlPEtT+Cz06o8oADNOVAAAAAAAH43t1bWVpVu7uvChQpR6qlSb2UUS+uraxtKt3eVoULelFyqVJvZRR8+e03XVxqi8draOdDE0pfw6b7Oq19+X6Lx8S6ml2vsaGn6fPMnsukVy/z1L7TNd3WqLp2lo50MTSlvCnxKq/xT/RePiemLgweW05hrrNXqoUF0047OrVa7QX7+iNaMY1x2XB3EYU4dOy6RQ09hrrM3yt6C6ace9Wq12gv39x2vicda4uyhaWkOmC7tvmT9X7xiMda4uyjaWkOmEeW+ZP1fvOWeK21zfY4rVNUlmS8sekF9e7AAKTIAAAA0mmmk0+zTOsde6fji7pXtpDa0ry2cVxTl6fB+Ds44easYZLFXFlP/ywai/SXKf57FtNjhLc0tLzpYl6e/wvn87HSpGanGUJyhJbSi2mvRoyzWPoZAAIAAAA45VyQFpebNLgyaREgyM7L9iOsqeHvpYLJVeiyup9VGpJ9qVXjZ+6Xb4NL1Z13kLSvY3Lt7iDhNJNejT7pr3H4LkqshG2OzPNk49eXS65cP8ANz7DB0Z7O/ajcYqnSxmoFUubKCUadxFb1KS8J/iS/Ne/g7kwuZxWZt1cYq/oXcNt39HL7UfjHlfNGJbROp9TgczTrsSW0109/Q54AKTwg/C+u7axs6t5eVoULejFyqVJvZRR4bU+sdP6epSeQv4Osl2t6L66rfpsuPi9kdHa91zktV13Sadrjqct6dtF8vxKb8v/AAi+nHlY+xqYGlXZUk2to+/2OR7Stc3OqLt2lt10MVSlvTpvs6r/ABz/AEXj4npJtcs8jpvCXWbvfoaK6KUdnVqtdoL9X6I1IqNcex2kIU4dOy6RQ05hbrN3yoUF0Uo96tVrtBfq/RHbOIx1ti7GFnaQ6YR5b5k/LfvLisfa4yyhaWlPohHl+ZP1b8s5R47bXN9jitU1SWZLyx6QXp/LAAKTIAAAAAAAAABnTOpoKnqLIxS2X1mb2+LbPHM5+oKsa+dv6sXvGVxNp+7qexwGbMf6UfUKd/047+yIABlgAAAccseSFXJYXGirghpcCIs7NeHttUaRx9ZzVO7p0FGFX3rs1L3br5HXWSsLvG3krW9oypVI+vDXqn5R2B7Kb76XGXOPnJ9VCfXDf8MvH5p/mez5bGWOUtnb31CNWP3XxKL9U/BnK10zcXwcjHU56dlTosW8N+nbfr0OkT9bavWt6yrW9apRqLidOTi180e3ZnQV5RcqmMrxuafinNqM18+H/g9WvsffWMtryzr0O+284NJ/B8M9cbIT4Z0VGZRkr9uSf57HmLfWurLeChT1Bf8ASuOqp1f73Pxv9V6lvoOndZ2/qQfMVWcU/ktjwo3E4QXXYksepPdQW/yRZNyblJtt9235LDyeQx2Cy9+19WsKzi/vyj0x/N9j3DB6DpUmquWrqtLn6Gk2o/N8v5bFc7Yx5Z58nUcfGXxy6+y5PVtNYG7zVy1STp28X/ErNdl7l6s7VxWPtcZZQtLSmoU48vzJ+rfln70KVKhRjRoU406cFtGMVskjZ4rLXP5HG6lqlma9uIr0+4ABUZQAAAAAAAAAAPGaoyUcVha911JVNuikn5m+P3+R5C4rUrehOvXqRp0oLqlKT2SR1PrDPTzd/wDYThaUd1Ri/PrJ+9l1NTnLsa2k4Esq5Nr4Vz9jwnPdkZSM1TvyAAQAAABxyrkhVyWl5pGlwZNLgiQZ5jRuUWJz9C4nLajP+HV/tfn5PZ/I7jXdbpnQbO1PZ3m1ksUrKtPe6tYqL3fecPEv0fy9Tw5df96OX8RYTnFZEVx0fyPaAAeA48/CrZ2dV71LShN+sqaZujb29F70qFKm/wCmCR+gHuybtm1s2wABFYAAAAAAAAAAAAAD87qvRtredxcVI06VNbylLhIXVxRtbedxcVI06VNbylJ9kjqzV+o62ar/AEVLqp2UH9iHDm/xS/bwW1VOxmlp2mzzZ+0Vy/z1Lq/UlbNV/oaPVSsoP7MPM3+J/t4PXlyUiNKEVFbI72imFEFXWtkikZSMsZcQACAAAAOOVckKuS0vNI0uDJpcESDIzl4bIXGLyNK9tZbTpvuvEl5T9zOIwuSLSfRkZRUk4y4Z3fhMnbZbHU7y1knGXaUd+8JeYs5p0zpvNXWEvlcUH10pdqtJvtNfo/RnbWHydplbKN1Z1VOL/mj96D9GvDMu6l1vpwcBqulyw5+aPWD+nZnMABQY4AAAAAAAAAAAAAD87qvRtbedxcVI06VNbylLhIl1cULW3ncXNWNKlTW8pSfZHVurdR181cfRU+qnZU5fw6f4v6pe/wB3gtqqdjNPTdNnmz9orl/x8y6u1HXzNd0qXVSsoP7EPMn+KX7eD18pDRjFRWyO8pphRBQrWyQIikRNFqKRlIyTGQACAAAAOOWPJCrksLjRpcGTS4ERZGFyGFyJgbOZiMne4q7VzZVnTn95cxkvRryjhhCaTWzK5RjNOMlumdrac1bj8pGNK4cbS646JS+zJ/0v9D2M6HPPYXVeXxnTD6b6zQXb6Os99l7nyjw2YvrE5fN8PKTcsd7dn/DO2geq4vXWJuUo3kKtnU279S64fmu/+D2G0yFjdx3tby3rf2VE2eSUJR5Rzt+DkUP9yDX/AD/ZyQXYhE8oBTjXt/ZWUOq7u6NFf1zSf5DS3JRhKb2itzkHHyF7a4+1lc3daNKlHy/L9F6s9XzGu7OjGVPGUZXNTxUmumH7v/B6Nlcne5S4+nva8qklv0r7sV6JeC+vHlLnobmFoV1zUrvhj9f/AA8jqvUVxm66hFOlZwe9On5b/FL3/wCjwQB7oxUVsjsKaYUwUILZIMhWQkWgiKRDQIpGUjJMZAAIAAAA45Y8kLHksLjRpcGTS4ERZGFyGFyJgbCAQiJQARZEGodu67NGTUeCIM5dLI5GkkqV/dw246a0l+pr/msz/wDLX/8A9if7nDMEfKvYr/Tg+UjmVcpk6v8A2ZK8n/dXk/1OO25Pqk22+W+5+ZtcDSS4JKKjwgABjAABAGQrIMAyIpENDRTJojJMCAAQAAABxyrkhVyWFxo0uDJpcCIsjC5DC5EwNhAIREoAIsiDUPJk1DyQYFXLMG1yzAkCBtcGDa4JCYAAAAACAMhWQYAiKRDQIpGUjJMZAAIAAAA45VyAWF5o0uABEGRhcgCYGwgBESgAiyINQ8gEGBVyzAAkCBtcAEhMAAAAABAGQAYBkQA0NFIwCTAgAEAAAAf/2Q==" style="height:36px;border-radius:8px" alt="CoinUp">
+    </div>
+    <div style="width:1px;height:28px;background:var(--border2);margin:0 4px"></div>
+    <div class="header-text">
+      <h1 style="font-size:15px">IP 风险分析</h1>
+      <p>账户安全审核 · 登录归属地查询 · 自动风险判定</p>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()" style="background:transparent;border:1px solid var(--border2);border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--text2);font-family:var(--sans);display:flex;align-items:center;gap:5px">
+      <span id="theme-icon">☀</span>
+    </button>
+    <div class="version">v3.0</div>
+  </div>
+
+  <!-- api config -->
+  <div class="section">
+    <div class="section-label">AI 解析配置 <span style="font-size:11px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">（本地正则优先，识别不全时自动AI兜底）</span></div>
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <label>API Key</label>
+          <input type="password" id="claude_key" placeholder="sk-..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:9px 12px;font-size:13px;font-family:var(--mono);color:var(--text);outline:none">
+          <div class="input-hint" style="margin-top:5px">推荐：<a href="https://siliconflow.cn" target="_blank" style="color:var(--accent)">硅基流动</a>（免费）· 支持任意 OpenAI 兼容接口</div>
+        </div>
+        <div>
+          <label>模型名称 <span style="color:var(--text3);font-weight:400">（留空用默认）</span></label>
+          <input type="text" id="ai_model" placeholder="Qwen/Qwen2.5-7B-Instruct" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:9px 12px;font-size:13px;font-family:var(--mono);color:var(--text);outline:none">
+        </div>
+      </div>
+      <div>
+        <label>接口地址 <span style="color:var(--text3);font-weight:400">（留空用硅基流动）</span></label>
+        <input type="text" id="ai_endpoint" placeholder="https://api.siliconflow.cn/v1/chat/completions" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:9px 12px;font-size:13px;font-family:var(--mono);color:var(--text);outline:none">
+        <div class="input-hint" style="margin-top:5px">
+          Groq: <code style="color:var(--text2);font-size:11px">https://api.groq.com/openai/v1/chat/completions</code> ·
+          OpenAI: <code style="color:var(--text2);font-size:11px">https://api.openai.com/v1/chat/completions</code>
+        </div>
+      </div>
+      <input type="hidden" id="parse_mode" value="auto">
+      <input type="hidden" id="query_delay" value="300">
+    </div>
+  </div>
+
+  <!-- input -->
+  <div class="section">
+    <div class="section-label">登录记录</div>
+    <div class="card">
+      <label>粘贴后台登录历史（支持任意格式）</label>
+      <textarea id="log_input" oninput="previewIPs()" placeholder="直接从后台复制粘贴，任意格式均可识别：
+
+2025-10-21 19:12:24    39.191.15.195    Android    成功
+2025-10-15 21:56:49    39.191.15.69     Android    成功
+2025-10-14 20:55:41    223.104.161.9    Android    成功
+
+也支持纯IP格式：
+39.191.15.195
+223.104.161.9"></textarea>
+      <div class="ip-chips" id="ip_chips"></div>
+    </div>
+  </div>
+
+  <!-- run -->
+  <button class="run-btn" id="run_btn" onclick="runAnalysis()">
+    查询归属地并分析风险
+  </button>
+
+  <!-- progress -->
+  <div class="progress-wrap" id="progress_wrap">
+    <div class="progress-label" id="progress_label">准备中...</div>
+    <div class="progress-track"><div class="progress-fill" id="progress_fill" style="width:0%"></div></div>
+    <div class="progress-sub" id="progress_sub"></div>
+  </div>
+
+  <!-- error -->
+  <div class="error-box" id="error_box"></div>
+
+  <!-- results -->
+  <div class="results" id="results">
+
+    <div class="section">
+      <div class="section-label">分析结果</div>
+    </div>
+
+    <!-- metrics -->
+    <div class="metrics" id="metrics"></div>
+
+    <!-- table -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-size:12px;align-items:center">
+      <span style="color:var(--text2);font-weight:500">标签说明：</span>
+      <span style="background:#FCEBEB;color:#A32D2D;padding:2px 10px;border-radius:99px;border:1px solid rgba(239,68,68,0.3)">高风险地区</span>
+      <span style="color:var(--text2);font-size:11px">印度/巴基斯坦/孟加拉/尼日利亚，需直接升级风控</span>
+      <span style="background:rgba(251,146,60,0.12);color:#fb923c;padding:2px 10px;border-radius:99px;border:1px solid rgba(251,146,60,0.25);margin-left:8px">触发条件1</span>
+      <span style="color:var(--text2);font-size:11px">12小时内出现IP切换（且非5地区内部切换）</span>
+      <span style="background:#FAEEDA;color:#633806;padding:2px 10px;border-radius:99px;border:1px solid rgba(245,158,11,0.3);margin-left:8px">5地区</span>
+      <span style="color:var(--text2);font-size:11px">中/港/台/新/澳，地区间切换不触发条件1</span>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table id="ip_table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>IP 地址</th>
+              <th>登录时间</th>
+              <th>国家 / 地区</th>
+              <th>城市</th>
+              <th>运营商</th>
+              <th>风险</th>
+            </tr>
+          </thead>
+          <tbody id="ip_tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- verdict -->
+    <div id="verdict_box"></div>
+
+    <div class="source-note" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <span style="display:flex;align-items:center;gap:6px">
+        <span class="source-dot"></span>
+        归属地：freeipapi.com / ipwho.is / ip-api.com 实时查询
+        <span id="query_time"></span>
+      </span>
+      <span style="display:flex;gap:8px">
+        <button onclick="exportText()" class="export-btn" style="background:transparent;border:1px solid var(--border2);border-radius:6px;padding:5px 14px;font-size:12px;color:var(--text2);cursor:pointer;font-family:var(--sans)">📋 复制报告</button>
+        <button onclick="window.print()" class="export-btn" style="background:transparent;border:1px solid var(--border2);border-radius:6px;padding:5px 14px;font-size:12px;color:var(--text2);cursor:pointer;font-family:var(--sans)">🖨 保存 PDF</button>
+      </span>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>IP Risk Analyzer · 本地单文件工具</span>
+    <span id="footer_time"></span>
+  </div>
+
+</div>
+
+<script>
+// ─── 常量 ───────────────────────────────────────────────
+const HIGH_RISK_CC = ['IN','PK','BD','NG'];
+const HIGH_RISK_NAMES = { IN:'印度', PK:'巴基斯坦', BD:'孟加拉', NG:'尼日利亚' };
+const FIVE_CC = ['CN','HK','TW','SG','MO'];
+const FIVE_NAMES = { CN:'中国', HK:'香港', TW:'台湾', SG:'新加坡', MO:'澳门' };
+const CC_NAMES = {
+  CN:'中国', HK:'香港', TW:'台湾', SG:'新加坡', MO:'澳门',
+  IN:'印度', PK:'巴基斯坦', BD:'孟加拉', NG:'尼日利亚',
+  US:'美国', JP:'日本', KR:'韩国', GB:'英国', DE:'德国',
+  FR:'法国', AU:'澳大利亚', CA:'加拿大', RU:'俄罗斯',
+  TH:'泰国', MY:'马来西亚', VN:'越南', ID:'印尼',
+  BR:'巴西', NL:'荷兰', UA:'乌克兰', TR:'土耳其',
+  PH:'菲律宾', IT:'意大利', ES:'西班牙', SE:'瑞典',
+  CH:'瑞士', NO:'挪威', PL:'波兰', CZ:'捷克',
+  AE:'阿联酋', SA:'沙特', IR:'伊朗', IQ:'伊拉克',
+  ZA:'南非', EG:'埃及', KE:'肯尼亚', GH:'加纳',
+};
+
+// ─── 本地IP提取（多格式适配）────────────────────────────
+function extractRecordsLocal(text) {
+  const timeRe = /(\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2})/g;
+  const ipv4Re = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
+  // IPv6：必须以至少两组4位十六进制开头，确保不误匹配时间
+  const ipv6Re = /\b([0-9a-fA-F]{4}:[0-9a-fA-F]{4}(?::[0-9a-fA-F]{0,4})*)/g;
+
+  // ① 多行格式
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length > 1) {
+    const records = [];
+    for (const line of lines) {
+      const times = [...line.matchAll(timeRe)].map(m => m[1]);
+      const t = times[0] || '';
+      const cleaned = line.replace(timeRe, m => 'X'.repeat(m.length));
+      for (const m of cleaned.matchAll(ipv4Re)) {
+        records.push({ ip: m[1], time: t, v6: false });
+      }
+      for (const m of line.matchAll(ipv6Re)) {
+        const isTruncated = text.slice(m.index + m[0].length, m.index + m[0].length + 3) === '...';
+        records.push({ ip: m[1] + (isTruncated ? '...' : ''), time: t, v6: true });
+      }
+    }
+    if (records.length) return records;
+  }
+
+  // ② 单行连续格式
+  const times = [...text.matchAll(timeRe)].map(m => ({ val: m[1], pos: m.index }));
+  const cleaned = text.replace(timeRe, m => 'X'.repeat(m.length));
+  const records = [];
+  for (const m of cleaned.matchAll(ipv4Re)) {
+    const prev = times.filter(t => t.pos < m.index);
+    records.push({ ip: m[1], time: prev.length ? prev[prev.length-1].val : '', v6: false });
+  }
+  for (const m of text.matchAll(ipv6Re)) {
+    const prev = times.filter(t => t.pos < m.index);
+    const isTruncated = text.slice(m.index + m[0].length, m.index + m[0].length + 3) === '...';
+    records.push({ ip: m[1] + (isTruncated ? '...' : ''), time: prev.length ? prev[prev.length-1].val : '', v6: true });
+  }
+  return records;
+}
+
+// ─── AI 兜底解析（OpenAI兼容，可换任意服务商）────────────
+async function extractRecordsClaude(text, apiKey) {
+  const endpointEl = document.getElementById('ai_endpoint');
+  const modelEl    = document.getElementById('ai_model');
+  const endpoint   = (endpointEl?.value||'').trim() || 'https://api.siliconflow.cn/v1/chat/completions';
+  const model      = (modelEl?.value||'').trim()    || 'Qwen/Qwen2.5-7B-Instruct';
+
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 1500,
+      temperature: 0,
+      messages: [
+        {
+          role: 'system',
+          content: '你是数据提取助手。从文本中提取所有IPv4地址和对应登录时间。严格只返回JSON，格式：{"records":[{"ip":"1.2.3.4","time":"2025-10-21 19:12:24"}]}。同一IP多次登录分别列出不去重，没有时间time为空字符串，只提取IPv4，不输出JSON以外任何内容。'
+        },
+        {
+          role: 'user',
+          content: '提取以下文本中所有IP和登录时间：\n\n' + text
+        }
+      ],
+    }),
+  });
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.error?.message || 'AI API 错误 ' + res.status);
+  }
+  const data = await res.json();
+  const raw   = data.choices?.[0]?.message?.content || '';
+  const clean = raw.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean).records || [];
+}
+
+function previewIPs() {
+  const records = extractRecordsLocal(document.getElementById('log_input').value);
+  const chips = document.getElementById('ip_chips');
+  chips.innerHTML = '';
+  if (!records.length) {
+    chips.innerHTML = '<span style="font-size:11px;color:var(--amber)">本地未识别到IP — 填写 AI Key 后将自动兜底解析</span>';
+    return;
+  }
+  // 统计信息
+  const withTime = records.filter(r => r.time).sort((a,b) => a.time > b.time ? 1 : -1);
+  const earliest = withTime.length ? withTime[0].time.slice(0,10) : '';
+  const latest   = withTime.length ? withTime[withTime.length-1].time.slice(0,10) : '';
+  const uniqueIPs = new Set(records.map(r => r.ip)).size;
+  const summary = document.createElement('span');
+  summary.style.cssText = 'font-size:11px;color:var(--text2);margin-right:8px';
+  summary.textContent = `识别到 ${records.length} 条记录，${uniqueIPs} 个唯一IP${earliest ? `，时间范围 ${earliest} ~ ${latest}` : ''}`;
+  chips.appendChild(summary);
+  // IP chip列表
+  [...new Set(records.map(r => r.ip))].slice(0, 15).forEach(ip => {
+    const c = document.createElement('span');
+    c.className = 'ip-chip';
+    c.textContent = ip;
+    chips.appendChild(c);
+  });
+  if (uniqueIPs > 15) {
+    const c = document.createElement('span');
+    c.className = 'ip-chip';
+    c.textContent = `+${uniqueIPs - 15} 个`;
+    chips.appendChild(c);
+  }
+}
+
+// ─── IP归属地查询（通过本地代理，彻底绕过CORS）─────────────
+async function queryIPInfo(ip, isV6) {
+  // 截断的IPv6（含...）无法查询
+  if (isV6 && ip.includes('...')) return { ip, cc:'', country:'IPv6 截断，无法查询', org:'', city:'', region:'', v6: true };
+  try {
+    const res = await fetch(`/api/ip/${ip}`);
+    if (res.ok) {
+      const d = await res.json();
+      if (d.cc || d.country) {
+        return { ip, cc: d.cc||'', country: d.country||'未知', org: d.org||'', city: d.city||'', region: d.region||'', source: d.source||'' };
+      }
+    }
+  } catch(e) {}
+  return { ip, cc:'', country:'查询失败（请确认服务器已启动）', org:'', city:'', region:'' };
+}
+
+// ─── 12小时内IP变更检测 ──────────────────────────────────
+function check12hSwitch(records) {
+  const withTime = records
+    .filter(r => r.time)
+    .sort((a, b) => new Date(a.time) - new Date(b.time));
+  const hits = [];
+  const seen = new Set();
+  for (let i = 0; i < withTime.length; i++) {
+    for (let j = i + 1; j < withTime.length; j++) {
+      const a = withTime[i], b = withTime[j];
+      const diff = (new Date(b.time) - new Date(a.time)) / (1000 * 3600);
+      if (diff > 12) break;
+      if (a.ip === b.ip) continue;
+      // 规则：两个IP都属于5地区（中/港/台/新/澳）之间切换，不触发条件1
+      const aFive = FIVE_CC.includes(a.cc);
+      const bFive = FIVE_CC.includes(b.cc);
+      if (aFive && bFive) continue;
+      const key = a.ip + '|' + b.ip;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      hits.push({
+        from: a.ip, to: b.ip,
+        fromCc: a.cc, toCc: b.cc,
+        hours: diff.toFixed(1),
+        time: b.time,
+      });
+    }
+  }
+  return hits;
+}
+
+// ─── UI helpers ──────────────────────────────────────────
+function setError(msg) {
+  const el = document.getElementById('error_box');
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent = msg || '';
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('run_btn');
+  btn.disabled = on;
+  btn.innerHTML = on
+    ? '<span class="spin"></span>查询中...'
+    : '查询归属地并分析风险';
+}
+
+function setProgress(n, total, sub) {
+  const wrap = document.getElementById('progress_wrap');
+  wrap.style.display = 'block';
+  document.getElementById('progress_label').textContent =
+    n === total ? '查询完成' : `正在查询 ${n} / ${total}`;
+  document.getElementById('progress_fill').style.width =
+    Math.round((n / total) * 100) + '%';
+  document.getElementById('progress_sub').textContent = sub || '';
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── 主流程 ───────────────────────────────────────────────
+async function runAnalysis() {
+  setError('');
+  const text = document.getElementById('log_input').value.trim();
+  if (!text) { setError('请粘贴登录记录后再分析'); return; }
+
+  const claudeKey = document.getElementById('claude_key').value.trim();
+  const token = '';
+  const delay = 300;
+  const mode = 'auto';
+
+  setLoading(true);
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('progress_wrap').style.display = 'none';
+
+  let records = [];
+  let parseMethod = '';
+
+  // ① 先用本地正则解析
+  setProgress(1, 3, '本地解析中...');
+  records = extractRecordsLocal(text);
+  parseMethod = '本地正则';
+
+  // ② 若本地解析条数为0，且有AI Key，自动用AI兜底
+  if (!records.length && claudeKey) {
+    try {
+      setProgress(1, 3, 'AI 兜底解析中...');
+      records = await extractRecordsClaude(text, claudeKey);
+      parseMethod = 'AI 兜底';
+    } catch(e) {
+      setError('解析失败：' + e.message);
+      setLoading(false); return;
+    }
+  }
+
+  // ③ 本地有结果但可能不全（IP数量 < 文本中IP出现次数）时也用AI补全
+  if (records.length > 0 && claudeKey) {
+    const ipCount = (text.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g) || []).length;
+    if (ipCount > records.length * 1.5) {
+      try {
+        setProgress(1, 3, 'AI 补全解析中...');
+        const aiRecords = await extractRecordsClaude(text, claudeKey);
+        if (aiRecords.length > records.length) {
+          records = aiRecords;
+          parseMethod = 'AI 补全';
+        }
+      } catch(e) { /* AI失败就用本地结果 */ }
+    }
+  }
+
+  if (!records.length) {
+    setError('未识别到任何IP地址。建议填写 Gemini API Key 并选择"强制使用 Claude 解析"。');
+    setLoading(false); return;
+  }
+
+  // 查询归属地（并发查询，相同IP只查一次）
+  const enriched = [];
+  const ipCache = {};
+  const startTime = Date.now();
+  const uniqueIPs = [...new Set(records.map(r => r.ip))];
+  const isV6Map = {};
+  records.forEach(r => { if (r.v6) isV6Map[r.ip] = true; });
+
+  // 并发查询，最多5个同时进行
+  const CONCURRENCY = 5;
+  let done = 0;
+  for (let i = 0; i < uniqueIPs.length; i += CONCURRENCY) {
+    const batch = uniqueIPs.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(batch.map(ip => queryIPInfo(ip, isV6Map[ip])));
+    results.forEach((res, idx) => {
+      ipCache[batch[idx]] = res;
+      done++;
+      setProgress(done, uniqueIPs.length, `查询归属地：${batch[idx]}`);
+    });
+  }
+  for (const r of records) {
+    const _c = ipCache[r.ip] || {}; enriched.push({ ...r, cc:_c.cc||'', country:_c.country||'未知', org:_c.org||'', city:_c.city||'', region:_c.region||'', source:_c.source||'', v6: r.v6||false });
+  }
+  setProgress(records.length, records.length, '');
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+
+  // 按登录时间倒序排列（最新在最上面）
+  enriched.sort((a, b) => {
+    if (!a.time && !b.time) return 0;
+    if (!a.time) return 1;
+    if (!b.time) return -1;
+    return new Date(b.time) - new Date(a.time);
+  });
+
+  // 分析
+  const highRisk = enriched.filter(r => HIGH_RISK_CC.includes(r.cc));
+  const fiveRegion = enriched.filter(r => FIVE_CC.includes(r.cc));
+  const switches = check12hSwitch(enriched);
+  const c1 = switches.length > 0;
+  const c2 = highRisk.length > 0;
+  let triggered = 0;
+  if (c1) triggered++;
+  if (c2) triggered++;
+
+  // 唯一地区
+  const uniqueCountries = [...new Set(enriched.map(r => r.country))].join('、');
+
+  // 渲染 metrics
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric">
+      <div class="metric-label">IP 数量</div>
+      <div class="metric-value">${enriched.length}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">高风险 IP</div>
+      <div class="metric-value ${highRisk.length > 0 ? 'danger' : 'ok'}">${highRisk.length}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">触发条件</div>
+      <div class="metric-value ${triggered >= 2 ? 'warn' : triggered === 0 ? 'ok' : ''}">${triggered} / 2</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">涉及地区</div>
+      <div class="metric-value" style="font-size:13px;line-height:1.4;padding-top:4px">${uniqueCountries}</div>
+    </div>
+  `;
+
+  // switchMap：ip|time -> [{peer, peerTime, hours}]
+  const switchMap = new Map();
+  const addSwitch = (key, peer, peerTime, hours) => {
+    if (!switchMap.has(key)) switchMap.set(key, []);
+    const list = switchMap.get(key);
+    if (!list.find(x => x.peer === peer)) list.push({ peer, peerTime, hours });
+  };
+  switches.forEach(s => {
+    // to记录：关联的是from，from的时间从enriched里找
+    const fromRec = [...enriched].reverse().find(r => r.ip === s.from && r.time < s.time);
+    addSwitch(s.to + '|' + s.time, s.from, fromRec ? fromRec.time : '', s.hours);
+    // from记录：关联的是to，to的时间就是 s.time
+    if (fromRec) addSwitch(fromRec.ip + '|' + fromRec.time, s.to, s.time, s.hours);
+  });
+
+  // 渲染表格
+  document.getElementById('ip_tbody').innerHTML = enriched.map((r, i) => {
+    const isV6   = r.v6 === true;
+    const isHigh = !isV6 && HIGH_RISK_CC.includes(r.cc);
+    const isFive = !isV6 && FIVE_CC.includes(r.cc);
+    const switchList = switchMap.get(r.ip + '|' + r.time) || [];
+    const isSwitch = switchList.length > 0;
+
+    const tags = [];
+    if (isV6)        tags.push(`<span class="badge badge-blue">IPv6</span>`);
+    else if (isHigh) tags.push(`<span class="badge badge-red">高风险地区</span>`);
+    else if (isFive) tags.push(`<span class="badge badge-amber">5地区</span>`);
+    else             tags.push(`<span class="badge badge-green">正常</span>`);
+    if (isSwitch && !isV6 && !isHigh) {
+      const lines = switchList.map(x => {
+        // 时间缩短为 MM-DD HH:mm
+        const t = x.peerTime ? ' (' + x.peerTime.slice(5,16) + ')' : '';
+        return `与 ${x.peer}${t} 间隔 ${x.hours}h`;
+      }).join('<br>');
+      tags.push(`<span class="switch-note"><span class="badge badge-orange">触发条件1</span><span class="switch-detail">${lines}</span></span>`);
+    }
+
+    let rowStyle = '';
+    if (isHigh)       rowStyle = 'background:rgba(239,68,68,0.06);border-left:2px solid rgba(239,68,68,0.5);';
+    else if (isSwitch && !isV6 && !isHigh) rowStyle = 'background:rgba(245,158,11,0.05);border-left:2px solid rgba(245,158,11,0.4);';
+    else if (isV6)    rowStyle = 'opacity:0.6;';
+
+    return `<tr style="${rowStyle}" data-ip="${r.ip}" data-source="${r.source||''}">
+      <td style="color:var(--text3);font-family:var(--mono);font-size:11px">${i + 1}</td>
+      <td class="td-ip" style="${isHigh ? 'color:#fca5a5' : isSwitch ? 'color:#fbbf24' : ''}">${r.ip}</td>
+      <td class="td-time">${r.time || '—'}</td>
+      <td class="td-country">${r.country}</td>
+      <td style="font-size:12px;color:var(--text2)">${r.city || '—'}</td>
+      <td class="td-org">${r.org || '—'}</td>
+      <td style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding-top:8px;padding-bottom:8px">${tags.join('')}</td>
+    </tr>`;
+  }).join('');
+
+  // verdict
+  const MANUAL_CHECK = '<div style="margin-top:10px;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:6px;font-size:12px;line-height:1.9;color:var(--text2)"><div style="font-weight:500;color:var(--text);margin-bottom:4px">需人工在后台核查以下条件：</div><div>条件3：近72小时内是否更改安全项？（登入密码 / 资金密码 / 邮箱 / 手机号）</div><div>条件4：本次提币是否使用从未使用过的新地址？</div><div style="margin-top:6px;color:var(--amber)">以上任意一项为「是」，则触发条件数 +1，满足3条即达升级标准。</div></div>';
+  let vcls, vtitle, vdetail, vbar, vbarColor, suggestion;
+
+  if (c2) {
+    vcls = 'verdict-escalate'; vbar = 100; vbarColor = '#ef4444';
+    vtitle = '⚠ 立即升级至风控';
+    vdetail = `检测到高风险地区登录 IP：${highRisk.map(r => r.country + '（' + r.ip + '）').join('、')}。若账号 KYC / 手机号归属地非该地区，可直接升级，无需等待满足3个条件。`;
+    suggestion = `<strong>立即操作：</strong>暂停本次提币申请，将案件上报风控团队进行二次核实，并保留当前截图记录。${MANUAL_CHECK}`;
+  } else if (triggered >= 2) {
+    vcls = 'verdict-watch'; vbar = 55; vbarColor = '#f59e0b';
+    vtitle = '⚡ 已满足2条，核查剩余条件后可升级';
+    vdetail = `已自动触发全部 ${triggered} 个可检测条件，请在后台补充核查条件3、4，满足任意一项即达到升级标准（≥3条）。`;
+    suggestion = `<strong>建议操作：</strong>立即在后台核查以下两项，任意一项为「是」即应上报风控。${MANUAL_CHECK}`;
+  } else if (triggered === 1) {
+    vcls = 'verdict-watch'; vbar = 22; vbarColor = '#f59e0b';
+    vtitle = '⚡ 触发1条，建议核查剩余条件';
+    vdetail = `已自动触发 ${triggered} 个条件，未达升级标准（需≥3条）。建议在后台核查条件3、4，若有触发则需升级。`;
+    suggestion = `<strong>建议操作：</strong>在后台确认以下两项，若有任意一项为「是」，则触发条件数达到2条，请结合实际情况判断是否升级。${MANUAL_CHECK}`;
+  } else {
+    vcls = 'verdict-pass'; vbar = 5; vbarColor = '#10b981';
+    vtitle = '✓ 自动检测无异常';
+    vdetail = '所有IP均来自正常地区，未检测到高风险登录或短时间内IP切换，账户活动正常。';
+    suggestion = `<strong>建议操作：</strong>常规确认提币地址及安全项后可正常放行。${MANUAL_CHECK}`;
+  }
+
+  const condRows = [
+    {
+      on: c1,
+      label: '条件1：12小时内变更IP地址',
+      detail: c1
+        ? switches.map(s => `${s.from} → ${s.to}（间隔 ${s.hours} 小时）`).join('；')
+        : '未检测到',
+    },
+    {
+      on: c2,
+      label: '条件2：来自高风险地区（印度/巴基斯坦/孟加拉/尼日利亚）',
+      detail: c2
+        ? highRisk.map(r => r.country + '（' + r.ip + '）').join('、')
+        : '未检测到',
+    },
+  ].map(c => {
+    const dotCls = c.on ? 'cond-dot cond-dot-on' : 'cond-dot cond-dot-off';
+    const badge = c.on
+      ? '<span class="cond-badge-on">已触发</span>'
+      : '<span class="cond-badge-off">未触发</span>';
+    return `<div class="cond-row">
+      <div class="${dotCls}"></div>
+      <div class="cond-text"><strong>${c.label}</strong><br>${c.detail}</div>
+      ${badge}
+    </div>`;
+  }).join('');
+
+  document.getElementById('verdict_box').innerHTML = `
+    <div class="verdict ${vcls}">
+      <div class="verdict-header">
+        <div class="verdict-title">${vtitle}</div>
+      </div>
+      <div class="verdict-bar-wrap">
+        <div class="verdict-bar-bg">
+          <div class="verdict-bar-fill" style="width:${vbar}%;background:${vbarColor}"></div>
+        </div>
+      </div>
+      <div class="verdict-body">${vdetail}</div>
+      <div class="conditions-list">${condRows}</div>
+      <div class="suggestion-box">${suggestion}</div>
+    </div>
+  `;
+
+  document.getElementById('query_time').textContent = `· 解析：${parseMethod} · 耗时 ${elapsed}s · ${new Date().toLocaleString('zh-CN')}`;
+  document.getElementById('footer_time').textContent = new Date().toLocaleString('zh-CN');
+bindHoverEffects();
+const savedTheme = localStorage.getItem('coinup-theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+  document.getElementById('results').style.display = 'block';
+
+  setLoading(false);
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  bindHoverEffects();
+}
+
+// ─── 导出报告 ─────────────────────────────────────────────
+function exportText() {
+  const rows = [];
+  document.querySelectorAll('#ip_tbody tr').forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length < 6) return;
+    const ip      = tds[1]?.innerText?.trim() || '';
+    const time    = tds[2]?.innerText?.trim() || '';
+    const country = tds[3]?.innerText?.trim() || '';
+    const city    = tds[4]?.innerText?.trim() || '';
+    const org     = tds[5]?.innerText?.trim() || '';
+    const tags    = tds[6]?.innerText?.trim() || '';
+    rows.push(`${time}  ${ip.padEnd(20)}  ${country} ${city}  ${tags}`);
+  });
+  const verdict = document.querySelector('.verdict .vt')?.innerText || '';
+  const detail  = document.querySelector('.verdict .vb')?.innerText || '';
+  const time    = new Date().toLocaleString('zh-CN');
+  const text = [
+    `IP 风险分析报告  ${time}`,
+    '='.repeat(60),
+    '',
+    ...rows,
+    '',
+    '='.repeat(60),
+    `结论：${verdict}`,
+    detail,
+  ].join('\n');
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('button[onclick="exportText()"]');
+    const orig = btn.textContent;
+    btn.textContent = '✓ 已复制';
+    setTimeout(() => btn.textContent = orig, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+// ─── 主题切换 ─────────────────────────────────────────────
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.getElementById('theme-icon').textContent = dark ? '☀' : '☾';
+  localStorage.setItem('coinup-theme', dark ? 'dark' : 'light');
+}
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  applyTheme(!isDark);
+}
+
+
+
+const SOURCE_URL = {
+  'freeipapi.com': ip => `https://freeipapi.com/api/json/${ip}`,
+  'ipwho.is':      ip => `https://ipwho.is/${ip}`,
+  'ip-api.com':    ip => `https://ip-api.com/#${ip}`,
+};
+
+function bindHoverEffects() {
+  document.querySelectorAll('#ip_tbody tr').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const ip = tr.dataset.ip || '';
+      if (!ip || ip.includes('...')) return;
+      const src = tr.dataset.source || '';
+      const fn = SOURCE_URL[src] || (ip => `https://ipinfo.io/${ip}`);
+      window.open(fn(ip), '_blank');
+    });
+  });
+}
+
+// ─── 点击光晕特效（小而精，有呼吸感）────────────────────
+document.addEventListener('click', function(e) {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const color = isDark ? '140,210,60' : '100,180,10';
+
+  // 圈1：快速扩散消散
+  const r1 = document.createElement('div');
+  const s1 = 20;
+  r1.style.cssText = `
+    position:fixed;left:${e.clientX-s1/2}px;top:${e.clientY-s1/2}px;
+    width:${s1}px;height:${s1}px;border-radius:50%;
+    border:1.5px solid rgba(${color},0.9);
+    pointer-events:none;z-index:9999;
+    animation:ripple-out 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+  `;
+  document.body.appendChild(r1);
+  r1.addEventListener('animationend', () => r1.remove());
+
+  // 圈2：稍大，延迟，带呼吸脉冲
+  const r2 = document.createElement('div');
+  const s2 = 32;
+  r2.style.cssText = `
+    position:fixed;left:${e.clientX-s2/2}px;top:${e.clientY-s2/2}px;
+    width:${s2}px;height:${s2}px;border-radius:50%;
+    border:1px solid rgba(${color},0.45);
+    pointer-events:none;z-index:9999;
+    animation:ripple-out 1s cubic-bezier(0.22,1,0.36,1) forwards;
+    animation-delay:0.08s;
+  `;
+  document.body.appendChild(r2);
+  r2.addEventListener('animationend', () => r2.remove());
+
+  // 圆心小点：闪现后消失
+  const dot = document.createElement('div');
+  dot.style.cssText = `
+    position:fixed;left:${e.clientX-3}px;top:${e.clientY-3}px;
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(${color},0.8);
+    pointer-events:none;z-index:9999;
+    animation:ripple-pulse 0.6s ease-out forwards;
+  `;
+  document.body.appendChild(dot);
+  dot.addEventListener('animationend', () => dot.remove());
+});
+
+// ─── 按钮滑入滑出（进左出右，循环不回弹）──────────────
+function bindSlideEffect(selector) {
+  document.querySelectorAll(selector).forEach(el => {
+    el.addEventListener('mouseleave', () => {
+      // 1. 加 leaving 类 → before 从右侧滑出（有动画）
+      el.classList.add('btn-leaving');
+      // 2. 动画结束后瞬间跳回左侧（无动画）
+      const dur = el.id === 'theme-toggle' ? 700 : 860;
+      setTimeout(() => {
+        el.classList.add('btn-reset');
+        el.classList.remove('btn-leaving');
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          el.classList.remove('btn-reset');
+        }));
+      }, dur);
+    });
+    el.addEventListener('mouseenter', () => {
+      // 进入时确保干净状态
+      el.classList.remove('btn-leaving', 'btn-reset');
+    });
+  });
+}
+bindSlideEffect('.run-btn');
+bindSlideEffect('.export-btn');
+bindSlideEffect('#theme-toggle');
+
+// init
+document.getElementById('footer_time').textContent = new Date().toLocaleString('zh-CN');
+bindHoverEffects();
+const savedTheme = localStorage.getItem('coinup-theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+</script>
+</body>
+</html>
