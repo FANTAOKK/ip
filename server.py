@@ -112,7 +112,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         # 接口3: ip-api.com
         try:
             r = requests.get(
-                f'http://ip-api.com/json/{ip}?lang=zh-CN&fields=status,country,countryCode,regionName,city,isp',
+                f'https://ip-api.com/json/{ip}?lang=zh-CN&fields=status,country,countryCode,regionName,city,isp',
                 headers={'User-Agent': 'Mozilla/5.0'},
                 timeout=5
             )
