@@ -4,7 +4,7 @@ IP风险分析工具 - 本地服务器
 用法：python3 server.py
 会自动打开浏览器访问 http://localhost:8888
 """
-import http.server, urllib.request, urllib.parse, json, os, sys, threading, webbrowser
+import http.server, json, os, sys, threading, webbrowser, requests
 
 PORT = 8888
 DIR  = os.path.dirname(os.path.abspath(__file__))
@@ -70,62 +70,62 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return {'cc': '', 'country': 'invalid IP', 'city': '', 'region': '', 'org': '', 'source': ''}
         # 接口1: freeipapi.com
         try:
-            req = urllib.request.Request(
+            r = requests.get(
                 f'https://freeipapi.com/api/json/{ip}',
-                headers={'User-Agent': 'Mozilla/5.0'}
+                headers={'User-Agent': 'Mozilla/5.0'},
+                timeout=5
             )
-            with urllib.request.urlopen(req, timeout=5) as r:
-                d = json.loads(r.read())
-                if d.get('countryCode') and d['countryCode'] != '-':
-                    return {
-                        'cc': d['countryCode'],
-                        'country': d.get('countryName', ''),
-                        'city': d.get('cityName', ''),
-                        'region': d.get('regionName', ''),
-                        'org': d.get('ipType', ''),
-                        'source': 'freeipapi.com'
-                    }
+            d = r.json()
+            if d.get('countryCode') and d['countryCode'] != '-':
+                return {
+                    'cc': d['countryCode'],
+                    'country': d.get('countryName', ''),
+                    'city': d.get('cityName', ''),
+                    'region': d.get('regionName', ''),
+                    'org': d.get('ipType', ''),
+                    'source': 'freeipapi.com'
+                }
         except Exception as e:
             print(f"  freeipapi failed for {ip}: {e}")
 
         # 接口2: ipwho.is
         try:
-            req = urllib.request.Request(
+            r = requests.get(
                 f'https://ipwho.is/{ip}',
-                headers={'User-Agent': 'Mozilla/5.0'}
+                headers={'User-Agent': 'Mozilla/5.0'},
+                timeout=5
             )
-            with urllib.request.urlopen(req, timeout=5) as r:
-                d = json.loads(r.read())
-                if d.get('success') and d.get('country_code'):
-                    conn = d.get('connection') or {}
-                    return {
-                        'cc': d['country_code'],
-                        'country': d.get('country', ''),
-                        'city': d.get('city', ''),
-                        'region': d.get('region', ''),
-                        'org': conn.get('isp') or conn.get('org') or '',
-                        'source': 'ipwho.is'
-                    }
+            d = r.json()
+            if d.get('success') and d.get('country_code'):
+                conn = d.get('connection') or {}
+                return {
+                    'cc': d['country_code'],
+                    'country': d.get('country', ''),
+                    'city': d.get('city', ''),
+                    'region': d.get('region', ''),
+                    'org': conn.get('isp') or conn.get('org') or '',
+                    'source': 'ipwho.is'
+                }
         except Exception as e:
             print(f"  ipwho.is failed for {ip}: {e}")
 
         # 接口3: ip-api.com
         try:
-            req = urllib.request.Request(
+            r = requests.get(
                 f'http://ip-api.com/json/{ip}?lang=zh-CN&fields=status,country,countryCode,regionName,city,isp',
-                headers={'User-Agent': 'Mozilla/5.0'}
+                headers={'User-Agent': 'Mozilla/5.0'},
+                timeout=5
             )
-            with urllib.request.urlopen(req, timeout=5) as r:
-                d = json.loads(r.read())
-                if d.get('status') == 'success':
-                    return {
-                        'cc': d.get('countryCode', ''),
-                        'country': d.get('country', ''),
-                        'city': d.get('city', ''),
-                        'region': d.get('regionName', ''),
-                        'org': d.get('isp', ''),
-                        'source': 'ip-api.com'
-                    }
+            d = r.json()
+            if d.get('status') == 'success':
+                return {
+                    'cc': d.get('countryCode', ''),
+                    'country': d.get('country', ''),
+                    'city': d.get('city', ''),
+                    'region': d.get('regionName', ''),
+                    'org': d.get('isp', ''),
+                    'source': 'ip-api.com'
+                }
         except Exception as e:
             print(f"  ip-api.com failed for {ip}: {e}")
 
