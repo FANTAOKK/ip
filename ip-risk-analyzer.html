@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.coingecko.com https://pro-api.coingecko.com https://api.binance.com https://ipwho.is https://api.siliconflow.cn https://api.groq.com https://api.openai.com https://freeipapi.com https://ipwho.is https://ip-api.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.coingecko.com https://pro-api.coingecko.com https://api.binance.com https://api.siliconflow.cn https://api.groq.com https://api.openai.com https://freeipapi.com https://ipwho.is https://ip-api.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
 <title>Risk Suite</title>
-<link rel="icon" href="logo.jpg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
 
@@ -40,10 +39,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--bg);color:var(--tx);font-size:13px;line-height:1.6;min-height:100vh;overflow-x:hidden}
 
-/* Noise texture overlay */
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.6}
-
-/* Grid background */
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(102,153,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(102,153,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
 
 .shell{position:relative;z-index:1}
@@ -51,7 +47,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 /* ── TOPBAR ── */
 .topbar{display:flex;align-items:center;gap:16px;padding:0 28px;height:56px;border-bottom:1px solid var(--b1);background:rgba(10,10,14,.85);backdrop-filter:blur(12px);position:sticky;top:0;z-index:200}
 .logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;font-family:var(--mono)}
 .logo-text{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:-.3px}
 .logo-text em{color:var(--green);font-style:normal}
 .logo-sep{width:1px;height:20px;background:var(--b2);margin:0 4px}
@@ -116,14 +111,11 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .ain::placeholder,.cin::placeholder{color:var(--t3)}
 .cin[readonly]{color:var(--t3);background:var(--s1)}
 .sec-warn{background:#2a1a0a;border:1px solid rgba(255,170,0,.35);border-radius:var(--rs);padding:6px 10px;font-size:11px;color:var(--amber);font-family:var(--mono);margin-top:8px;display:none}
-
 textarea.ain{resize:vertical;min-height:130px;line-height:1.7}
 
 /* ── PILLS / BADGES ── */
 .pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10px;font-family:var(--mono);font-weight:500}
 .pill-g{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
-.pill-b{background:var(--bd);color:var(--blue);border:1px solid rgba(102,153,255,.3)}
-.pill-p{background:var(--pd);color:var(--purple);border:1px solid rgba(170,119,255,.3)}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:500;font-family:var(--mono);white-space:nowrap}
 .badge-green{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
 .badge-red{background:var(--rd);color:var(--red);border:1px solid rgba(255,85,102,.3)}
@@ -187,7 +179,7 @@ input[type=file]{display:none}
 /* ── RESULTS ── */
 #pnl-results{display:none}
 .rpg{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
-@media(max-width:700px){.rpg{grid-column:1fr}}
+@media(max-width:700px){.rpg{grid-template-columns:1fr}}
 .rc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:18px;transition:border-color .2s}
 .rc:hover{border-color:var(--b2)}
 .rc.big{grid-column:1/-1;background:var(--s2);border-color:var(--b2)}
@@ -217,7 +209,7 @@ table.dt tr:last-child td{border-bottom:none}
 table.dt tr:hover td{background:var(--s2)}
 .erow{text-align:center;padding:28px;color:var(--t3);font-size:12px}
 
-/* ── IP TOOL SPECIFICS ── */
+/* ── IP TOOL ── */
 .ip-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;margin-bottom:16px;transition:border-color .2s}
 .ip-card:hover{border-color:var(--b2)}
 .ip-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;min-height:0}
@@ -281,7 +273,7 @@ table.dt tr:hover td{background:var(--s2)}
 .td-time{font-family:var(--mono);font-size:11px;color:var(--t2);white-space:nowrap}
 .td-country{font-weight:500}
 .td-org{font-size:11px;color:var(--t2);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#ip_tbody tr{position:relative;cursor:pointer;transition:background .2s}
+#ip_tbody tr{cursor:pointer;transition:background .2s}
 #ip_tbody tr:hover{background:var(--s2)}
 #ip_tbody tr:hover .td-ip{color:var(--blue) !important}
 .source-note{font-size:11px;font-family:var(--mono);color:var(--t3);margin-top:12px;display:flex;align-items:center;gap:6px}
@@ -289,40 +281,34 @@ table.dt tr:hover td{background:var(--s2)}
 .export-btn{background:transparent;border:1px solid var(--b2);border-radius:6px;padding:5px 14px;font-size:12px;color:var(--t2);cursor:pointer;font-family:var(--sans);transition:.2s}
 .export-btn:hover{border-color:var(--green);color:var(--green)}
 
-/* ── DIVIDER ── */
-.divline{height:1px;background:var(--b1);margin:24px 0}
-
-/* ── SHARED TOOLTIP ── */
-.input-hint{font-size:11px;color:var(--t3);font-family:var(--mono);line-height:1.5;margin-top:4px}
-.input-hint a{color:var(--green);text-decoration:none}
-.input-hint a:hover{text-decoration:underline}
-
 /* ── AI CONFIG ── */
 .ai-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;margin-bottom:22px}
 .ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 @media(max-width:600px){.ai-grid{grid-template-columns:1fr}}
 
-/* ── SCROLLBAR ── */
+/* ── MISC ── */
+.divline{height:1px;background:var(--b1);margin:24px 0}
+.input-hint{font-size:11px;color:var(--t3);font-family:var(--mono);line-height:1.5;margin-top:4px}
+.input-hint a{color:var(--green);text-decoration:none}
+.input-hint a:hover{text-decoration:underline}
+
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--s1)}
 ::-webkit-scrollbar-thumb{background:var(--b3);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--t3)}
 
-/* ── CLICK RIPPLE KEYFRAMES ── */
 @keyframes ripple-out{0%{transform:scale(0);opacity:.9}40%{opacity:.6}100%{transform:scale(1);opacity:0}}
-@keyframes ripple-pulse{0%{transform:scale(1);opacity:.5}50%{transform:scale(1.15);opacity:.25}100%{transform:scale(1);opacity:0}}
 </style>
 </head>
 <body>
 <div class="shell">
 
-<!-- ══════════ TOPBAR ══════════ -->
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="logo">
-    <img src="logo.jpg" style="width:28px; height:28px; border-radius:7px;">
-    <div>
-      <div class="logo-text"><em>Risk</em> Suite</div>
-    </div>
+  <img src="logo.jpg" style="width:28px; height:28px; border-radius:7px;"><div>
+    <div class="logo-text"><em>Risk</em> Suite</div>
+  </div>
     <div class="logo-sep"></div>
     <div class="logo-sub">POWERED BY FANTA</div>
   </div>
@@ -340,7 +326,7 @@ table.dt tr:hover td{background:var(--s2)}
   </div>
 </div>
 
-<!-- ══════════ PAGE: PNL ══════════ -->
+<!-- PAGE: PNL -->
 <div class="page active" id="page-pnl">
 <div class="wrap">
 
@@ -416,10 +402,10 @@ table.dt tr:hover td{background:var(--s2)}
   <div class="dtw"><div class="slabel">合约交易明细</div><div class="dtc"><div class="dthd"><span class="dthd-t">合约记录</span><span id="ct-fmt-label" style="font-size:10px;font-family:var(--mono);color:var(--t3)"></span><span class="dthd-c" id="dct-ct">0 笔</span></div><div class="tsc" id="ct-table-wrap"></div></div></div>
 </div>
 
-</div><!-- /wrap pnl -->
-</div><!-- /page pnl -->
+</div>
+</div><!-- /page-pnl -->
 
-<!-- ══════════ PAGE: IP ══════════ -->
+<!-- PAGE: IP -->
 <div class="page" id="page-ip">
 <div class="wrap">
 
@@ -428,26 +414,42 @@ table.dt tr:hover td{background:var(--s2)}
   <div class="ai-grid">
     <div class="afield">
       <label>API Key <span style="color:var(--t3);font-weight:400">（本地正则优先，无法识别时AI兜底）</span></label>
-      <input type="password" class="ain" id="claude_key" placeholder="sk-...">
-      <div class="input-hint">推荐：<a href="https://siliconflow.cn" target="_blank">硅基流动</a>（免费）· 支持任意 OpenAI 兼容接口</div>
-      <div class="anote" style="color:var(--amber);margin-top:6px">⚠仅在本地浏览器内使用，不会上传至任何服务器。建议使用权限最小的临时 Key。</div>
+      <input type="password" class="ain" id="claude_key" placeholder="sk-..." autocomplete="off" maxlength="512">
+      <div class="input-hint">推荐：<a href="https://siliconflow.cn" target="_blank" rel="noopener noreferrer">硅基流动</a>（免费）· 支持任意 OpenAI 兼容接口</div>
+      <div class="anote" style="color:var(--amber);margin-top:6px">⚠仅在本地浏览器内使用，不会上传至任何服务器。建议使用权限最小的临时Key。</div>
     </div>
     <div class="afield">
       <label>模型名称 <span style="color:var(--t3);font-weight:400">（留空用默认）</span></label>
-      <input type="text" class="ain" id="ai_model" placeholder="Qwen/Qwen2.5-7B-Instruct">
+      <input type="text" class="ain" id="ai_model" placeholder="Qwen/Qwen2.5-7B-Instruct" maxlength="128">
     </div>
   </div>
   <div class="afield">
     <label>接口地址 <span style="color:var(--t3);font-weight:400">（留空用硅基流动）</span></label>
-    <input type="text" class="ain" id="ai_endpoint" placeholder="https://api.siliconflow.cn/v1/chat/completions">
+    <input type="text" class="ain" id="ai_endpoint" placeholder="https://api.siliconflow.cn/v1/chat/completions" maxlength="256">
     <div class="input-hint">Groq: <code style="color:var(--t2)">https://api.groq.com/openai/v1/chat/completions</code> · OpenAI: <code style="color:var(--t2)">https://api.openai.com/v1/chat/completions</code></div>
+  </div>
+</div>
+
+<div class="slabel">风控规则配置</div>
+<div class="ai-card" style="margin-bottom:22px">
+  <div class="ai-grid">
+    <div class="afield">
+      <label>高风险地区代码 <span style="color:var(--t3);font-weight:400">（ISO 3166-1，逗号分隔）</span></label>
+      <input type="text" class="ain" id="cfg_high_risk" value="IN,PK,BD,NG" placeholder="IN,PK,BD,NG" maxlength="256">
+      <div class="input-hint">触发条件2：登录 IP 归属于此列表中的地区时直接升级风控</div>
+    </div>
+    <div class="afield">
+      <label>同区豁免地区代码 <span style="color:var(--t3);font-weight:400">（不触发IP切换条件）</span></label>
+      <input type="text" class="ain" id="cfg_five_cc" value="CN,HK,TW,SG,MO" placeholder="CN,HK,TW,SG,MO" maxlength="256">
+      <div class="input-hint">触发条件1 豁免：两个 IP 均属于此列表时不计为切换</div>
+    </div>
   </div>
 </div>
 
 <div class="slabel">登录记录</div>
 <div class="ip-card">
   <label style="font-size:12px;color:var(--t2);font-weight:500;margin-bottom:8px;display:block">粘贴后台登录历史（支持任意格式）</label>
-  <textarea class="ain" id="log_input" oninput="previewIPs()" placeholder="直接从后台复制粘贴，任意格式均可识别：
+  <textarea class="ain" id="log_input" placeholder="直接从后台复制粘贴，任意格式均可识别：
 
 2025-10-21 19:12:24    39.191.15.195    Android    成功
 2025-10-15 21:56:49    39.191.15.69     Android    成功
@@ -511,17 +513,46 @@ table.dt tr:hover td{background:var(--s2)}
       <button onclick="window.print()" class="export-btn">🖨 保存 PDF</button>
     </span>
   </div>
-</div><!-- /ip-results -->
+</div>
 
-</div><!-- /wrap ip -->
-</div><!-- /page ip -->
+</div>
+</div><!-- /page-ip -->
 
 </div><!-- /shell -->
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha256-yVBhl8r4CaB1tt7h2g02+xnacVj/6KiOewyWxdhiPJk=" crossorigin="anonymous"></script>
 <script>
+'use strict';
+
 // ═══════════════════════════════════════════════
-// TAB SWITCHING
+// 共用常量 & 工具函数
+// ═══════════════════════════════════════════════
+
+/** 严格 IPv4 正则，全局复用，防止各处校验不一致 */
+const IPV4_STRICT = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/;
+
+/** 时间格式正则：yyyy-mm-dd HH:MM:SS 或 yyyy/mm/dd HH:MM:SS */
+const TIME_STRICT = /^\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2}$/;
+
+function isValidIPv4(ip) {
+  return typeof ip === 'string' && IPV4_STRICT.test(ip.trim());
+}
+
+/**
+ * 解析时间字符串为 Date 对象
+ * 修复：统一将 "/" 转为 "-"，将空格转为 "T"，确保 Safari / Firefox 兼容
+ */
+function parseTime(s) {
+  if (!s) return null;
+  return new Date(s.replace(/\//g, '-').replace(' ', 'T'));
+}
+
+function setStatus(t) {
+  document.getElementById('topTxt').textContent = t;
+}
+
+// ═══════════════════════════════════════════════
+// TAB 切换
 // ═══════════════════════════════════════════════
 function switchTab(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -531,695 +562,1338 @@ function switchTab(name) {
 }
 
 // ═══════════════════════════════════════════════
-// SHARED UTILS
+// PNL 工具
 // ═══════════════════════════════════════════════
-function esc(v) {
-  if (v == null) return '—';
-  return String(v)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#x27;')
-    .replace(/\//g,'&#x2F;')
-    .replace(/`/g,'&#x60;');
-}
-function setStatus(t) { document.getElementById('topTxt').textContent = t; }
 
-// ═══════════════════════════════════════════════
-// ─── PNL TOOL ─────────────────────────────────
-// ═══════════════════════════════════════════════
-const ALLOWED_EXTS = new Set(['.xls','.xlsx','.csv']);
-const MAGIC = {xlsx:[0x50,0x4B,0x03,0x04],xls:[0xD0,0xCF,0x11,0xE0]};
+const ALLOWED_EXTS = new Set(['.xls', '.xlsx', '.csv']);
+const MAGIC = { xlsx: [0x50, 0x4B, 0x03, 0x04], xls: [0xD0, 0xCF, 0x11, 0xE0] };
 
 async function checkFileSafe(file) {
   const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
-  if (!ALLOWED_EXTS.has(ext)) return {ok:false,reason:'不支持的文件类型: '+ext};
-  if (file.size > 20*1024*1024) return {ok:false,reason:'文件过大（最大20MB）: '+file.name};
-  if (file.size === 0) return {ok:false,reason:'文件为空: '+file.name};
-  if (ext === '.csv') return {ok:true};
-  const buf = await file.slice(0,4).arrayBuffer();
+  if (!ALLOWED_EXTS.has(ext)) return { ok: false, reason: '不支持的文件类型: ' + ext };
+  if (file.size > 20 * 1024 * 1024) return { ok: false, reason: '文件过大（最大20MB）: ' + file.name };
+  if (file.size === 0) return { ok: false, reason: '文件为空: ' + file.name };
+  if (ext === '.csv') return { ok: true };
+  const buf = await file.slice(0, 4).arrayBuffer();
   const bytes = new Uint8Array(buf);
-  if (!MAGIC.xlsx.every((b,i)=>bytes[i]===b) && !MAGIC.xls.every((b,i)=>bytes[i]===b))
-    return {ok:false,reason:'文件内容与扩展名不符: '+file.name};
-  return {ok:true};
+  const isXlsx = MAGIC.xlsx.every((b, i) => bytes[i] === b);
+  const isXls  = MAGIC.xls.every((b, i) => bytes[i] === b);
+  if (!isXlsx && !isXls) return { ok: false, reason: '文件内容与扩展名不符: ' + file.name };
+  return { ok: true };
 }
 
+/**
+ * 验证代理路径：必须是 / 开头的相对路径，禁止协议、路径穿越、空字节
+ * 返回 true = 合法，false = 非法或为空
+ */
 function validateProxyUrl(val) {
   const warn = document.getElementById('proxyWarn');
   const inp  = document.getElementById('proxyUrl');
-  const hasScheme = /[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(val);
-  const notRelative = val.length === 0 || !val.startsWith('/');
-  const hasTraversal = /\.\./.test(val);
-  const hasNullByte = val.includes('\0');
-  const bad = hasScheme || notRelative || hasTraversal || hasNullByte;
-  warn.style.display = bad ? 'block' : 'none';
+  if (!val) {
+    warn.style.display = 'none';
+    inp.style.borderColor = '';
+    return false;
+  }
+  const bad = !val.startsWith('/')
+    || /[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(val)
+    || /\.\./.test(val)
+    || val.includes('\0');
+  warn.style.display    = bad ? 'block' : 'none';
   inp.style.borderColor = bad ? 'var(--red)' : '';
   return !bad;
 }
 
-const D = {recharge:[],withdraw:[],spot:[],contract:[]};
-const FN = {recharge:[],withdraw:[],spot:[],contract:[]};
-let rates = [{sym:'USDT',id:'tether',rate:1,manual:true,st:''},{sym:'CP',id:'',rate:0.242,manual:true,st:''}];
-let _rep = null;
-const GID = {BTC:'bitcoin',ETH:'ethereum',BNB:'binancecoin',SOL:'solana',XRP:'ripple',ADA:'cardano',DOGE:'dogecoin',AVAX:'avalanche-2',MATIC:'matic-network',DOT:'polkadot',LTC:'litecoin',LINK:'chainlink',UNI:'uniswap',DAI:'dai',USDC:'usd-coin',TRX:'tron',SHIB:'shiba-inu',TON:'the-open-network',USDT:'tether'};
+const D  = { recharge: [], withdraw: [], spot: [], contract: [] };
+const FN = { recharge: [], withdraw: [], spot: [], contract: [] };
+let rates = [
+  { sym: 'USDT', id: 'tether', rate: 1,     manual: true, st: '' },
+  { sym: 'CP',   id: '',       rate: 0.242,  manual: true, st: '' }
+];
+let _pnlReport = null;
 
-function fmtS(n,d=2){return(n>=0?'+':'')+n.toFixed(d);}
-function cc(n){return n>0?'pos':n<0?'neg':'neu';}
-function pAmt(v){if(v==null)return 0;const m=String(v).replace(/,/g,'').match(/[\d.]+/);return m?parseFloat(m[0]):0;}
-function normC(s){let u=String(s||'').toUpperCase().trim();u=u.replace(/\bBEP20\b|\bTRC20\b|\bERC20\b/g,'').trim();return u||'USDT';}
-function getRate(sym){const s=normC(sym);const c=rates.find(x=>x.sym.toUpperCase()===s);return c?c.rate:null;}
-function toU(a,sym){const r=getRate(sym);return r===null?null:a*r;}
+const GID = {
+  BTC:'bitcoin', ETH:'ethereum', BNB:'binancecoin', SOL:'solana', XRP:'ripple',
+  ADA:'cardano', DOGE:'dogecoin', AVAX:'avalanche-2', MATIC:'matic-network',
+  DOT:'polkadot', LTC:'litecoin', LINK:'chainlink', UNI:'uniswap', DAI:'dai',
+  USDC:'usd-coin', TRX:'tron', SHIB:'shiba-inu', TON:'the-open-network', USDT:'tether'
+};
+
+function fmtS(n, d = 2) { return (n >= 0 ? '+' : '') + n.toFixed(d); }
+function colorCls(n)     { return n > 0 ? 'pos' : n < 0 ? 'neg' : 'neu'; }
+
+function pAmt(v) {
+  if (v == null) return 0;
+  const m = String(v).replace(/,/g, '').match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : 0;
+}
+
+function normC(s) {
+  let u = String(s || '').toUpperCase().trim();
+  u = u.replace(/\b(BEP20|TRC20|ERC20)\b/g, '').trim();
+  return u || 'USDT';
+}
+
+function getRate(sym) {
+  const s = normC(sym);
+  const c = rates.find(x => x.sym.toUpperCase() === s);
+  return c ? c.rate : null;
+}
+
+function toU(a, sym) {
+  const r = getRate(sym);
+  return r === null ? null : a * r;
+}
 
 function detectContractFmt(rows) {
-  if (!rows||!rows.length) return 'flow';
+  if (!rows || !rows.length) return 'flow';
   const keys = Object.keys(rows[0]);
-  if (keys.includes('平仓盈亏')&&keys.includes('手续费')&&(keys.includes('资金费')||keys.includes('资金费用'))) return 'position';
-  if (keys.includes('仓位方向')&&keys.includes('订单状态')&&keys.includes('盈亏')) return 'order';
+  if (keys.includes('平仓盈亏') && keys.includes('手续费') && (keys.includes('资金费') || keys.includes('资金费用'))) return 'position';
+  if (keys.includes('仓位方向') && keys.includes('订单状态') && keys.includes('盈亏')) return 'order';
   return 'flow';
 }
 
 function toggleApi() { document.getElementById('apiHd').classList.toggle('open'); }
+
 function onSourceChange() {
   const src = document.getElementById('apiSource').value;
   document.getElementById('proxyUrlField').style.display = src === 'coingecko_proxy' ? '' : 'none';
-  document.getElementById('apiKeyField').style.display = src === 'coingecko_pro' ? '' : 'none';
+  document.getElementById('apiKeyField').style.display   = src === 'coingecko_pro'   ? '' : 'none';
 }
 
 async function fetchOne(i) {
   const r = rates[i];
   if (r.sym === 'USDT') { r.rate = 1; renderRates(); return; }
   const src = document.getElementById('apiSource').value;
-  rates[i].st = 'loading'; renderRates();
+  rates[i].st = 'loading';
+  renderRates();
   try {
     let price = null;
     if (src === 'binance') {
-      const sym = r.sym.replace(/[^A-Z0-9]/g,'');
-      const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol='+sym+'USDT');
+      const sym = r.sym.replace(/[^A-Z0-9]/g, '');
+      const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=' + sym + 'USDT');
+      if (!res.ok) throw new Error('Binance ' + res.status);
       const j = await res.json();
       if (j.price) price = parseFloat(j.price);
     } else {
-      const id = (r.id||GID[r.sym.toUpperCase()]||r.sym.toLowerCase()).replace(/[^a-z0-9\-]/g,'');
-      let url, hdrs = {'Accept':'application/json'};
+      const id = (r.id || GID[r.sym.toUpperCase()] || r.sym.toLowerCase()).replace(/[^a-z0-9-]/g, '');
+      const hdrs = { 'Accept': 'application/json' };
+      let url;
       if (src === 'coingecko_proxy') {
         const base = document.getElementById('proxyUrl').value.trim();
-        if (!base.startsWith('/')||/[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(base)||/\.\./.test(base)||base.includes('\0')) { rates[i].st='err'; setStatus('代理URL必须是相对路径'); renderRates(); return; }
-        url = base+'?ids='+encodeURIComponent(id)+'&vs_currencies=usd';
+        if (!validateProxyUrl(base)) { rates[i].st = 'err'; setStatus('代理URL无效，请填写以 / 开头的相对路径'); renderRates(); return; }
+        url = base + '?ids=' + encodeURIComponent(id) + '&vs_currencies=usd';
       } else if (src === 'coingecko_pro') {
-        url = 'https://pro-api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(id)+'&vs_currencies=usd';
-        const key = document.getElementById('apiKey').value.trim().slice(0,256);
+        url = 'https://pro-api.coingecko.com/api/v3/simple/price?ids=' + encodeURIComponent(id) + '&vs_currencies=usd';
+        // 去除换行符，防止 Header Injection
+        const key = document.getElementById('apiKey').value.replace(/[\r\n]/g, '').trim().slice(0, 256);
         if (key) hdrs['x-cg-pro-api-key'] = key;
       } else {
-        url = 'https://api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(id)+'&vs_currencies=usd';
+        url = 'https://api.coingecko.com/api/v3/simple/price?ids=' + encodeURIComponent(id) + '&vs_currencies=usd';
       }
-      const res = await fetch(url,{headers:hdrs,cache:'no-cache'});
-      if (res.status === 429) { rates[i].st='err'; setStatus('触发限流'); renderRates(); return; }
+      const res = await fetch(url, { headers: hdrs, cache: 'no-cache' });
+      if (res.status === 429) { rates[i].st = 'err'; setStatus('触发限流，请稍后重试'); renderRates(); return; }
+      if (!res.ok) throw new Error('CoinGecko ' + res.status);
       const j = await res.json();
-      if (j[id]&&j[id].usd!==undefined) price = j[id].usd;
+      if (j[id] && j[id].usd !== undefined) price = j[id].usd;
     }
     if (price !== null) { rates[i].rate = price; rates[i].manual = false; rates[i].st = 'ok'; }
     else rates[i].st = 'err';
-  } catch(e) { rates[i].st = 'err'; }
+  } catch (e) {
+    rates[i].st = 'err';
+  }
   renderRates();
 }
 
 async function fetchAll() {
-  const btn = document.getElementById('fallBtn'); btn.disabled = true; setStatus('批量查询中…');
-  const src = document.getElementById('apiSource').value;
-  const todo = rates.map((r,i)=>({i,r})).filter(x=>x.r.sym!=='USDT'&&x.r.sym);
-  if (src === 'binance') { for (const {i} of todo) await fetchOne(i); }
-  else {
-    const ids = todo.map(x=>(x.r.id||GID[x.r.sym.toUpperCase()]||x.r.sym.toLowerCase()).replace(/[^a-z0-9\-]/g,'')).filter(Boolean);
-    if (!ids.length) { btn.disabled=false; return; }
-    todo.forEach(x=>{ rates[x.i].st='loading'; }); renderRates();
+  const btn = document.getElementById('fallBtn');
+  btn.disabled = true;
+  setStatus('批量查询中…');
+  const src  = document.getElementById('apiSource').value;
+  const todo = rates.map((r, i) => ({ i, r })).filter(x => x.r.sym !== 'USDT' && x.r.sym);
+  if (src === 'binance') {
+    for (const { i } of todo) await fetchOne(i);
+  } else {
+    const ids = todo
+      .map(x => (x.r.id || GID[x.r.sym.toUpperCase()] || x.r.sym.toLowerCase()).replace(/[^a-z0-9-]/g, ''))
+      .filter(Boolean);
+    if (!ids.length) { btn.disabled = false; return; }
+    todo.forEach(x => { rates[x.i].st = 'loading'; });
+    renderRates();
     try {
-      let url, hdrs = {'Accept':'application/json'};
+      const hdrs     = { 'Accept': 'application/json' };
       const idsParam = ids.map(encodeURIComponent).join(',');
-      if (src==='coingecko_proxy') { const base=document.getElementById('proxyUrl').value.trim(); if (!base.startsWith('/')||/[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(base)||/\.\./.test(base)||base.includes('\0')) throw new Error('代理URL无效'); url=base+'?ids='+idsParam+'&vs_currencies=usd'; }
-      else if (src==='coingecko_pro') { url='https://pro-api.coingecko.com/api/v3/simple/price?ids='+idsParam+'&vs_currencies=usd'; const key=document.getElementById('apiKey').value.trim().slice(0,256); if (key) hdrs['x-cg-pro-api-key']=key; }
-      else { url='https://api.coingecko.com/api/v3/simple/price?ids='+idsParam+'&vs_currencies=usd'; }
-      const res = await fetch(url,{headers:hdrs,cache:'no-cache'});
-      if (res.status===429) throw new Error('429');
+      let url;
+      if (src === 'coingecko_proxy') {
+        const base = document.getElementById('proxyUrl').value.trim();
+        if (!validateProxyUrl(base)) throw new Error('代理URL无效，请填写以 / 开头的相对路径');
+        url = base + '?ids=' + idsParam + '&vs_currencies=usd';
+      } else if (src === 'coingecko_pro') {
+        url = 'https://pro-api.coingecko.com/api/v3/simple/price?ids=' + idsParam + '&vs_currencies=usd';
+        const key = document.getElementById('apiKey').value.replace(/[\r\n]/g, '').trim().slice(0, 256);
+        if (key) hdrs['x-cg-pro-api-key'] = key;
+      } else {
+        url = 'https://api.coingecko.com/api/v3/simple/price?ids=' + idsParam + '&vs_currencies=usd';
+      }
+      const res = await fetch(url, { headers: hdrs, cache: 'no-cache' });
+      if (res.status === 429) throw new Error('触发限流');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      todo.forEach(({i,r})=>{ const id=(r.id||GID[r.sym.toUpperCase()]||r.sym.toLowerCase()).replace(/[^a-z0-9\-]/g,''); if (data[id]&&data[id].usd!==undefined) { rates[i].rate=data[id].usd; rates[i].st='ok'; rates[i].manual=false; } else rates[i].st='err'; });
+      todo.forEach(({ i, r }) => {
+        const id = (r.id || GID[r.sym.toUpperCase()] || r.sym.toLowerCase()).replace(/[^a-z0-9-]/g, '');
+        if (data[id] && data[id].usd !== undefined) {
+          rates[i].rate = data[id].usd; rates[i].st = 'ok'; rates[i].manual = false;
+        } else {
+          rates[i].st = 'err';
+        }
+      });
       setStatus('价格已更新');
-    } catch(e) { todo.forEach(x=>{rates[x.i].st='err';}); setStatus('查询失败'); }
+    } catch (e) {
+      todo.forEach(x => { rates[x.i].st = 'err'; });
+      setStatus('查询失败：' + e.message);
+    }
   }
-  renderRates(); btn.disabled = false;
+  renderRates();
+  btn.disabled = false;
 }
 
 function renderRates() {
-  const tb = document.getElementById('rateBody'); tb.innerHTML = '';
-  rates.forEach((r,i) => {
+  const tb = document.getElementById('rateBody');
+  tb.innerHTML = '';
+  rates.forEach((r, i) => {
     const tr = document.createElement('tr');
-    const td1 = document.createElement('td'); const inSym = document.createElement('input'); inSym.className='cin'; inSym.style.width='85px'; inSym.value=r.sym; inSym.addEventListener('input',function(){rates[i].sym=this.value.toUpperCase();rates[i].st='';}); td1.appendChild(inSym); tr.appendChild(td1);
-    const td2 = document.createElement('td'); const inId = document.createElement('input'); inId.className='cin'; inId.style.width='125px'; inId.value=r.id||''; inId.placeholder='如 bitcoin'; inId.addEventListener('input',function(){rates[i].id=this.value.replace(/[^a-z0-9\-]/gi,'');}); td2.appendChild(inId); tr.appendChild(td2);
-    const td3 = document.createElement('td'); const inRate = document.createElement('input'); inRate.className='cin'; inRate.style.width='115px'; inRate.value=String(r.rate||''); inRate.type='number'; inRate.step='any'; inRate.min='0'; inRate.max='999999999'; if (r.sym==='USDT') inRate.readOnly=true; inRate.addEventListener('input',function(){rates[i].rate=parseFloat(this.value)||0;rates[i].manual=true;}); td3.appendChild(inRate); tr.appendChild(td3);
-    const td4 = document.createElement('td'); td4.style.whiteSpace='nowrap';
-    const btnQ = document.createElement('button'); btnQ.className='fone'; btnQ.textContent='查询'; if (r.sym==='USDT') btnQ.disabled=true; btnQ.addEventListener('click',()=>fetchOne(i));
-    const btnRm = document.createElement('button'); btnRm.className='rmcoin'; btnRm.textContent='×'; if (rates.length<=1) btnRm.disabled=true; btnRm.addEventListener('click',()=>rmRate(i));
+
+    // 币种代码
+    const td1 = document.createElement('td');
+    const inSym = document.createElement('input');
+    inSym.className = 'cin'; inSym.style.width = '85px'; inSym.value = r.sym;
+    inSym.addEventListener('input', function () { rates[i].sym = this.value.toUpperCase(); rates[i].st = ''; });
+    td1.appendChild(inSym); tr.appendChild(td1);
+
+    // CoinGecko ID
+    const td2 = document.createElement('td');
+    const inId = document.createElement('input');
+    inId.className = 'cin'; inId.style.width = '125px'; inId.value = r.id || ''; inId.placeholder = '如 bitcoin';
+    inId.addEventListener('input', function () { rates[i].id = this.value.replace(/[^a-z0-9-]/gi, ''); });
+    td2.appendChild(inId); tr.appendChild(td2);
+
+    // 汇率
+    const td3 = document.createElement('td');
+    const inRate = document.createElement('input');
+    inRate.className = 'cin'; inRate.style.width = '115px'; inRate.value = String(r.rate || '');
+    inRate.type = 'number'; inRate.step = 'any'; inRate.min = '0'; inRate.max = '999999999';
+    if (r.sym === 'USDT') inRate.readOnly = true;
+    inRate.addEventListener('input', function () { rates[i].rate = parseFloat(this.value) || 0; rates[i].manual = true; });
+    td3.appendChild(inRate); tr.appendChild(td3);
+
+    // 操作
+    const td4 = document.createElement('td');
+    td4.style.whiteSpace = 'nowrap';
+    const btnQ = document.createElement('button');
+    btnQ.className = 'fone'; btnQ.textContent = '查询';
+    if (r.sym === 'USDT') btnQ.disabled = true;
+    btnQ.addEventListener('click', () => fetchOne(i));
+    const btnRm = document.createElement('button');
+    btnRm.className = 'rmcoin'; btnRm.textContent = '×';
+    if (rates.length <= 1) btnRm.disabled = true;
+    btnRm.addEventListener('click', () => rmRate(i));
     td4.appendChild(btnQ); td4.appendChild(btnRm); tr.appendChild(td4);
-    const td5 = document.createElement('td'); const stMap={ok:'✓ 已更新',err:'✗ 查询失败',loading:'查询中…','':''}; const clsMap={ok:'ok',err:'err',loading:'loading','':''}; const tag=document.createElement('span'); tag.className='ftag '+(clsMap[r.st]||''); tag.textContent=stMap[r.st]||''; td5.appendChild(tag); tr.appendChild(td5);
+
+    // 状态
+    const td5 = document.createElement('td');
+    const stMap  = { ok: '✓ 已更新', err: '✗ 查询失败', loading: '查询中…', '': '' };
+    const clsMap = { ok: 'ok', err: 'err', loading: 'loading', '': '' };
+    const tag = document.createElement('span');
+    tag.className   = 'ftag ' + (clsMap[r.st] || '');
+    tag.textContent = stMap[r.st] || '';
+    td5.appendChild(tag); tr.appendChild(td5);
+
     tb.appendChild(tr);
   });
 }
 
-function addRate() { rates.push({sym:'',id:'',rate:0,manual:true,st:''}); renderRates(); }
-function rmRate(i) { if (rates.length<=1) return; rates.splice(i,1); renderRates(); }
+function addRate() { rates.push({ sym: '', id: '', rate: 0, manual: true, st: '' }); renderRates(); }
+function rmRate(i) { if (rates.length <= 1) return; rates.splice(i, 1); renderRates(); }
 
-function trig(t) { const el=document.getElementById('fi-'+t); el.value=''; el.click(); }
+function trig(t) { const el = document.getElementById('fi-' + t); el.value = ''; el.click(); }
 
-async function onFiles(t,files) {
+async function onFiles(t, files) {
   for (const f of files) {
-    if (FN[t].find(x=>x.name===f.name)) continue;
+    if (FN[t].find(x => x.name === f.name)) continue;
     const check = await checkFileSafe(f);
-    if (!check.ok) { setStatus('⚠ '+check.reason); alert('文件被拒绝：'+check.reason); continue; }
+    if (!check.ok) { setStatus('⚠ ' + check.reason); alert('文件被拒绝：' + check.reason); continue; }
     const rows = await rdXL(f);
-    if (rows.length) { D[t].push(...rows); FN[t].push({name:f.name,cnt:rows.length}); }
+    if (rows.length) { D[t].push(...rows); FN[t].push({ name: f.name, cnt: rows.length }); }
   }
-  refreshPanel(t); autoCoins();
+  refreshPanel(t);
+  autoCoins();
 }
 
 function rdXL(f) {
   return new Promise(res => {
     const rdr = new FileReader();
     rdr.onload = e => {
-      try { const wb=XLSX.read(e.target.result,{type:'array'}); const ws=wb.Sheets[wb.SheetNames[0]]; res(XLSX.utils.sheet_to_json(ws,{defval:null})); }
-      catch { res([]); }
+      try {
+        const wb = XLSX.read(e.target.result, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        res(XLSX.utils.sheet_to_json(ws, { defval: null }));
+      } catch {
+        res([]);
+      }
     };
+    rdr.onerror = () => res([]);
     rdr.readAsArrayBuffer(f);
   });
 }
 
-function rmFile(t,i,ev) { ev.stopPropagation(); D[t]=[]; FN[t]=[]; refreshPanel(t); }
+function rmFile(t, i, ev) {
+  ev.stopPropagation();
+  D[t] = []; FN[t] = [];
+  refreshPanel(t);
+}
 
 function refreshPanel(t) {
-  const chips = document.getElementById('chips-'+t); chips.innerHTML='';
-  FN[t].forEach((f,i) => {
-    const d=document.createElement('div'); d.className='chip';
-    const nm=document.createElement('span'); nm.className='chip-nm'; nm.title=f.name; nm.textContent=f.name;
-    const rows=document.createElement('span'); rows.className='chip-rows'; rows.textContent=f.cnt+'行';
-    const rm=document.createElement('span'); rm.className='chip-rm'; rm.textContent='×'; rm.addEventListener('click',ev=>rmFile(t,i,ev));
-    d.appendChild(nm); d.appendChild(rows); d.appendChild(rm); chips.appendChild(d);
+  const chips = document.getElementById('chips-' + t);
+  chips.innerHTML = '';
+  FN[t].forEach((f, i) => {
+    const d  = document.createElement('div'); d.className = 'chip';
+    const nm = document.createElement('span'); nm.className = 'chip-nm'; nm.title = f.name; nm.textContent = f.name;
+    const rw = document.createElement('span'); rw.className = 'chip-rows'; rw.textContent = f.cnt + '行';
+    const rm = document.createElement('span'); rm.className = 'chip-rm'; rm.textContent = '×';
+    rm.addEventListener('click', ev => rmFile(t, i, ev));
+    d.appendChild(nm); d.appendChild(rw); d.appendChild(rm);
+    chips.appendChild(d);
   });
-  document.getElementById('ct-'+t).textContent = D[t].length+' 条';
+  document.getElementById('ct-' + t).textContent = D[t].length + ' 条';
   renderPSum(t);
 }
 
 function calcContract(rows) {
-  const fmt=detectContractFmt(rows); let p=0,f=0,fd=0;
-  if (fmt==='position') { rows.forEach(r=>{p+=parseFloat(r['平仓盈亏'])||0;f+=parseFloat(r['手续费'])||0;fd+=parseFloat(r['资金费']??r['资金费用']??0)||0;}); }
-  else if (fmt==='order') { rows.forEach(r=>{ if(r['订单状态']==='完全成交'&&r['仓位方向']==='平仓'){p+=parseFloat(r['盈亏'])||0;} f+=parseFloat(r['手续费'])||0; }); }
-  else { rows.forEach(r=>{const tp=String(r['类型']||'');const a=parseFloat(r['金额'])||0;if(tp==='平仓盈亏')p+=a;else if(tp.includes('手续费'))f+=a;else if(tp==='资金费用'||tp==='资金费')fd+=a;}); }
-  return {p,f,fd,net:p+f+fd,fmt};
+  const fmt = detectContractFmt(rows);
+  let p = 0, f = 0, fd = 0;
+  if (fmt === 'position') {
+    rows.forEach(r => {
+      p  += parseFloat(r['平仓盈亏']) || 0;
+      f  += parseFloat(r['手续费'])   || 0;
+      fd += parseFloat(r['资金费'] ?? r['资金费用'] ?? 0) || 0;
+    });
+  } else if (fmt === 'order') {
+    rows.forEach(r => {
+      if (r['订单状态'] === '完全成交' && r['仓位方向'] === '平仓') p += parseFloat(r['盈亏']) || 0;
+      f += parseFloat(r['手续费']) || 0;
+    });
+  } else {
+    rows.forEach(r => {
+      const tp = String(r['类型'] || '');
+      const a  = parseFloat(r['金额']) || 0;
+      if (tp === '平仓盈亏') p += a;
+      else if (tp.includes('手续费')) f += a;
+      else if (tp === '资金费用' || tp === '资金费') fd += a;
+    });
+  }
+  return { p, f, fd, net: p + f + fd, fmt };
 }
 
 function renderPSum(t) {
-  const el=document.getElementById('sum-'+t);
-  if (!D[t].length) { el.style.display='none'; return; }
-  el.style.display=''; el.innerHTML='';
+  const el = document.getElementById('sum-' + t);
+  if (!D[t].length) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  el.innerHTML = '';
   const frag = document.createDocumentFragment();
-  function mkRow(k,v,vc){const div=document.createElement('div');div.className='psr';const sk=document.createElement('span');sk.className='pk';sk.textContent=k;const sv=document.createElement('span');sv.className='pv '+(vc||'neu');sv.textContent=v;div.appendChild(sk);div.appendChild(sv);return div;}
-  if (t==='recharge') { const bc={}; D[t].forEach(r=>{const c=normC(r['币种']);bc[c]=(bc[c]||0)+pAmt(r['充值金额']);}); Object.entries(bc).forEach(([c,v])=>frag.appendChild(mkRow(c,'+'+v.toFixed(4),'neu'))); frag.appendChild(mkRow('共 '+D[t].length+' 笔','','')); }
-  else if (t==='withdraw') { const bc={}; let fee=0; D[t].forEach(r=>{const c=normC(r['币种']);bc[c]=(bc[c]||0)+pAmt(r['提现金额']);fee+=pAmt(r['手续费']);}); Object.entries(bc).forEach(([c,v])=>frag.appendChild(mkRow(c,'-'+v.toFixed(4),'neu'))); frag.appendChild(mkRow('手续费','-'+fee.toFixed(4),'neg')); frag.appendChild(mkRow('共 '+D[t].length+' 笔','','')); }
-  else if (t==='spot') { let bu=0,su=0; D[t].forEach(r=>{const tp=r['委托类型']||r['类型']||'';if(tp==='买入')bu+=pAmt(r['成交金额']);else if(tp==='卖出')su+=pAmt(r['成交金额']);}); const n=su-bu; frag.appendChild(mkRow('买入','-'+bu.toFixed(2)+' U','neg')); frag.appendChild(mkRow('卖出','+'+su.toFixed(2)+' U','pos')); frag.appendChild(mkRow('净盈亏',(n>=0?'+':'')+n.toFixed(2)+' U',cc(n))); }
-  else if (t==='contract') { const{p,f,fd,net,fmt}=calcContract(D[t]); const badge=document.getElementById('ct-fmt-badge'); badge.innerHTML=''; const sp=document.createElement('span'); sp.className='fmt-badge '+(fmt==='position'?'fmt-pos':'fmt-flow'); sp.textContent=(fmt==='position'?'⚡':'≋')+' 已识别：'+(fmt==='position'?'仓位格式':'流水格式'); badge.appendChild(sp); frag.appendChild(mkRow('平仓盈亏',(p>=0?'+':'')+p.toFixed(4),cc(p))); frag.appendChild(mkRow('手续费',f.toFixed(4),'neg')); frag.appendChild(mkRow('资金费',(fd>=0?'+':'')+fd.toFixed(4),cc(fd))); frag.appendChild(mkRow('净盈亏',(net>=0?'+':'')+net.toFixed(4),cc(net))); }
+
+  function mkRow(k, v, vc) {
+    const div = document.createElement('div'); div.className = 'psr';
+    const sk  = document.createElement('span'); sk.className = 'pk'; sk.textContent = k;
+    const sv  = document.createElement('span'); sv.className = 'pv ' + (vc || 'neu'); sv.textContent = v;
+    div.appendChild(sk); div.appendChild(sv);
+    return div;
+  }
+
+  if (t === 'recharge') {
+    const bc = {};
+    D[t].forEach(r => { const c = normC(r['币种']); bc[c] = (bc[c] || 0) + pAmt(r['充值金额']); });
+    Object.entries(bc).forEach(([c, v]) => frag.appendChild(mkRow(c, '+' + v.toFixed(4), 'neu')));
+    frag.appendChild(mkRow('共 ' + D[t].length + ' 笔', '', ''));
+  } else if (t === 'withdraw') {
+    const bc = {}; let fee = 0;
+    D[t].forEach(r => { const c = normC(r['币种']); bc[c] = (bc[c] || 0) + pAmt(r['提现金额']); fee += pAmt(r['手续费']); });
+    Object.entries(bc).forEach(([c, v]) => frag.appendChild(mkRow(c, '-' + v.toFixed(4), 'neu')));
+    frag.appendChild(mkRow('手续费', '-' + fee.toFixed(4), 'neg'));
+    frag.appendChild(mkRow('共 ' + D[t].length + ' 笔', '', ''));
+  } else if (t === 'spot') {
+    let bu = 0, su = 0;
+    D[t].forEach(r => { const tp = r['委托类型'] || r['类型'] || ''; if (tp === '买入') bu += pAmt(r['成交金额']); else if (tp === '卖出') su += pAmt(r['成交金额']); });
+    const n = su - bu;
+    frag.appendChild(mkRow('买入', '-' + bu.toFixed(2) + ' U', 'neg'));
+    frag.appendChild(mkRow('卖出', '+' + su.toFixed(2) + ' U', 'pos'));
+    frag.appendChild(mkRow('净盈亏', (n >= 0 ? '+' : '') + n.toFixed(2) + ' U', colorCls(n)));
+  } else if (t === 'contract') {
+    const { p, f, fd, net, fmt } = calcContract(D[t]);
+    const badge = document.getElementById('ct-fmt-badge');
+    badge.innerHTML = '';
+    const sp = document.createElement('span');
+    sp.className   = 'fmt-badge ' + (fmt === 'position' ? 'fmt-pos' : 'fmt-flow');
+    sp.textContent = (fmt === 'position' ? '⚡' : '≋') + ' 已识别：' + (fmt === 'position' ? '仓位格式' : '流水格式');
+    badge.appendChild(sp);
+    frag.appendChild(mkRow('平仓盈亏', (p  >= 0 ? '+' : '') + p.toFixed(4),  colorCls(p)));
+    frag.appendChild(mkRow('手续费',   f.toFixed(4), 'neg'));
+    frag.appendChild(mkRow('资金费',   (fd >= 0 ? '+' : '') + fd.toFixed(4), colorCls(fd)));
+    frag.appendChild(mkRow('净盈亏',   (net >= 0 ? '+' : '') + net.toFixed(4), colorCls(net)));
+  }
   el.appendChild(frag);
 }
 
 function autoCoins() {
   const found = new Set(['USDT']);
-  [...D.recharge,...D.withdraw].forEach(r=>{const c=normC(r['币种']);if(c)found.add(c);});
-  [...D.contract].forEach(r=>{const c=normC(r['币种']||'');if(c)found.add(c);});
-  found.forEach(sym=>{if (!rates.find(x=>x.sym.toUpperCase()===sym)) { const isU=sym==='USDT'; rates.push({sym,id:GID[sym]||sym.toLowerCase(),rate:isU?1:0,manual:isU,st:''}); }});
+  [...D.recharge, ...D.withdraw].forEach(r => { const c = normC(r['币种']); if (c) found.add(c); });
+  D.contract.forEach(r => { const c = normC(r['币种'] || ''); if (c) found.add(c); });
+  found.forEach(sym => {
+    if (!rates.find(x => x.sym.toUpperCase() === sym)) {
+      const isU = sym === 'USDT';
+      rates.push({ sym, id: GID[sym] || sym.toLowerCase(), rate: isU ? 1 : 0, manual: isU, st: '' });
+    }
+  });
   renderRates();
 }
 
 function calc() {
-  const bcR={}; let rcT=0;
-  D.recharge.forEach(r=>{const c=normC(r['币种']);const a=pAmt(r['充值金额']);bcR[c]=(bcR[c]||0)+a;const u=toU(a,c);if(u!==null)rcT+=u;});
-  const bcW={}; let wdT=0,wdF=0;
-  D.withdraw.forEach(r=>{const c=normC(r['币种']);const a=pAmt(r['提现金额']);const fe=pAmt(r['手续费']);bcW[c]=(bcW[c]||0)+a;const u=toU(a,c);if(u!==null)wdT+=u;wdF+=fe;}); wdT+=wdF;
-  let spBuy=0,spSell=0;
-  D.spot.forEach(r=>{const tp=r['委托类型']||r['类型']||'';if(tp==='买入')spBuy+=pAmt(r['成交金额']);else if(tp==='卖出')spSell+=pAmt(r['成交金额']);});
-  const spPnl=spSell-spBuy;
-  const{p:ctP,f:ctF,fd:ctFd,net:ctNet,fmt:ctFmt}=calcContract(D.contract);
-  const netFlow=rcT-wdT; const total=netFlow+spPnl+ctNet;
-  _rep={bcR,bcW,rcT,wdT,wdF,spBuy,spSell,spPnl,ctP,ctF,ctFd,ctNet,ctFmt,netFlow,total};
-  renderRes(_rep);
-  document.getElementById('pnl-results').style.display='block';
-  document.getElementById('copyBtn').style.display='inline-block';
-  document.getElementById('chart-section').style.display='block';
-  drawChart(_rep); setStatus('计算完成');
-  setTimeout(()=>document.getElementById('pnl-results').scrollIntoView({behavior:'smooth'}),80);
+  const bcR = {}; let rcT = 0;
+  D.recharge.forEach(r => {
+    const c = normC(r['币种']); const a = pAmt(r['充值金额']);
+    bcR[c] = (bcR[c] || 0) + a;
+    const u = toU(a, c); if (u !== null) rcT += u;
+  });
+
+  const bcW = {}; let wdT = 0, wdF = 0;
+  D.withdraw.forEach(r => {
+    const c = normC(r['币种']); const a = pAmt(r['提现金额']); const fe = pAmt(r['手续费']);
+    bcW[c] = (bcW[c] || 0) + a;
+    const u = toU(a, c); if (u !== null) wdT += u;
+    wdF += fe;
+  });
+  wdT += wdF;
+
+  let spBuy = 0, spSell = 0;
+  D.spot.forEach(r => {
+    const tp = r['委托类型'] || r['类型'] || '';
+    if (tp === '买入') spBuy += pAmt(r['成交金额']);
+    else if (tp === '卖出') spSell += pAmt(r['成交金额']);
+  });
+  const spPnl = spSell - spBuy;
+
+  const { p: ctP, f: ctF, fd: ctFd, net: ctNet, fmt: ctFmt } = calcContract(D.contract);
+  const netFlow = rcT - wdT;
+  const total   = netFlow + spPnl + ctNet;
+
+  _pnlReport = { bcR, bcW, rcT, wdT, wdF, spBuy, spSell, spPnl, ctP, ctF, ctFd, ctNet, ctFmt, netFlow, total };
+  renderRes(_pnlReport);
+
+  document.getElementById('pnl-results').style.display    = 'block';
+  document.getElementById('copyBtn').style.display        = 'inline-block';
+  document.getElementById('chart-section').style.display  = 'block';
+  drawChart(_pnlReport);
+  setStatus('计算完成');
+  setTimeout(() => document.getElementById('pnl-results').scrollIntoView({ behavior: 'smooth' }), 80);
 }
 
-function sv(id,txt,cls){const el=document.getElementById(id);if(!el)return;el.textContent=txt;if(cls){el.className=el.className.replace(/\bpos\b|\bneg\b|\bneu\b/g,'').trim()+' '+cls;}}
-function mkRcRow(k,v,vc){const div=document.createElement('div');div.className='rcrow';const sk=document.createElement('span');sk.className='k';sk.textContent=k;const sv2=document.createElement('span');sv2.className='v '+(vc||'');sv2.textContent=v;div.appendChild(sk);div.appendChild(sv2);return div;}
+function svEl(id, txt, cls) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = txt;
+  if (cls) el.className = el.className.replace(/\bpos\b|\bneg\b|\bneu\b/g, '').trim() + ' ' + cls;
+}
+
+function mkRcRow(k, v, vc) {
+  const div = document.createElement('div'); div.className = 'rcrow';
+  const sk  = document.createElement('span'); sk.className = 'k'; sk.textContent = k;
+  const sv  = document.createElement('span'); sv.className = 'v ' + (vc || ''); sv.textContent = v;
+  div.appendChild(sk); div.appendChild(sv);
+  return div;
+}
 
 function renderRes(r) {
-  const tot=document.getElementById('r-total'); tot.textContent=fmtS(r.total)+' USDT'; tot.className='rcmain '+cc(r.total);
-  document.getElementById('r-total-sub').textContent='充提净 '+fmtS(r.netFlow,2)+' U  ·  现货 '+fmtS(r.spPnl,2)+' U  ·  合约 '+fmtS(r.ctNet,2)+' U';
-  sv('r-rc-main',r.rcT.toFixed(2)+' USDT','neu');
-  const rcRows=document.getElementById('r-rc-rows'); rcRows.innerHTML=''; Object.entries(r.bcR).forEach(([c,v])=>rcRows.appendChild(mkRcRow(c,'+'+v.toFixed(4),'neu'))); rcRows.appendChild(mkRcRow('折算合计',r.rcT.toFixed(2)+' U','neu'));
-  sv('r-wd-main',r.wdT.toFixed(2)+' USDT','neu');
-  const wdRows=document.getElementById('r-wd-rows'); wdRows.innerHTML=''; Object.entries(r.bcW).forEach(([c,v])=>wdRows.appendChild(mkRcRow(c,'-'+v.toFixed(4),'neu'))); wdRows.appendChild(mkRcRow('手续费','-'+r.wdF.toFixed(4),'neg')); wdRows.appendChild(mkRcRow('折算合计',r.wdT.toFixed(2)+' U','neu'));
-  sv('r-sp-main',fmtS(r.spPnl)+' USDT',cc(r.spPnl));
-  const spRows=document.getElementById('r-sp-rows'); spRows.innerHTML=''; spRows.appendChild(mkRcRow('买入花费','-'+r.spBuy.toFixed(2),'neg')); spRows.appendChild(mkRcRow('卖出获得','+'+r.spSell.toFixed(2),'pos')); spRows.appendChild(mkRcRow('净盈亏',fmtS(r.spPnl),cc(r.spPnl)));
-  sv('r-ct-main',fmtS(r.ctNet)+' USDT',cc(r.ctNet));
-  const ctRows=document.getElementById('r-ct-rows'); ctRows.innerHTML='';
-  const fmtHint=document.createElement('div'); fmtHint.className='rcrow'; const fk=document.createElement('span'); fk.className='k'; fk.style.cssText='font-size:10px;color:var(--t3)'; fk.textContent='格式: '+(r.ctFmt==='position'?'仓位格式':'流水格式'); fmtHint.appendChild(fk); fmtHint.appendChild(document.createElement('span')); ctRows.appendChild(fmtHint);
-  ctRows.appendChild(mkRcRow('平仓盈亏',fmtS(r.ctP),cc(r.ctP))); ctRows.appendChild(mkRcRow('手续费',r.ctF.toFixed(4),'neg')); ctRows.appendChild(mkRcRow('资金费',fmtS(r.ctFd,4),cc(r.ctFd))); ctRows.appendChild(mkRcRow('净盈亏',fmtS(r.ctNet),cc(r.ctNet)));
-  const fmtLbl=document.getElementById('ct-fmt-label'); if(fmtLbl) fmtLbl.textContent=r.ctFmt==='position'?'仓位格式':'流水格式';
+  const tot = document.getElementById('r-total');
+  tot.textContent = fmtS(r.total) + ' USDT';
+  tot.className   = 'rcmain ' + colorCls(r.total);
+  document.getElementById('r-total-sub').textContent =
+    '充提净 ' + fmtS(r.netFlow, 2) + ' U  ·  现货 ' + fmtS(r.spPnl, 2) + ' U  ·  合约 ' + fmtS(r.ctNet, 2) + ' U';
+
+  svEl('r-rc-main', r.rcT.toFixed(2) + ' USDT', 'neu');
+  const rcRows = document.getElementById('r-rc-rows'); rcRows.innerHTML = '';
+  Object.entries(r.bcR).forEach(([c, v]) => rcRows.appendChild(mkRcRow(c, '+' + v.toFixed(4), 'neu')));
+  rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
+
+  svEl('r-wd-main', r.wdT.toFixed(2) + ' USDT', 'neu');
+  const wdRows = document.getElementById('r-wd-rows'); wdRows.innerHTML = '';
+  Object.entries(r.bcW).forEach(([c, v]) => wdRows.appendChild(mkRcRow(c, '-' + v.toFixed(4), 'neu')));
+  wdRows.appendChild(mkRcRow('手续费',   '-' + r.wdF.toFixed(4), 'neg'));
+  wdRows.appendChild(mkRcRow('折算合计', r.wdT.toFixed(2) + ' U', 'neu'));
+
+  svEl('r-sp-main', fmtS(r.spPnl) + ' USDT', colorCls(r.spPnl));
+  const spRows = document.getElementById('r-sp-rows'); spRows.innerHTML = '';
+  spRows.appendChild(mkRcRow('买入花费', '-' + r.spBuy.toFixed(2), 'neg'));
+  spRows.appendChild(mkRcRow('卖出获得', '+' + r.spSell.toFixed(2), 'pos'));
+  spRows.appendChild(mkRcRow('净盈亏',   fmtS(r.spPnl), colorCls(r.spPnl)));
+
+  svEl('r-ct-main', fmtS(r.ctNet) + ' USDT', colorCls(r.ctNet));
+  const ctRows = document.getElementById('r-ct-rows'); ctRows.innerHTML = '';
+  const fmtHint = document.createElement('div'); fmtHint.className = 'rcrow';
+  const fk = document.createElement('span'); fk.className = 'k'; fk.style.cssText = 'font-size:10px;color:var(--t3)';
+  fk.textContent = '格式: ' + (r.ctFmt === 'position' ? '仓位格式' : '流水格式');
+  fmtHint.appendChild(fk); fmtHint.appendChild(document.createElement('span'));
+  ctRows.appendChild(fmtHint);
+  ctRows.appendChild(mkRcRow('平仓盈亏', fmtS(r.ctP),   colorCls(r.ctP)));
+  ctRows.appendChild(mkRcRow('手续费',   r.ctF.toFixed(4), 'neg'));
+  ctRows.appendChild(mkRcRow('资金费',   fmtS(r.ctFd, 4), colorCls(r.ctFd)));
+  ctRows.appendChild(mkRcRow('净盈亏',   fmtS(r.ctNet), colorCls(r.ctNet)));
+
+  const fmtLbl = document.getElementById('ct-fmt-label');
+  if (fmtLbl) fmtLbl.textContent = r.ctFmt === 'position' ? '仓位格式' : '流水格式';
+
   renderDtRC(); renderDtWD(); renderDtSP(); renderDtCT();
 }
 
 function drawChart(r) {
-  const c=document.getElementById('nativeChart'); c.innerHTML='';
-  const data=[{label:'充提净留存',value:r.netFlow},{label:'现货净盈亏',value:r.spPnl},{label:'合约净盈亏',value:r.ctNet},{label:'综合总盈亏',value:r.total}];
-  const maxV=Math.max(...data.map(d=>Math.abs(d.value)))||1;
-  data.forEach(item=>{
-    const col=item.value>=0?'var(--green)':'var(--red)';
-    const h=Math.max((Math.abs(item.value)/maxV)*100,2);
-    const wrap=document.createElement('div'); wrap.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%';
-    const valEl=document.createElement('div'); valEl.style.cssText='color:'+col+';font-size:13px;font-weight:500;font-family:var(--mono);margin-bottom:8px;text-align:center'; valEl.textContent=(item.value>0?'+':'')+item.value.toFixed(2);
-    const bar=document.createElement('div'); bar.style.cssText='width:100%;max-width:65px;height:'+h+'%;background:'+col+';opacity:.85;border-radius:4px 4px 0 0;transition:height .6s cubic-bezier(.4,0,.2,1)';
-    const lbl=document.createElement('div'); lbl.style.cssText='font-size:11px;color:var(--t3);margin-top:12px;text-align:center;white-space:nowrap'; lbl.textContent=item.label;
-    wrap.appendChild(valEl); wrap.appendChild(bar); wrap.appendChild(lbl); c.appendChild(wrap);
+  const c = document.getElementById('nativeChart'); c.innerHTML = '';
+  const data = [
+    { label: '充提净留存', value: r.netFlow },
+    { label: '现货净盈亏', value: r.spPnl   },
+    { label: '合约净盈亏', value: r.ctNet   },
+    { label: '综合总盈亏', value: r.total   }
+  ];
+  const maxV = Math.max(...data.map(d => Math.abs(d.value))) || 1;
+  data.forEach(item => {
+    const col  = item.value >= 0 ? 'var(--green)' : 'var(--red)';
+    const h    = Math.max((Math.abs(item.value) / maxV) * 100, 2);
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%';
+    const valEl = document.createElement('div');
+    valEl.style.cssText = 'color:' + col + ';font-size:13px;font-weight:500;font-family:var(--mono);margin-bottom:8px;text-align:center';
+    valEl.textContent   = (item.value > 0 ? '+' : '') + item.value.toFixed(2);
+    const bar = document.createElement('div');
+    bar.style.cssText = 'width:100%;max-width:65px;height:' + h + '%;background:' + col + ';opacity:.85;border-radius:4px 4px 0 0;transition:height .6s cubic-bezier(.4,0,.2,1)';
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:11px;color:var(--t3);margin-top:12px;text-align:center;white-space:nowrap';
+    lbl.textContent   = item.label;
+    wrap.appendChild(valEl); wrap.appendChild(bar); wrap.appendChild(lbl);
+    c.appendChild(wrap);
   });
 }
 
-function mkTd(content,style,isTag){const td=document.createElement('td');if(style)td.setAttribute('style',style);if(isTag){const span=document.createElement('span');span.className='tag '+isTag.cls;span.textContent=isTag.text;td.appendChild(span);}else{td.textContent=content==null?'—':String(content);}return td;}
-
-function renderDtRC(){const tb=document.getElementById('dtb-rc');document.getElementById('dct-rc').textContent=D.recharge.length+' 笔';tb.innerHTML='';if(!D.recharge.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=6;td.className='erow';td.textContent='无数据';tr.appendChild(td);tb.appendChild(tr);return;}D.recharge.forEach(r=>{const c=normC(r['币种']),a=pAmt(r['充值金额']),u=toU(a,c);const tr=document.createElement('tr');tr.appendChild(mkTd(String(r['充值时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['用户ID'],'font-family:var(--mono);color:var(--t2)'));tr.appendChild(mkTd(c,'font-family:var(--mono)'));tr.appendChild(mkTd('+'+a.toFixed(4),'font-family:var(--mono);color:var(--green)'));tr.appendChild(mkTd(u!==null?'+'+u.toFixed(2)+' U':null,'font-family:var(--mono);color:var(--blue)'));tr.appendChild(mkTd(r['充值状态'],'color:var(--t3);font-size:11px'));tb.appendChild(tr);});}
-function renderDtWD(){const tb=document.getElementById('dtb-wd');document.getElementById('dct-wd').textContent=D.withdraw.length+' 笔';tb.innerHTML='';if(!D.withdraw.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=7;td.className='erow';td.textContent='无数据';tr.appendChild(td);tb.appendChild(tr);return;}D.withdraw.forEach(r=>{const c=normC(r['币种']),a=pAmt(r['提现金额']),fe=pAmt(r['手续费']),u=toU(a,c);const tr=document.createElement('tr');tr.appendChild(mkTd(String(r['提现时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['用户ID'],'font-family:var(--mono);color:var(--t2)'));tr.appendChild(mkTd(c,'font-family:var(--mono)'));tr.appendChild(mkTd('-'+a.toFixed(4),'font-family:var(--mono);color:var(--red)'));tr.appendChild(mkTd('-'+fe.toFixed(4),'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(u!==null?'-'+u.toFixed(2)+' U':null,'font-family:var(--mono);color:var(--blue)'));tr.appendChild(mkTd(r['提币状态'],'color:var(--t3);font-size:11px'));tb.appendChild(tr);});}
-function renderDtSP(){const tb=document.getElementById('dtb-sp');document.getElementById('dct-sp').textContent=D.spot.length+' 笔';tb.innerHTML='';if(!D.spot.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=6;td.className='erow';td.textContent='无数据';tr.appendChild(td);tb.appendChild(tr);return;}D.spot.forEach(r=>{const tp=r['委托类型']||r['类型']||'';const tr=document.createElement('tr');tr.appendChild(mkTd(String(r['委托时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(null,null,{cls:tp==='买入'?'t-buy':'t-sell',text:tp||'—'}));tr.appendChild(mkTd(r['委托金额'],'font-family:var(--mono)'));tr.appendChild(mkTd(r['成交数量'],'font-family:var(--mono)'));tr.appendChild(mkTd(r['成交金额'],'font-family:var(--mono);color:var(--blue)'));tr.appendChild(mkTd(r['成交均价'],'font-family:var(--mono);color:var(--t2)'));tb.appendChild(tr);});}
-function renderDtCT(){
-  document.getElementById('dct-ct').textContent=D.contract.length+' 笔';
-  const wrap=document.getElementById('ct-table-wrap'); wrap.innerHTML='';
-  if(!D.contract.length){const t=document.createElement('table');t.className='dt';const tb=document.createElement('tbody');const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=6;td.className='erow';td.textContent='无数据';tr.appendChild(td);tb.appendChild(tr);t.appendChild(tb);wrap.appendChild(t);return;}
-  const fmt=detectContractFmt(D.contract);const table=document.createElement('table');table.className='dt';
-  const thead=document.createElement('thead');const htr=document.createElement('tr');
-  const headers=fmt==='position'?['创建时间','用户','合约','仓位方向','合约方向','成交数量','成交均价','盈亏','手续费','状态','创建时间']:fmt==='order'?['创建时间','用户','合约','仓位方向','合约方向','成交数量','成交均价','盈亏','手续费','状态']:['时间','UID','类型','金额','币种'];
-  headers.forEach(h=>{const th=document.createElement('th');th.textContent=h;htr.appendChild(th);});thead.appendChild(htr);table.appendChild(thead);
-  const tbody=document.createElement('tbody');
-  D.contract.forEach(r=>{
-    const tr=document.createElement('tr');
-    if(fmt==='position'){const pnl=parseFloat(r['平仓盈亏'])||0;tr.appendChild(mkTd(String(r['创建时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['用户UID'],'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(r['合约'],'font-family:var(--mono)'));tr.appendChild(mkTd(null,null,{cls:r['方向']==='买入'?'t-buy':'t-sell',text:r['方向']||'—'}));tr.appendChild(mkTd((r['杠杆']||'—')+'x','font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(r['仓位(张)']??r['已平仓位(张)'],'font-family:var(--mono)'));tr.appendChild(mkTd(parseFloat(r['开仓均价']||0).toFixed(6),'font-family:var(--mono);color:var(--t2)'));tr.appendChild(mkTd(parseFloat(r['平仓均价']||0).toFixed(6),'font-family:var(--mono);color:var(--t2)'));tr.appendChild(mkTd((pnl>=0?'+':'')+pnl.toFixed(4),'font-family:var(--mono);font-weight:500;color:'+(pnl>=0?'var(--green)':'var(--red)')));tr.appendChild(mkTd(parseFloat(r['手续费']||0).toFixed(4),'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(parseFloat(r['资金费']??r['资金费用']??0).toFixed(4),'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(parseFloat(r['累计盈亏']||0).toFixed(4),'font-family:var(--mono);font-weight:500;color:var(--blue)'));tr.appendChild(mkTd(r['仓位状态'],'font-size:10px;color:var(--t3)'));}
-    else if(fmt==='order'){
-  const pnl=parseFloat(r['盈亏'])||0;
-  const fee=parseFloat(r['手续费'])||0;
-  const isClosed=r['仓位方向']==='平仓'&&r['订单状态']==='完全成交';
-  tr.appendChild(mkTd(String(r['创建时间']||'').slice(0,16),'color:var(--t2)'));
-  tr.appendChild(mkTd(r['用户'],'font-family:var(--mono);color:var(--t3)'));
-  tr.appendChild(mkTd(r['合约'],'font-family:var(--mono)'));
-  tr.appendChild(mkTd(r['仓位方向'],null,{cls:r['仓位方向']==='平仓'?'t-sell':'t-buy',text:r['仓位方向']||'—'}));
-  tr.appendChild(mkTd(r['合约方向'],null,{cls:r['合约方向']==='买入'?'t-buy':'t-sell',text:r['合约方向']||'—'}));
-  tr.appendChild(mkTd(r['成交数量'],'font-family:var(--mono)'));
-  tr.appendChild(mkTd(parseFloat(r['成交均价']||0).toFixed(6),'font-family:var(--mono);color:var(--t2)'));
-  tr.appendChild(mkTd(isClosed?(pnl>=0?'+':'')+pnl.toFixed(4):'—','font-family:var(--mono);font-weight:500;color:'+(pnl>=0?'var(--green)':'var(--red)')));
-  tr.appendChild(mkTd(fee.toFixed(4),'font-family:var(--mono);color:var(--t3)'));
-  tr.appendChild(mkTd(r['订单状态'],'font-size:10px;color:var(--t3)'));
+function mkTd(content, style, isTag) {
+  const td = document.createElement('td');
+  if (style) td.setAttribute('style', style);
+  if (isTag) {
+    const span = document.createElement('span');
+    span.className   = 'tag ' + isTag.cls;
+    span.textContent = isTag.text;
+    td.appendChild(span);
+  } else {
+    td.textContent = content == null ? '—' : String(content);
+  }
+  return td;
 }
-else{const tp=r['类型']||'',a=parseFloat(r['金额'])||0;let tc='t-neu';if(tp==='平仓盈亏')tc=a>=0?'t-buy':'t-sell';else if(tp.includes('手续费')||tp==='资金费用'||tp==='资金费')tc='t-fee';else if(tp==='转入')tc='t-in';else if(tp==='转出')tc='t-out';tr.appendChild(mkTd(String(r['时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['UID'],'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(null,null,{cls:tc,text:tp||'—'}));tr.appendChild(mkTd((a>=0?'+':'')+a.toFixed(4),'font-family:var(--mono);color:'+(a>=0?'var(--green)':'var(--red)')));tr.appendChild(mkTd(normC(r['币种']||'USDT'),'font-family:var(--mono);color:var(--t3)'));}
+
+function renderDtRC() {
+  const tb = document.getElementById('dtb-rc');
+  document.getElementById('dct-rc').textContent = D.recharge.length + ' 笔';
+  tb.innerHTML = '';
+  if (!D.recharge.length) { tb.innerHTML = '<tr><td colspan="6" class="erow">无数据</td></tr>'; return; }
+  D.recharge.forEach(r => {
+    const c = normC(r['币种']), a = pAmt(r['充值金额']), u = toU(a, c);
+    const tr = document.createElement('tr');
+    tr.appendChild(mkTd(String(r['充值时间'] || '').slice(0, 16), 'color:var(--t2)'));
+    tr.appendChild(mkTd(r['用户ID'], 'font-family:var(--mono);color:var(--t2)'));
+    tr.appendChild(mkTd(c, 'font-family:var(--mono)'));
+    tr.appendChild(mkTd('+' + a.toFixed(4), 'font-family:var(--mono);color:var(--green)'));
+    tr.appendChild(mkTd(u !== null ? '+' + u.toFixed(2) + ' U' : null, 'font-family:var(--mono);color:var(--blue)'));
+    tr.appendChild(mkTd(r['充值状态'], 'color:var(--t3);font-size:11px'));
+    tb.appendChild(tr);
+  });
+}
+
+function renderDtWD() {
+  const tb = document.getElementById('dtb-wd');
+  document.getElementById('dct-wd').textContent = D.withdraw.length + ' 笔';
+  tb.innerHTML = '';
+  if (!D.withdraw.length) { tb.innerHTML = '<tr><td colspan="7" class="erow">无数据</td></tr>'; return; }
+  D.withdraw.forEach(r => {
+    const c = normC(r['币种']), a = pAmt(r['提现金额']), fe = pAmt(r['手续费']), u = toU(a, c);
+    const tr = document.createElement('tr');
+    tr.appendChild(mkTd(String(r['提现时间'] || '').slice(0, 16), 'color:var(--t2)'));
+    tr.appendChild(mkTd(r['用户ID'], 'font-family:var(--mono);color:var(--t2)'));
+    tr.appendChild(mkTd(c, 'font-family:var(--mono)'));
+    tr.appendChild(mkTd('-' + a.toFixed(4), 'font-family:var(--mono);color:var(--red)'));
+    tr.appendChild(mkTd('-' + fe.toFixed(4), 'font-family:var(--mono);color:var(--t3)'));
+    tr.appendChild(mkTd(u !== null ? '-' + u.toFixed(2) + ' U' : null, 'font-family:var(--mono);color:var(--blue)'));
+    tr.appendChild(mkTd(r['提币状态'], 'color:var(--t3);font-size:11px'));
+    tb.appendChild(tr);
+  });
+}
+
+function renderDtSP() {
+  const tb = document.getElementById('dtb-sp');
+  document.getElementById('dct-sp').textContent = D.spot.length + ' 笔';
+  tb.innerHTML = '';
+  if (!D.spot.length) { tb.innerHTML = '<tr><td colspan="6" class="erow">无数据</td></tr>'; return; }
+  D.spot.forEach(r => {
+    const tp = r['委托类型'] || r['类型'] || '';
+    const tr = document.createElement('tr');
+    tr.appendChild(mkTd(String(r['委托时间'] || '').slice(0, 16), 'color:var(--t2)'));
+    tr.appendChild(mkTd(null, null, { cls: tp === '买入' ? 't-buy' : 't-sell', text: tp || '—' }));
+    tr.appendChild(mkTd(r['委托金额'], 'font-family:var(--mono)'));
+    tr.appendChild(mkTd(r['成交数量'], 'font-family:var(--mono)'));
+    tr.appendChild(mkTd(r['成交金额'], 'font-family:var(--mono);color:var(--blue)'));
+    tr.appendChild(mkTd(r['成交均价'], 'font-family:var(--mono);color:var(--t2)'));
+    tb.appendChild(tr);
+  });
+}
+
+function renderDtCT() {
+  document.getElementById('dct-ct').textContent = D.contract.length + ' 笔';
+  const wrap = document.getElementById('ct-table-wrap'); wrap.innerHTML = '';
+  if (!D.contract.length) {
+    wrap.innerHTML = '<table class="dt"><tbody><tr><td colspan="6" class="erow">无数据</td></tr></tbody></table>';
+    return;
+  }
+  const fmt   = detectContractFmt(D.contract);
+  const table = document.createElement('table'); table.className = 'dt';
+  const thead = document.createElement('thead'); const htr = document.createElement('tr');
+  const headers = fmt === 'position'
+    ? ['创建时间','用户','合约','方向','杠杆','仓位(张)','开仓均价','平仓均价','平仓盈亏','手续费','资金费','累计盈亏','状态']
+    : fmt === 'order'
+    ? ['创建时间','用户','合约','仓位方向','合约方向','成交数量','成交均价','盈亏','手续费','状态']
+    : ['时间','UID','类型','金额','币种'];
+  headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; htr.appendChild(th); });
+  thead.appendChild(htr); table.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  D.contract.forEach(r => {
+    const tr = document.createElement('tr');
+    if (fmt === 'position') {
+      const pnl = parseFloat(r['平仓盈亏']) || 0;
+      tr.appendChild(mkTd(String(r['创建时间'] || '').slice(0, 16), 'color:var(--t2)'));
+      tr.appendChild(mkTd(r['用户UID'], 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(r['合约'], 'font-family:var(--mono)'));
+      tr.appendChild(mkTd(null, null, { cls: r['方向'] === '买入' ? 't-buy' : 't-sell', text: r['方向'] || '—' }));
+      tr.appendChild(mkTd((r['杠杆'] || '—') + 'x', 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(r['仓位(张)'] ?? r['已平仓位(张)'], 'font-family:var(--mono)'));
+      tr.appendChild(mkTd(parseFloat(r['开仓均价'] || 0).toFixed(6), 'font-family:var(--mono);color:var(--t2)'));
+      tr.appendChild(mkTd(parseFloat(r['平仓均价'] || 0).toFixed(6), 'font-family:var(--mono);color:var(--t2)'));
+      tr.appendChild(mkTd((pnl >= 0 ? '+' : '') + pnl.toFixed(4), 'font-family:var(--mono);font-weight:500;color:' + (pnl >= 0 ? 'var(--green)' : 'var(--red)')));
+      tr.appendChild(mkTd(parseFloat(r['手续费'] || 0).toFixed(4), 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(parseFloat(r['资金费'] ?? r['资金费用'] ?? 0).toFixed(4), 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(parseFloat(r['累计盈亏'] || 0).toFixed(4), 'font-family:var(--mono);font-weight:500;color:var(--blue)'));
+      tr.appendChild(mkTd(r['仓位状态'], 'font-size:10px;color:var(--t3)'));
+    } else if (fmt === 'order') {
+      const pnl = parseFloat(r['盈亏']) || 0;
+      const fee = parseFloat(r['手续费']) || 0;
+      const isClosed = r['仓位方向'] === '平仓' && r['订单状态'] === '完全成交';
+      tr.appendChild(mkTd(String(r['创建时间'] || '').slice(0, 16), 'color:var(--t2)'));
+      tr.appendChild(mkTd(r['用户'], 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(r['合约'], 'font-family:var(--mono)'));
+      tr.appendChild(mkTd(null, null, { cls: r['仓位方向'] === '平仓' ? 't-sell' : 't-buy', text: r['仓位方向'] || '—' }));
+      tr.appendChild(mkTd(null, null, { cls: r['合约方向'] === '买入' ? 't-buy' : 't-sell', text: r['合约方向'] || '—' }));
+      tr.appendChild(mkTd(r['成交数量'], 'font-family:var(--mono)'));
+      tr.appendChild(mkTd(parseFloat(r['成交均价'] || 0).toFixed(6), 'font-family:var(--mono);color:var(--t2)'));
+      tr.appendChild(mkTd(isClosed ? (pnl >= 0 ? '+' : '') + pnl.toFixed(4) : '—', 'font-family:var(--mono);font-weight:500;color:' + (pnl >= 0 ? 'var(--green)' : 'var(--red)')));
+      tr.appendChild(mkTd(fee.toFixed(4), 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(r['订单状态'], 'font-size:10px;color:var(--t3)'));
+    } else {
+      const tp = r['类型'] || '', a = parseFloat(r['金额']) || 0;
+      let tc = 't-neu';
+      if (tp === '平仓盈亏') tc = a >= 0 ? 't-buy' : 't-sell';
+      else if (tp.includes('手续费') || tp === '资金费用' || tp === '资金费') tc = 't-fee';
+      else if (tp === '转入') tc = 't-in';
+      else if (tp === '转出') tc = 't-out';
+      tr.appendChild(mkTd(String(r['时间'] || '').slice(0, 16), 'color:var(--t2)'));
+      tr.appendChild(mkTd(r['UID'], 'font-family:var(--mono);color:var(--t3)'));
+      tr.appendChild(mkTd(null, null, { cls: tc, text: tp || '—' }));
+      tr.appendChild(mkTd((a >= 0 ? '+' : '') + a.toFixed(4), 'font-family:var(--mono);color:' + (a >= 0 ? 'var(--green)' : 'var(--red)')));
+      tr.appendChild(mkTd(normC(r['币种'] || 'USDT'), 'font-family:var(--mono);color:var(--t3)'));
+    }
     tbody.appendChild(tr);
   });
   table.appendChild(tbody); wrap.appendChild(table);
 }
 
 function copyReport() {
-  if (!_rep) return;
-  const r = _rep;
-  const rlines = rates.map(x=>'  '+x.sym+': '+x.rate+' USDT').join('\n');
-  const txt = '═══════ 盈亏计算报告 ═══════\n汇率配置：\n'+rlines+'\n\n【充值】\n'+Object.entries(r.bcR).map(([c,v])=>'  '+c+': +'+v.toFixed(4)).join('\n')+'\n  折算合计: '+r.rcT.toFixed(2)+' USDT\n\n【提现】\n'+Object.entries(r.bcW).map(([c,v])=>'  '+c+': -'+v.toFixed(4)).join('\n')+'\n  手续费: -'+r.wdF.toFixed(4)+' USDT\n  折算合计: '+r.wdT.toFixed(2)+' USDT\n  充提净额: '+fmtS(r.netFlow)+' USDT\n\n【现货交易】\n  买入花费: -'+r.spBuy.toFixed(2)+' USDT\n  卖出获得: +'+r.spSell.toFixed(2)+' USDT\n  现货净盈亏: '+fmtS(r.spPnl)+' USDT\n\n【合约交易】（'+(r.ctFmt==='position'?'仓位格式':'流水格式')+'）\n  平仓盈亏: '+fmtS(r.ctP)+' USDT\n  手续费: '+r.ctF.toFixed(4)+' USDT\n  资金费: '+fmtS(r.ctFd,4)+' USDT\n  合约净盈亏: '+fmtS(r.ctNet)+' USDT\n\n【综合净盈亏】\n  充提净额: '+fmtS(r.netFlow)+' USDT\n  现货盈亏: '+fmtS(r.spPnl)+' USDT\n  合约盈亏: '+fmtS(r.ctNet)+' USDT\n  ─────────────────────\n  综合净盈亏: '+fmtS(r.total)+' USDT\n═══════════════════════════';
-  navigator.clipboard.writeText(txt).then(()=>{setStatus('已复制');setTimeout(()=>setStatus('就绪'),2000);});
+  if (!_pnlReport) return;
+  const r = _pnlReport;
+  const rlines = rates.map(x => '  ' + x.sym + ': ' + x.rate + ' USDT').join('\n');
+  const txt = [
+    '═══════ 盈亏计算报告 ═══════',
+    '汇率配置：', rlines, '',
+    '【充值】',
+    ...Object.entries(r.bcR).map(([c, v]) => '  ' + c + ': +' + v.toFixed(4)),
+    '  折算合计: ' + r.rcT.toFixed(2) + ' USDT', '',
+    '【提现】',
+    ...Object.entries(r.bcW).map(([c, v]) => '  ' + c + ': -' + v.toFixed(4)),
+    '  手续费: -' + r.wdF.toFixed(4) + ' USDT',
+    '  折算合计: ' + r.wdT.toFixed(2) + ' USDT',
+    '  充提净额: ' + fmtS(r.netFlow) + ' USDT', '',
+    '【现货交易】',
+    '  买入花费: -' + r.spBuy.toFixed(2) + ' USDT',
+    '  卖出获得: +' + r.spSell.toFixed(2) + ' USDT',
+    '  现货净盈亏: ' + fmtS(r.spPnl) + ' USDT', '',
+    '【合约交易】（' + (r.ctFmt === 'position' ? '仓位格式' : '流水格式') + '）',
+    '  平仓盈亏: ' + fmtS(r.ctP) + ' USDT',
+    '  手续费: ' + r.ctF.toFixed(4) + ' USDT',
+    '  资金费: ' + fmtS(r.ctFd, 4) + ' USDT',
+    '  合约净盈亏: ' + fmtS(r.ctNet) + ' USDT', '',
+    '【综合净盈亏】',
+    '  充提净额: ' + fmtS(r.netFlow) + ' USDT',
+    '  现货盈亏: ' + fmtS(r.spPnl) + ' USDT',
+    '  合约盈亏: ' + fmtS(r.ctNet) + ' USDT',
+    '  ─────────────────────',
+    '  综合净盈亏: ' + fmtS(r.total) + ' USDT',
+    '═══════════════════════════'
+  ].join('\n');
+  navigator.clipboard.writeText(txt).then(() => {
+    setStatus('已复制');
+    setTimeout(() => setStatus('就绪'), 2000);
+  }).catch(() => setStatus('复制失败，请手动复制'));
 }
 
 function resetAll() {
-  ['recharge','withdraw','spot','contract'].forEach(t=>{D[t]=[];FN[t]=[];refreshPanel(t);});
-  document.getElementById('ct-fmt-badge').innerHTML='';
-  rates=[{sym:'USDT',id:'tether',rate:1,manual:true,st:''},{sym:'CP',id:'',rate:0.242,manual:true,st:''}];
+  ['recharge', 'withdraw', 'spot', 'contract'].forEach(t => { D[t] = []; FN[t] = []; refreshPanel(t); });
+  document.getElementById('ct-fmt-badge').innerHTML = '';
+  rates = [
+    { sym: 'USDT', id: 'tether', rate: 1,    manual: true, st: '' },
+    { sym: 'CP',   id: '',       rate: 0.242, manual: true, st: '' }
+  ];
   renderRates();
-  document.getElementById('pnl-results').style.display='none';
-  document.getElementById('copyBtn').style.display='none';
-  document.getElementById('chart-section').style.display='none';
-  _rep=null; setStatus('就绪');
+  document.getElementById('pnl-results').style.display   = 'none';
+  document.getElementById('copyBtn').style.display       = 'none';
+  document.getElementById('chart-section').style.display = 'none';
+  _pnlReport = null;
+  setStatus('就绪');
 }
 
 // ═══════════════════════════════════════════════
-// ─── IP RISK TOOL ──────────────────────────────
+// IP 风险分析工具
 // ═══════════════════════════════════════════════
-const HIGH_RISK_CC  = ['IN','PK','BD','NG'];
-const FIVE_CC       = ['CN','HK','TW','SG','MO'];
-const _ipCache      = new Map();
 
+/** 运行时从 UI 读取，支持动态配置 */
+function getHighRiskCC() {
+  return document.getElementById('cfg_high_risk').value
+    .split(',').map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]{2}$/.test(s));
+}
+function getFiveCC() {
+  return document.getElementById('cfg_five_cc').value
+    .split(',').map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]{2}$/.test(s));
+}
+
+/** IP 归属地缓存（最多500条，LRU 简化版：超限时清空重建） */
+const _ipCache     = new Map();
+const IP_CACHE_MAX = 500;
+
+function ipCacheSet(ip, val) {
+  if (_ipCache.size >= IP_CACHE_MAX) _ipCache.clear();
+  _ipCache.set(ip, val);
+}
+
+/** 最后一次分析的数据层快照，供导出使用 */
+let _lastIPReport = null;
+
+/**
+ * 清洗 AI 返回的记录数组
+ * 使用共用 IPV4_STRICT / TIME_STRICT 防止注入
+ */
+function sanitizeAIRecords(records) {
+  if (!Array.isArray(records)) return [];
+  return records
+    .filter(r => r && typeof r === 'object')
+    .map(r => ({
+      ip:   isValidIPv4(r.ip) ? r.ip.trim() : null,
+      time: typeof r.time === 'string' && TIME_STRICT.test(r.time.trim()) ? r.time.trim() : ''
+    }))
+    .filter(r => r.ip !== null);
+}
+
+/** 本地正则提取 IP 记录（使用严格 IPv4 正则，避免 999.x.x.x 误匹配） */
 function extractRecordsLocal(text) {
   const timeRe = /(\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2})/g;
-  const ipv4Re = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
+  // 使用与 IPV4_STRICT 等价的捕获组正则，保证一致性
+  const ipv4Re = /\b((25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d))\b/g;
   const ipv6Re = /\b([0-9a-fA-F]{4}:[0-9a-fA-F]{4}(?::[0-9a-fA-F]{0,4})*)/g;
-  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  const lines  = text.split('\n').map(l => l.trim()).filter(Boolean);
+
   if (lines.length > 1) {
     const records = [];
     for (const line of lines) {
-      const times = [...line.matchAll(timeRe)].map(m=>m[1]);
-      const t = times[0]||'';
-      const cleaned = line.replace(timeRe,m=>'X'.repeat(m.length));
-      for (const m of cleaned.matchAll(ipv4Re)) records.push({ip:m[1],time:t,v6:false});
-      for (const m of line.matchAll(ipv6Re)) { const isTruncated=text.slice(m.index+m[0].length,m.index+m[0].length+3)==='...'; records.push({ip:m[1]+(isTruncated?'...':''),time:t,v6:true}); }
+      const times   = [...line.matchAll(timeRe)].map(m => m[1]);
+      const t       = times[0] || '';
+      const cleaned = line.replace(timeRe, m => 'X'.repeat(m.length));
+      for (const m of cleaned.matchAll(ipv4Re)) records.push({ ip: m[1], time: t, v6: false });
+      for (const m of line.matchAll(ipv6Re)) {
+        const isTrunc = text.slice(m.index + m[0].length, m.index + m[0].length + 3) === '...';
+        records.push({ ip: m[1] + (isTrunc ? '...' : ''), time: t, v6: true });
+      }
     }
     if (records.length) return records;
   }
-  const times = [...text.matchAll(timeRe)].map(m=>({val:m[1],pos:m.index}));
-  const cleaned = text.replace(timeRe,m=>'X'.repeat(m.length));
+
+  // 无行结构时，按位置关联时间
+  const times   = [...text.matchAll(timeRe)].map(m => ({ val: m[1], pos: m.index }));
+  const cleaned = text.replace(timeRe, m => 'X'.repeat(m.length));
   const records = [];
-  for (const m of cleaned.matchAll(ipv4Re)) { const prev=times.filter(t=>t.pos<m.index); records.push({ip:m[1],time:prev.length?prev[prev.length-1].val:'',v6:false}); }
-  for (const m of text.matchAll(ipv6Re)) { const prev=times.filter(t=>t.pos<m.index); const isTruncated=text.slice(m.index+m[0].length,m.index+m[0].length+3)==='...'; records.push({ip:m[1]+(isTruncated?'...':''),time:prev.length?prev[prev.length-1].val:'',v6:true}); }
+  for (const m of cleaned.matchAll(ipv4Re)) {
+    const prev = times.filter(t => t.pos < m.index);
+    records.push({ ip: m[1], time: prev.length ? prev[prev.length - 1].val : '', v6: false });
+  }
+  for (const m of text.matchAll(ipv6Re)) {
+    const prev    = times.filter(t => t.pos < m.index);
+    const isTrunc = text.slice(m.index + m[0].length, m.index + m[0].length + 3) === '...';
+    records.push({ ip: m[1] + (isTrunc ? '...' : ''), time: prev.length ? prev[prev.length - 1].val : '', v6: true });
+  }
   return records;
 }
 
-  const PRIVATE_HOST_RE = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|::1|fc00:|fd[0-9a-f]{2}:)/i;
-  function validateAIEndpoint(url) {
-    try {
-      const u = new URL(url);
-      if (u.protocol !== 'https:') return false;
-      if (PRIVATE_HOST_RE.test(u.hostname)) return false;
-      return true;
-    } catch { return false; }
-  }
-
-async function extractRecordsClaude(text, apiKey) {
-  const rawEndpoint = (document.getElementById('ai_endpoint')?.value||'').trim()||'https://api.siliconflow.cn/v1/chat/completions';
-  if (!validateAIEndpoint(rawEndpoint)) throw new Error('AI 接口地址不合法，必须是 HTTPS 公网地址');
-  const endpoint = rawEndpoint;
-  const model    = (document.getElementById('ai_model')?.value||'').trim()||'Qwen/Qwen2.5-7B-Instruct';
-  const res = await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},body:JSON.stringify({model,max_tokens:1500,temperature:0,messages:[{role:'system',content:'你是数据提取助手。从文本中提取所有IPv4地址和对应登录时间。严格只返回JSON，格式：{"records":[{"ip":"1.2.3.4","time":"2025-10-21 19:12:24"}]}。同一IP多次登录分别列出不去重，没有时间time为空字符串，只提取IPv4，不输出JSON以外任何内容。'},{role:'user',content:'提取以下文本中所有IP和登录时间：\n\n'+text}]})});
-  if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e.error?.message||'AI API 错误 '+res.status); }
-  const data = await res.json();
-  const IPV4_RE = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/;
-  const TIME_RE = /^\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2}$/;
-  function sanitizeAIRecords(records) {
-    if (!Array.isArray(records)) return [];
-    return records
-      .filter(r => r && typeof r === 'object')
-      .map(r => ({
-        ip: typeof r.ip === 'string' && IPV4_RE.test(r.ip.trim()) ? r.ip.trim() : null,
-        time: typeof r.time === 'string' && TIME_RE.test(r.time.trim()) ? r.time.trim() : ''
-      }))
-      .filter(r => r.ip !== null);
-  }
-
-  const raw   = data.choices?.[0]?.message?.content||'';
-  const clean = raw.replace(/```json|```/g,'').trim();
+/** 验证 AI endpoint：必须是 HTTPS 公网地址，禁止私网/本地回环 */
+const PRIVATE_HOST_RE = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|::1|fc00:|fd[0-9a-f]{2}:)/i;
+function validateAIEndpoint(url) {
   try {
-    return sanitizeAIRecords(JSON.parse(clean).records||[]);
-  } catch {
-    throw new Error('AI 返回格式不合法，请重试或切换本地解析模式');
+    const u = new URL(url);
+    if (u.protocol !== 'https:') return false;
+    if (PRIVATE_HOST_RE.test(u.hostname)) return false;
+    return true;
+  } catch { return false; }
+}
+
+/** AI 兜底解析，含 Header Injection 防护与 8s 超时 */
+async function extractRecordsClaude(text, apiKey) {
+  const rawEndpoint = (document.getElementById('ai_endpoint')?.value || '').trim()
+    || 'https://api.siliconflow.cn/v1/chat/completions';
+  if (!validateAIEndpoint(rawEndpoint)) throw new Error('AI 接口地址不合法，必须是 HTTPS 公网地址');
+
+  // 防 Header Injection：去除换行符，截断至合理长度
+  const safeKey   = apiKey.replace(/[\r\n]/g, '').trim().slice(0, 256);
+  const safeModel = (document.getElementById('ai_model')?.value || '').replace(/[\r\n]/g, '').trim().slice(0, 128)
+    || 'Qwen/Qwen2.5-7B-Instruct';
+
+  const controller = new AbortController();
+  const timer      = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const res = await fetch(rawEndpoint, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + safeKey },
+      signal:  controller.signal,
+      body: JSON.stringify({
+        model:       safeModel,
+        max_tokens:  1500,
+        temperature: 0,
+        messages: [
+          { role: 'system', content: '你是数据提取助手。从文本中提取所有IPv4地址和对应登录时间。严格只返回JSON，格式：{"records":[{"ip":"1.2.3.4","time":"2025-10-21 19:12:24"}]}。同一IP多次登录分别列出不去重，没有时间time为空字符串，只提取IPv4，不输出JSON以外任何内容。' },
+          { role: 'user',   content: '提取以下文本中所有IP和登录时间：\n\n' + text }
+        ]
+      })
+    });
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || 'AI API 错误 ' + res.status); }
+    const data  = await res.json();
+    const raw   = data.choices?.[0]?.message?.content || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    try {
+      return sanitizeAIRecords(JSON.parse(clean).records || []);
+    } catch {
+      throw new Error('AI 返回格式不合法，请重试');
+    }
+  } finally {
+    clearTimeout(timer);
   }
 }
 
+/** 节流版 previewIPs，防止大量文本输入时卡主线程 */
+let _previewTimer = null;
 function previewIPs() {
-  const records = extractRecordsLocal(document.getElementById('log_input').value);
-  const chips   = document.getElementById('ip_chips');
-  chips.innerHTML = '';
-  if (!records.length) {
-    const hint = document.createElement('span');
-hint.style.cssText = 'font-size:11px;color:var(--amber)';
-hint.textContent = '本地未识别到IP — 填写 AI Key 后将自动兜底解析';
-chips.appendChild(hint);
-    return;
-  }
-  const withTime   = records.filter(r=>r.time).sort((a,b)=>a.time>b.time?1:-1);
-  const earliest   = withTime.length?withTime[0].time.slice(0,10):'';
-  const latest     = withTime.length?withTime[withTime.length-1].time.slice(0,10):'';
-  const uniqueIPs  = new Set(records.map(r=>r.ip)).size;
-  const summary    = document.createElement('span');
-  summary.style.cssText='font-size:11px;color:var(--t2);margin-right:8px';
-  summary.textContent=`识别到 ${records.length} 条记录，${uniqueIPs} 个唯一IP${earliest?' ，时间范围 '+earliest+' ~ '+latest:''}`;
-  chips.appendChild(summary);
-  [...new Set(records.map(r=>r.ip))].slice(0,15).forEach(ip=>{const c=document.createElement('span');c.className='ip-chip';c.textContent=ip;chips.appendChild(c);});
-  if (uniqueIPs>15) { const c=document.createElement('span');c.className='ip-chip';c.textContent='+'+( uniqueIPs-15)+' 个';chips.appendChild(c); }
+  clearTimeout(_previewTimer);
+  _previewTimer = setTimeout(() => {
+    const records  = extractRecordsLocal(document.getElementById('log_input').value);
+    const chips    = document.getElementById('ip_chips');
+    chips.innerHTML = '';
+    if (!records.length) {
+      const hint = document.createElement('span');
+      hint.style.cssText  = 'font-size:11px;color:var(--amber)';
+      hint.textContent    = '本地未识别到IP — 填写 AI Key 后将自动兜底解析';
+      chips.appendChild(hint);
+      return;
+    }
+    const withTime  = records.filter(r => r.time).sort((a, b) => a.time > b.time ? 1 : -1);
+    const earliest  = withTime.length ? withTime[0].time.slice(0, 10) : '';
+    const latest    = withTime.length ? withTime[withTime.length - 1].time.slice(0, 10) : '';
+    const uniqueIPs = new Set(records.map(r => r.ip)).size;
+    const summary   = document.createElement('span');
+    summary.style.cssText = 'font-size:11px;color:var(--t2);margin-right:8px';
+    summary.textContent   = `识别到 ${records.length} 条记录，${uniqueIPs} 个唯一IP${earliest ? ' ，时间范围 ' + earliest + ' ~ ' + latest : ''}`;
+    chips.appendChild(summary);
+    [...new Set(records.map(r => r.ip))].slice(0, 15).forEach(ip => {
+      const c = document.createElement('span'); c.className = 'ip-chip'; c.textContent = ip;
+      chips.appendChild(c);
+    });
+    if (uniqueIPs > 15) {
+      const c = document.createElement('span'); c.className = 'ip-chip'; c.textContent = '+' + (uniqueIPs - 15) + ' 个';
+      chips.appendChild(c);
+    }
+  }, 300);
 }
 
+/**
+ * 查询单个 IP 归属地
+ * 含严格格式校验 + 5s 超时 + 四源降级
+ */
 async function queryIPInfo(ip, isV6) {
-  if (isV6 && ip.includes('...')) return {ip,cc:'',country:'IPv6 截断，无法查询',org:'',city:'',region:'',v6:true};
+  if (isV6 && ip.includes('...')) return { ip, cc: '', country: 'IPv6 截断，无法查询', org: '', city: '', region: '', v6: true };
+  if (!isV6 && !isValidIPv4(ip))  return { ip, cc: '', country: 'IP 格式非法', org: '', city: '', region: '' };
   if (_ipCache.has(ip)) return _ipCache.get(ip);
+
   const encodedIp = encodeURIComponent(ip);
 
-  // 源1：本地代理（部署时优先）
+  async function tryFetch(url) {
+    const ctrl  = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 5000);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal });
+      return res.ok ? await res.json() : null;
+    } catch { return null; } finally { clearTimeout(timer); }
+  }
+
+  // 源1：本地代理
   try {
-    const res = await fetch('/api/ip/'+encodedIp);
-    if (res.ok) { const d=await res.json(); if (d.cc||d.country) { const r={ip,cc:d.cc||'',country:d.country||'未知',org:d.org||'',city:d.city||'',region:d.region||'',source:d.source||'local'}; _ipCache.set(ip,r); return r; } }
-  } catch(e) {}
+    const d = await tryFetch('/api/ip/' + encodedIp);
+    if (d && (d.cc || d.country)) {
+      const r = { ip, cc: d.cc || '', country: d.country || '未知', org: d.org || '', city: d.city || '', region: d.region || '', source: 'local' };
+      ipCacheSet(ip, r); return r;
+    }
+  } catch { /* 继续降级 */ }
 
   // 源2：freeipapi.com
-  try {
-    const res = await fetch('https://freeipapi.com/api/json/'+encodedIp);
-    if (res.ok) { const d=await res.json(); if (d.countryCode&&d.countryCode!=='-') { const r={ip,cc:d.countryCode,country:d.countryName||'',city:d.cityName||'',region:d.regionName||'',org:'',source:'freeipapi'}; _ipCache.set(ip,r); return r; } }
-  } catch(e) {}
+  const d2 = await tryFetch('https://freeipapi.com/api/json/' + encodedIp);
+  if (d2 && d2.countryCode && d2.countryCode !== '-') {
+    const r = { ip, cc: d2.countryCode, country: d2.countryName || '', city: d2.cityName || '', region: d2.regionName || '', org: '', source: 'freeipapi' };
+    ipCacheSet(ip, r); return r;
+  }
 
   // 源3：ipwho.is
-  try {
-    const res = await fetch('https://ipwho.is/'+encodedIp);
-    if (res.ok) { const d=await res.json(); if (d.success&&d.country_code) { const conn=d.connection||{}; const r={ip,cc:d.country_code,country:d.country||'',city:d.city||'',region:d.region||'',org:conn.isp||conn.org||'',source:'ipwho.is'}; _ipCache.set(ip,r); return r; } }
-  } catch(e) {}
+  const d3 = await tryFetch('https://ipwho.is/' + encodedIp);
+  if (d3 && d3.success && d3.country_code) {
+    const conn = d3.connection || {};
+    const r = { ip, cc: d3.country_code, country: d3.country || '', city: d3.city || '', region: d3.region || '', org: conn.isp || conn.org || '', source: 'ipwho.is' };
+    ipCacheSet(ip, r); return r;
+  }
 
   // 源4：ip-api.com
-  try {
-    const res = await fetch('https://ip-api.com/json/'+encodedIp+'?fields=status,country,countryCode,city,regionName,org');
-    if (res.ok) { const d=await res.json(); if (d.status==='success') { const r={ip,cc:d.countryCode||'',country:d.country||'',city:d.city||'',region:d.regionName||'',org:d.org||'',source:'ip-api'}; _ipCache.set(ip,r); return r; } }
-  } catch(e) {}
+  const d4 = await tryFetch('https://ip-api.com/json/' + encodedIp + '?fields=status,country,countryCode,city,regionName,org');
+  if (d4 && d4.status === 'success') {
+    const r = { ip, cc: d4.countryCode || '', country: d4.country || '', city: d4.city || '', region: d4.regionName || '', org: d4.org || '', source: 'ip-api' };
+    ipCacheSet(ip, r); return r;
+  }
 
-  const failed = {ip,cc:'',country:'查询失败',org:'',city:'',region:''};
-  return failed;
+  return { ip, cc: '', country: '查询失败', org: '', city: '', region: '' };
 }
 
-function check12hSwitch(records) {
-  const withTime = records.filter(r=>r.time).sort((a,b)=>new Date(a.time)-new Date(b.time));
-  const hits=[]; const seen=new Set();
-  for (let i=0;i<withTime.length;i++) {
-    for (let j=i+1;j<withTime.length;j++) {
-      const a=withTime[i],b=withTime[j];
-      const diff=(new Date(b.time)-new Date(a.time))/(1000*3600);
-      if (diff>12) break;
-      if (a.ip===b.ip) continue;
-      const aFive=FIVE_CC.includes(a.cc);
-      const bFive=FIVE_CC.includes(b.cc);
-      if (aFive&&bFive) continue;
-      const key=a.ip+'|'+b.ip;
+/**
+ * 12小时内IP切换检测
+ * 修复：使用 parseTime() 统一时间解析，兼容 Safari / Firefox
+ */
+function check12hSwitch(records, FIVE_CC) {
+  const withTime = records
+    .filter(r => r.time && parseTime(r.time))
+    .sort((a, b) => parseTime(a.time) - parseTime(b.time));
+  const hits = [], seen = new Set();
+  for (let i = 0; i < withTime.length; i++) {
+    for (let j = i + 1; j < withTime.length; j++) {
+      const a = withTime[i], b = withTime[j];
+      const ta = parseTime(a.time), tb = parseTime(b.time);
+      const diff = (tb - ta) / (1000 * 3600);
+      if (diff > 12) break;
+      if (a.ip === b.ip) continue;
+      if (FIVE_CC.includes(a.cc) && FIVE_CC.includes(b.cc)) continue;
+      const key = a.ip + '|' + b.ip;
       if (seen.has(key)) continue;
-      seen.add(key); hits.push({from:a.ip,to:b.ip,fromCc:a.cc,toCc:b.cc,hours:diff.toFixed(1),time:b.time});
+      seen.add(key);
+      hits.push({ from: a.ip, to: b.ip, fromCc: a.cc, toCc: b.cc, hours: diff.toFixed(1), time: b.time });
     }
   }
   return hits;
 }
 
-function setIPError(msg) { const el=document.getElementById('error_box');el.style.display=msg?'block':'none';el.textContent=msg||''; }
+function setIPError(msg) {
+  const el = document.getElementById('error_box');
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent   = msg || '';
+}
+
 function setIPLoading(on) {
   const btn = document.getElementById('run_btn');
-  btn.disabled = on;
+  btn.disabled    = on;
   btn.textContent = '';
   if (on) {
-    const spin = document.createElement('span');
-    spin.className = 'spin';
+    const spin = document.createElement('span'); spin.className = 'spin';
     btn.appendChild(spin);
     btn.appendChild(document.createTextNode('查询中...'));
   } else {
     btn.textContent = '查询归属地并分析风险';
   }
 }
-function setProgress(n,total,sub) {
-  const wrap=document.getElementById('progress_wrap'); wrap.style.display='block';
-  document.getElementById('progress_label').textContent=n===total?'查询完成':`正在查询 ${n} / ${total}`;
-  document.getElementById('progress_fill').style.width=Math.round((n/total)*100)+'%';
-  document.getElementById('progress_sub').textContent=sub||'';
+
+function setProgress(n, total, sub) {
+  const wrap = document.getElementById('progress_wrap'); wrap.style.display = 'block';
+  document.getElementById('progress_label').textContent = n === total ? '查询完成' : `正在查询 ${n} / ${total}`;
+  document.getElementById('progress_fill').style.width  = Math.round((n / total) * 100) + '%';
+  document.getElementById('progress_sub').textContent   = sub || '';
 }
 
 async function runAnalysis() {
   setIPError('');
   const text = document.getElementById('log_input').value.trim();
   if (!text) { setIPError('请粘贴登录记录后再分析'); return; }
-  const claudeKey = document.getElementById('claude_key').value.trim();
-  setIPLoading(true);
-  document.getElementById('ip-results').style.display='none';
-  document.getElementById('progress_wrap').style.display='none';
 
-  let records=[]; let parseMethod='';
-  setProgress(1,3,'本地解析中...');
-  records=extractRecordsLocal(text); parseMethod='本地正则';
+  // 运行时读取风控配置
+  const HIGH_RISK_CC = getHighRiskCC();
+  const FIVE_CC      = getFiveCC();
+  const claudeKey    = document.getElementById('claude_key').value.trim();
+
+  setIPLoading(true);
+  document.getElementById('ip-results').style.display    = 'none';
+  document.getElementById('progress_wrap').style.display = 'none';
+
+  let records = [], parseMethod = '';
+  setProgress(1, 3, '本地解析中...');
+  records = extractRecordsLocal(text); parseMethod = '本地正则';
 
   if (!records.length && claudeKey) {
-    try { setProgress(1,3,'AI 兜底解析中...'); records=await extractRecordsClaude(text,claudeKey); parseMethod='AI 兜底'; }
-    catch(e) { setIPError('解析失败：'+e.message); setIPLoading(false); return; }
+    try {
+      setProgress(1, 3, 'AI 兜底解析中...');
+      records = await extractRecordsClaude(text, claudeKey);
+      parseMethod = 'AI 兜底';
+    } catch (e) {
+      setIPError('解析失败：' + e.message);
+      setIPLoading(false);
+      return;
+    }
   }
   if (!records.length) { setIPError('未识别到任何IP地址。建议填写 AI Key 后重试。'); setIPLoading(false); return; }
 
-  const enriched=[]; const ipCache={}; const startTime=Date.now();
-  const uniqueIPs=[...new Set(records.map(r=>r.ip))];
-  const isV6Map={}; records.forEach(r=>{if(r.v6)isV6Map[r.ip]=true;});
-  const CONCURRENCY=5; let done=0;
-  for (let i=0;i<uniqueIPs.length;i+=CONCURRENCY) {
-    const batch=uniqueIPs.slice(i,i+CONCURRENCY);
-    const results=await Promise.all(batch.map(ip=>queryIPInfo(ip,isV6Map[ip])));
-    results.forEach((res,idx)=>{ipCache[batch[idx]]=res;done++;setProgress(done,uniqueIPs.length,'查询归属地：'+batch[idx]);});
+  const enriched  = [];
+  const ipInfoMap = {};
+  const startTime = Date.now();
+  const uniqueIPs = [...new Set(records.map(r => r.ip))];
+  const isV6Map   = {};
+  records.forEach(r => { if (r.v6) isV6Map[r.ip] = true; });
+
+  const CONCURRENCY = 5;
+  let done = 0;
+  for (let i = 0; i < uniqueIPs.length; i += CONCURRENCY) {
+    const batch   = uniqueIPs.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(batch.map(ip => queryIPInfo(ip, isV6Map[ip])));
+    results.forEach((res, idx) => { ipInfoMap[batch[idx]] = res; done++; setProgress(done, uniqueIPs.length, '查询归属地：' + batch[idx]); });
   }
-  for (const r of records) { const _c=ipCache[r.ip]||{}; enriched.push({...r,cc:_c.cc||'',country:_c.country||'未知',org:_c.org||'',city:_c.city||'',region:_c.region||'',source:_c.source||'',v6:r.v6||false}); }
-  setProgress(records.length,records.length,'');
-  const elapsed=((Date.now()-startTime)/1000).toFixed(1);
 
-  enriched.sort((a,b)=>{ if(!a.time&&!b.time)return 0; if(!a.time)return 1; if(!b.time)return -1; return new Date(b.time)-new Date(a.time); });
+  for (const r of records) {
+    const info = ipInfoMap[r.ip] || {};
+    enriched.push({ ...r, cc: info.cc || '', country: info.country || '未知', org: info.org || '', city: info.city || '', region: info.region || '', source: info.source || '', v6: r.v6 || false });
+  }
+  setProgress(records.length, records.length, '');
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
 
-  const highRisk=enriched.filter(r=>HIGH_RISK_CC.includes(r.cc));
-  const switches=check12hSwitch(enriched);
-  const c1=switches.length>0; const c2=highRisk.length>0;
-  let triggered=0; if(c1)triggered++; if(c2)triggered++;
-  const uniqueCountries=[...new Set(enriched.map(r=>r.country))].join('、');
+  enriched.sort((a, b) => {
+    if (!a.time && !b.time) return 0;
+    if (!a.time) return 1; if (!b.time) return -1;
+    return (parseTime(b.time) || 0) - (parseTime(a.time) || 0);
+  });
+
+  const highRisk = enriched.filter(r => HIGH_RISK_CC.includes(r.cc));
+  const switches = check12hSwitch(enriched, FIVE_CC);
+  const c1 = switches.length > 0;
+  const c2 = highRisk.length > 0;
+  let triggered = 0; if (c1) triggered++; if (c2) triggered++;
+  const uniqueCountries = [...new Set(enriched.map(r => r.country))].join('、');
 
   // metrics
-  const metricsEl=document.getElementById('metrics'); metricsEl.innerHTML='';
-  [{label:'IP 数量',value:String(enriched.length),cls:''},{label:'高风险 IP',value:String(highRisk.length),cls:highRisk.length>0?'danger':'ok'},{label:'触发条件',value:triggered+' / 2',cls:triggered>=2?'warn':triggered===0?'ok':''},{label:'涉及地区',value:uniqueCountries,cls:'',small:true}].forEach(m=>{
-    const card=document.createElement('div'); card.className='metric';
-    const lbl=document.createElement('div'); lbl.className='metric-label'; lbl.textContent=m.label;
-    const val=document.createElement('div'); val.className='metric-value'+(m.cls?' '+m.cls:'');
-    if(m.small) val.style.cssText='font-size:13px;line-height:1.4;padding-top:4px';
-    val.textContent=m.value; card.appendChild(lbl); card.appendChild(val); metricsEl.appendChild(card);
+  const metricsEl = document.getElementById('metrics'); metricsEl.innerHTML = '';
+  [
+    { label: 'IP 数量',   value: String(enriched.length),   cls: '' },
+    { label: '高风险 IP', value: String(highRisk.length),   cls: highRisk.length > 0 ? 'danger' : 'ok' },
+    { label: '触发条件',  value: triggered + ' / 2',        cls: triggered >= 2 ? 'warn' : triggered === 0 ? 'ok' : '' },
+    { label: '涉及地区',  value: uniqueCountries,           cls: '', small: true }
+  ].forEach(m => {
+    const card = document.createElement('div'); card.className = 'metric';
+    const lbl  = document.createElement('div'); lbl.className  = 'metric-label'; lbl.textContent = m.label;
+    const val  = document.createElement('div'); val.className  = 'metric-value' + (m.cls ? ' ' + m.cls : '');
+    if (m.small) val.style.cssText = 'font-size:13px;line-height:1.4;padding-top:4px';
+    val.textContent = m.value; card.appendChild(lbl); card.appendChild(val); metricsEl.appendChild(card);
   });
 
-  const switchMap=new Map();
-  const addSwitch=(key,peer,peerTime,hours)=>{ if(!switchMap.has(key))switchMap.set(key,[]); const list=switchMap.get(key); if(!list.find(x=>x.peer===peer))list.push({peer,peerTime,hours}); };
-  switches.forEach(s=>{const fromRec=[...enriched].reverse().find(r=>r.ip===s.from&&r.time<s.time);addSwitch(s.to+'|'+s.time,s.from,fromRec?fromRec.time:'',s.hours);if(fromRec)addSwitch(fromRec.ip+'|'+fromRec.time,s.to,s.time,s.hours);});
-
-  // table
-  const tbody=document.getElementById('ip_tbody'); tbody.innerHTML='';
-  enriched.forEach((r,i)=>{
-    const isV6=r.v6===true; const isHigh=!isV6&&HIGH_RISK_CC.includes(r.cc); const isFive=!isV6&&FIVE_CC.includes(r.cc);
-    const switchList=switchMap.get(r.ip+'|'+r.time)||[]; const isSwitch=switchList.length>0;
-    const switchNote=switchList.length?switchList.map(x=>{const t=x.peerTime?' ('+x.peerTime.slice(5,16)+')':'';return '与 '+x.peer+t+' 间隔 '+x.hours+'h';}).join('\n'):'';    let rowStyle='';
-    if(isHigh)rowStyle='background:rgba(255,85,102,.05);border-left:2px solid rgba(255,85,102,.5);';
-    else if(isSwitch&&!isV6&&!isHigh)rowStyle='background:rgba(255,170,0,.05);border-left:2px solid rgba(255,170,0,.4);';
-    else if(isV6)rowStyle='opacity:0.6;';
-    const tr=document.createElement('tr'); tr.style.cssText=rowStyle; tr.dataset.ip=r.ip; tr.dataset.source=r.source||'';
-    const td0=document.createElement('td');td0.style.cssText='color:var(--t3);font-family:var(--mono);font-size:11px;padding:8px 12px;border-bottom:1px solid var(--b1)';td0.textContent=i+1;
-    const td1=document.createElement('td');td1.className='td-ip';td1.style.cssText='padding:8px 12px;border-bottom:1px solid var(--b1)';if(isHigh)td1.style.color='var(--red)';else if(isSwitch)td1.style.color='var(--amber)';td1.textContent=r.ip;
-    const td2=document.createElement('td');td2.className='td-time';td2.style.cssText='padding:8px 12px;border-bottom:1px solid var(--b1)';td2.textContent=r.time||'—';
-    const td3=document.createElement('td');td3.className='td-country';td3.style.cssText='padding:8px 12px;border-bottom:1px solid var(--b1)';td3.textContent=r.country;
-    const td4=document.createElement('td');td4.style.cssText='font-size:12px;color:var(--t2);padding:8px 12px;border-bottom:1px solid var(--b1)';td4.textContent=r.city||'—';
-    const td5=document.createElement('td');td5.className='td-org';td5.style.cssText='padding:8px 12px;border-bottom:1px solid var(--b1)';td5.textContent=r.org||'—';
-    const td6=document.createElement('td');td6.style.cssText='display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:8px 12px;border-bottom:1px solid var(--b1)';
-    if(isV6){const b=document.createElement('span');b.className='badge badge-blue';b.textContent='IPv6';td6.appendChild(b);}
-    else if(isHigh){const b=document.createElement('span');b.className='badge badge-red';b.textContent='高风险地区';td6.appendChild(b);}
-    else if(isFive){const b=document.createElement('span');b.className='badge badge-amber';b.textContent='5地区';td6.appendChild(b);}
-    else{const b=document.createElement('span');b.className='badge badge-green';b.textContent='正常';td6.appendChild(b);}
-    if(isSwitch&&!isV6&&!isHigh){const sw=document.createElement('span');sw.className='switch-note';const sb=document.createElement('span');sb.className='badge badge-orange';sb.textContent='触发条件1';sw.appendChild(sb);const sd=document.createElement('span');sd.className='switch-detail';sd.textContent=switchNote;sw.appendChild(sd);td6.appendChild(sw);}
-    [td0,td1,td2,td3,td4,td5,td6].forEach(td=>tr.appendChild(td)); tbody.appendChild(tr);
+  // 构建切换映射
+  const switchMap = new Map();
+  const addSwitch = (key, peer, peerTime, hours) => {
+    if (!switchMap.has(key)) switchMap.set(key, []);
+    const list = switchMap.get(key);
+    if (!list.find(x => x.peer === peer)) list.push({ peer, peerTime, hours });
+  };
+  switches.forEach(s => {
+    const fromRec = [...enriched].reverse().find(r => r.ip === s.from && r.time < s.time);
+    addSwitch(s.to + '|' + s.time, s.from, fromRec ? fromRec.time : '', s.hours);
+    if (fromRec) addSwitch(fromRec.ip + '|' + fromRec.time, s.to, s.time, s.hours);
   });
 
-  // bind row click
-  tbody.querySelectorAll('tr').forEach(tr=>{
-    tr.addEventListener('click',()=>{
-      const ip=tr.dataset.ip||''; if(!ip||ip.includes('...'))return;
-      window.open('https://ipinfo.io/'+ip,'_blank','noopener,noreferrer');
+  // 渲染表格
+  const tbody = document.getElementById('ip_tbody'); tbody.innerHTML = '';
+  enriched.forEach((r, i) => {
+    const isV6     = r.v6 === true;
+    const isHigh   = !isV6 && HIGH_RISK_CC.includes(r.cc);
+    const isFive   = !isV6 && FIVE_CC.includes(r.cc);
+    const switchList = switchMap.get(r.ip + '|' + r.time) || [];
+    const isSwitch   = switchList.length > 0;
+    const switchNote = switchList.map(x => {
+      const t = x.peerTime ? ' (' + x.peerTime.slice(5, 16) + ')' : '';
+      return '与 ' + x.peer + t + ' 间隔 ' + x.hours + 'h';
+    }).join('\n');
+
+    let rowStyle = '';
+    if (isHigh)               rowStyle = 'background:rgba(255,85,102,.05);border-left:2px solid rgba(255,85,102,.5);';
+    else if (isSwitch && !isV6) rowStyle = 'background:rgba(255,170,0,.05);border-left:2px solid rgba(255,170,0,.4);';
+    else if (isV6)            rowStyle = 'opacity:0.6;';
+
+    const tr = document.createElement('tr'); tr.style.cssText = rowStyle; tr.dataset.ip = r.ip;
+
+    const td0 = document.createElement('td'); td0.style.cssText = 'color:var(--t3);font-family:var(--mono);font-size:11px;padding:8px 12px;border-bottom:1px solid var(--b1)'; td0.textContent = i + 1;
+    const td1 = document.createElement('td'); td1.className = 'td-ip'; td1.style.cssText = 'padding:8px 12px;border-bottom:1px solid var(--b1)';
+    if (isHigh) td1.style.color = 'var(--red)'; else if (isSwitch) td1.style.color = 'var(--amber)';
+    td1.textContent = r.ip;
+    const td2 = document.createElement('td'); td2.className = 'td-time'; td2.style.cssText = 'padding:8px 12px;border-bottom:1px solid var(--b1)'; td2.textContent = r.time || '—';
+    const td3 = document.createElement('td'); td3.className = 'td-country'; td3.style.cssText = 'padding:8px 12px;border-bottom:1px solid var(--b1)'; td3.textContent = r.country;
+    const td4 = document.createElement('td'); td4.style.cssText = 'font-size:12px;color:var(--t2);padding:8px 12px;border-bottom:1px solid var(--b1)'; td4.textContent = r.city || '—';
+    const td5 = document.createElement('td'); td5.className = 'td-org'; td5.style.cssText = 'padding:8px 12px;border-bottom:1px solid var(--b1)'; td5.textContent = r.org || '—';
+    const td6 = document.createElement('td'); td6.style.cssText = 'display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:8px 12px;border-bottom:1px solid var(--b1)';
+
+    if (isV6) {
+      const b = document.createElement('span'); b.className = 'badge badge-blue'; b.textContent = 'IPv6'; td6.appendChild(b);
+    } else if (isHigh) {
+      const b = document.createElement('span'); b.className = 'badge badge-red'; b.textContent = '高风险地区'; td6.appendChild(b);
+    } else if (isFive) {
+      const b = document.createElement('span'); b.className = 'badge badge-amber'; b.textContent = '5地区'; td6.appendChild(b);
+    } else {
+      const b = document.createElement('span'); b.className = 'badge badge-green'; b.textContent = '正常'; td6.appendChild(b);
+    }
+    if (isSwitch && !isV6 && !isHigh) {
+      const sw = document.createElement('span'); sw.className = 'switch-note';
+      const sb = document.createElement('span'); sb.className = 'badge badge-orange'; sb.textContent = '触发条件1'; sw.appendChild(sb);
+      const sd = document.createElement('span'); sd.className = 'switch-detail'; sd.textContent = switchNote; sw.appendChild(sd);
+      td6.appendChild(sw);
+    }
+    [td0, td1, td2, td3, td4, td5, td6].forEach(td => tr.appendChild(td));
+    tbody.appendChild(tr);
+  });
+
+  // 行点击：打开 ipinfo.io（仅合法 IPv4）
+  tbody.querySelectorAll('tr').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const ip = tr.dataset.ip || '';
+      if (!isValidIPv4(ip)) return;
+      window.open('https://ipinfo.io/' + ip, '_blank', 'noopener,noreferrer');
     });
   });
 
-  // verdict
+  // 裁决面板
   const MANUAL_CHECK_ITEMS = [
     '条件3：近72小时内是否更改安全项？（登入密码 / 资金密码 / 邮箱 / 手机号）',
     '条件4：本次提币是否使用从未使用过的新地址？'
   ];
+
   function buildManualCheck() {
     const wrap = document.createElement('div');
-    wrap.style.cssText='margin-top:10px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:6px;font-size:12px;line-height:1.9;color:var(--t2)';
-    const hd = document.createElement('div'); hd.style.cssText='font-weight:500;color:var(--tx);margin-bottom:4px'; hd.textContent='需人工在后台核查：'; wrap.appendChild(hd);
-    MANUAL_CHECK_ITEMS.forEach(txt=>{const d=document.createElement('div');d.textContent=txt;wrap.appendChild(d);});
-    const note=document.createElement('div');note.style.cssText='margin-top:6px;color:var(--amber)';note.textContent='以上任意一项为「是」，则触发条件数 +1，满足3条即达升级标准。';wrap.appendChild(note);
+    wrap.style.cssText = 'margin-top:10px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:6px;font-size:12px;line-height:1.9;color:var(--t2)';
+    const hd = document.createElement('div'); hd.style.cssText = 'font-weight:500;color:var(--tx);margin-bottom:4px'; hd.textContent = '需人工在后台核查：';
+    wrap.appendChild(hd);
+    MANUAL_CHECK_ITEMS.forEach(txt => { const d = document.createElement('div'); d.textContent = txt; wrap.appendChild(d); });
+    const note = document.createElement('div'); note.style.cssText = 'margin-top:6px;color:var(--amber)';
+    note.textContent = '以上任意一项为「是」，则触发条件数 +1，满足3条即达升级标准。';
+    wrap.appendChild(note);
     return wrap;
   }
+
   function buildSuggBox(actionText, extraText) {
-    const box = document.createElement('div'); box.className='suggestion-box';
-    const strong=document.createElement('strong'); strong.textContent=actionText; box.appendChild(strong);
-    if(extraText){const t=document.createElement('span');t.textContent=extraText;box.appendChild(t);}
+    const box    = document.createElement('div'); box.className = 'suggestion-box';
+    const strong = document.createElement('strong'); strong.textContent = actionText; box.appendChild(strong);
+    if (extraText) { const t = document.createElement('span'); t.textContent = extraText; box.appendChild(t); }
     box.appendChild(buildManualCheck());
     return box;
   }
-  let vcls,vtitle,vdetail,vbar,vbarColor,suggBoxEl;
-  if(c2){vcls='verdict-escalate';vbar=100;vbarColor='var(--red)';vtitle='⚠ 立即升级至风控';vdetail='检测到高风险地区登录 IP：'+highRisk.map(r=>r.country+'（'+r.ip+'）').join('、')+'。若账号 KYC / 手机号归属地非该地区，可直接升级，无需等待满足3个条件。';suggBoxEl=buildSuggBox('立即操作：','暂停本次提币申请，将案件上报风控团队进行二次核实，并保留当前截图记录。');}
-  else if(triggered>=2){vcls='verdict-watch';vbar=55;vbarColor='var(--amber)';vtitle='⚡ 已满足2条，核查剩余条件后可升级';vdetail='已自动触发全部 '+triggered+' 个可检测条件，请在后台补充核查条件3、4，满足任意一项即达到升级标准（≥3条）。';suggBoxEl=buildSuggBox('建议操作：','立即在后台核查以下两项，任意一项为「是」即应上报风控。');}
-  else if(triggered===1){vcls='verdict-watch';vbar=22;vbarColor='var(--amber)';vtitle='⚡ 触发1条，建议核查剩余条件';vdetail='已自动触发 '+triggered+' 个条件，未达升级标准（需≥3条）。建议在后台核查条件3、4，若有触发则需升级。';suggBoxEl=buildSuggBox('建议操作：','在后台确认以下两项，若有任意一项为「是」，则触发条件数达到2条。');}
-  else{vcls='verdict-pass';vbar=5;vbarColor='var(--green)';vtitle='✓ 自动检测无异常';vdetail='所有IP均来自正常地区，未检测到高风险登录或短时间内IP切换，账户活动正常。';suggBoxEl=buildSuggBox('建议操作：','常规确认提币地址及安全项后可正常放行。');}
 
-  const condDefs=[{on:c1,label:'条件1：12小时内变更IP地址',detail:c1?switches.map(s=>s.from+' → '+s.to+'（间隔 '+s.hours+' 小时）').join('；'):'未检测到'},{on:c2,label:'条件2：来自高风险地区（印度/巴基斯坦/孟加拉/尼日利亚）',detail:c2?highRisk.map(r=>r.country+'（'+r.ip+'）').join('、'):'未检测到'}];
+  let vcls, vtitle, vdetail, vbar, vbarColor, suggBoxEl;
+  if (c2) {
+    vcls = 'verdict-escalate'; vbar = 100; vbarColor = 'var(--red)';
+    vtitle  = '⚠ 立即升级至风控';
+    vdetail = '检测到高风险地区登录 IP：' + highRisk.map(r => r.country + '（' + r.ip + '）').join('、') + '。若账号 KYC / 手机号归属地非该地区，可直接升级，无需等待满足3个条件。';
+    suggBoxEl = buildSuggBox('立即操作：', '暂停本次提币申请，将案件上报风控团队进行二次核实，并保留当前截图记录。');
+  } else if (triggered >= 2) {
+    vcls = 'verdict-watch'; vbar = 55; vbarColor = 'var(--amber)';
+    vtitle  = '⚡ 已满足2条，核查剩余条件后可升级';
+    vdetail = '已自动触发全部 ' + triggered + ' 个可检测条件，请在后台补充核查条件3、4，满足任意一项即达到升级标准（≥3条）。';
+    suggBoxEl = buildSuggBox('建议操作：', '立即在后台核查以下两项，任意一项为「是」即应上报风控。');
+  } else if (triggered === 1) {
+    vcls = 'verdict-watch'; vbar = 22; vbarColor = 'var(--amber)';
+    vtitle  = '⚡ 触发1条，建议核查剩余条件';
+    vdetail = '已自动触发 ' + triggered + ' 个条件，未达升级标准（需≥3条）。建议在后台核查条件3、4，若有触发则需升级。';
+    suggBoxEl = buildSuggBox('建议操作：', '在后台确认以下两项，若有任意一项为「是」，则触发条件数达到2条。');
+  } else {
+    vcls = 'verdict-pass'; vbar = 5; vbarColor = 'var(--green)';
+    vtitle  = '✓ 自动检测无异常';
+    vdetail = '所有IP均来自正常地区，未检测到高风险登录或短时间内IP切换，账户活动正常。';
+    suggBoxEl = buildSuggBox('建议操作：', '常规确认提币地址及安全项后可正常放行。');
+  }
 
-  const vbox=document.getElementById('verdict_box'); vbox.innerHTML='';
-  const vWrap=document.createElement('div'); vWrap.className='verdict '+vcls;
-  const vHeader=document.createElement('div'); vHeader.className='verdict-header';
-  const vTitle=document.createElement('div'); vTitle.className='verdict-title'; vTitle.textContent=vtitle;
+  const condDefs = [
+    { on: c1, label: '条件1：12小时内变更IP地址', detail: c1 ? switches.map(s => s.from + ' → ' + s.to + '（间隔 ' + s.hours + ' 小时）').join('；') : '未检测到' },
+    { on: c2, label: '条件2：来自高风险地区（' + HIGH_RISK_CC.join('/') + '）', detail: c2 ? highRisk.map(r => r.country + '（' + r.ip + '）').join('、') : '未检测到' }
+  ];
+
+  const vbox = document.getElementById('verdict_box'); vbox.innerHTML = '';
+  const vWrap   = document.createElement('div'); vWrap.className = 'verdict ' + vcls;
+  const vHeader = document.createElement('div'); vHeader.className = 'verdict-header';
+  const vTitle  = document.createElement('div'); vTitle.className  = 'verdict-title'; vTitle.textContent = vtitle;
   vHeader.appendChild(vTitle); vWrap.appendChild(vHeader);
-  const barWrap=document.createElement('div'); barWrap.className='verdict-bar-wrap';
-  const barBg=document.createElement('div'); barBg.className='verdict-bar-bg';
-  const barFill=document.createElement('div'); barFill.className='verdict-bar-fill'; barFill.style.cssText='width:'+vbar+'%;background:'+vbarColor;
+
+  const barWrap  = document.createElement('div'); barWrap.className  = 'verdict-bar-wrap';
+  const barBg    = document.createElement('div'); barBg.className    = 'verdict-bar-bg';
+  const barFill  = document.createElement('div'); barFill.className  = 'verdict-bar-fill';
+  barFill.style.cssText = 'width:' + vbar + '%;background:' + vbarColor;
   barBg.appendChild(barFill); barWrap.appendChild(barBg); vWrap.appendChild(barWrap);
-  const vBody=document.createElement('div'); vBody.className='verdict-body'; vBody.textContent=vdetail; vWrap.appendChild(vBody);
-  const condList=document.createElement('div'); condList.className='conditions-list';
-  condDefs.forEach(c=>{const row=document.createElement('div');row.className='cond-row';const dot=document.createElement('div');dot.className=c.on?'cond-dot cond-dot-on':'cond-dot cond-dot-off';const txt=document.createElement('div');txt.className='cond-text';const strong=document.createElement('strong');strong.textContent=c.label;txt.appendChild(strong);txt.appendChild(document.createElement('br'));txt.appendChild(document.createTextNode(c.detail));const bdg=document.createElement('span');bdg.className=c.on?'cond-badge-on':'cond-badge-off';bdg.textContent=c.on?'已触发':'未触发';row.appendChild(dot);row.appendChild(txt);row.appendChild(bdg);condList.appendChild(row);});
-  vWrap.appendChild(condList);
-  const suggBox=suggBoxEl;
-  vWrap.appendChild(suggBox); vbox.appendChild(vWrap);
 
-  document.getElementById('query_time').textContent='· 解析：'+parseMethod+' · 耗时 '+elapsed+'s';
-  document.getElementById('ip-results').style.display='block';
-  setIPLoading(false); setStatus('IP分析完成');
-  setTimeout(()=>document.getElementById('ip-results').scrollIntoView({behavior:'smooth',block:'start'}),80);
-}
+  const vBody = document.createElement('div'); vBody.className = 'verdict-body'; vBody.textContent = vdetail;
+  vWrap.appendChild(vBody);
 
-function exportIPText() {
-  const rows=[];
-  document.querySelectorAll('#ip_tbody tr').forEach(tr=>{
-    const tds=tr.querySelectorAll('td');
-    if(tds.length<6)return;
-    rows.push([tds[1]?.innerText?.trim()||'',tds[2]?.innerText?.trim()||'',tds[3]?.innerText?.trim()||'',tds[4]?.innerText?.trim()||'',tds[6]?.innerText?.trim().replace(/\n/g,' ')||''].join('  '));
+  const condList = document.createElement('div'); condList.className = 'conditions-list';
+  condDefs.forEach(c => {
+    const row    = document.createElement('div'); row.className = 'cond-row';
+    const dot    = document.createElement('div'); dot.className = c.on ? 'cond-dot cond-dot-on' : 'cond-dot cond-dot-off';
+    const txt    = document.createElement('div'); txt.className = 'cond-text';
+    const strong = document.createElement('strong'); strong.textContent = c.label;
+    txt.appendChild(strong); txt.appendChild(document.createElement('br'));
+    txt.appendChild(document.createTextNode(c.detail));
+    const bdg = document.createElement('span'); bdg.className = c.on ? 'cond-badge-on' : 'cond-badge-off'; bdg.textContent = c.on ? '已触发' : '未触发';
+    row.appendChild(dot); row.appendChild(txt); row.appendChild(bdg);
+    condList.appendChild(row);
   });
-  const vTitle=document.querySelector('.verdict-title')?.textContent||'';
-  const vBody=document.querySelector('.verdict-body')?.textContent||'';
-  const text=['IP 风险分析报告  '+new Date().toLocaleString('zh-CN'),'='.repeat(60),''].concat(rows).concat(['','='.repeat(60),'结论：'+vTitle,vBody]).join('\n');
-  navigator.clipboard.writeText(text).then(()=>{const btn=document.querySelector('button[onclick="exportIPText()"]');const orig=btn.textContent;btn.textContent='✓ 已复制';setTimeout(()=>btn.textContent=orig,2000);}).catch(()=>{try{const blob=new Blob([text],{type:'text/plain'});const item=new ClipboardItem({'text/plain':blob});navigator.clipboard.write([item]);}catch(e2){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}finally{document.body.removeChild(ta);}}});
+  vWrap.appendChild(condList);
+  vWrap.appendChild(suggBoxEl);
+  vbox.appendChild(vWrap);
+
+  document.getElementById('query_time').textContent = '· 解析：' + parseMethod + ' · 耗时 ' + elapsed + 's';
+  document.getElementById('ip-results').style.display = 'block';
+
+  // 保存数据层快照
+  _lastIPReport = { enriched, vtitle, vdetail, switches, highRisk, triggered, parseMethod, elapsed, HIGH_RISK_CC, FIVE_CC };
+
+  setIPLoading(false);
+  setStatus('IP分析完成');
+  setTimeout(() => document.getElementById('ip-results').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+/** 导出报告（从数据层生成，不依赖 DOM） */
+function exportIPText() {
+  if (!_lastIPReport) return;
+  const { enriched, vtitle, vdetail, switches, highRisk, triggered, parseMethod, elapsed, HIGH_RISK_CC, FIVE_CC } = _lastIPReport;
+
+  const rows = enriched.map((r, i) => {
+    const isHigh  = HIGH_RISK_CC.includes(r.cc);
+    const isFive  = FIVE_CC.includes(r.cc);
+    const riskTag = r.v6 ? 'IPv6' : isHigh ? '高风险地区' : isFive ? '5地区' : '正常';
+    return [
+      String(i + 1).padStart(3, ' '),
+      r.ip.padEnd(18, ' '),
+      (r.time || '—').padEnd(22, ' '),
+      r.country.padEnd(16, ' '),
+      (r.city || '—').padEnd(14, ' '),
+      riskTag
+    ].join('  ');
+  });
+
+  const condLine1 = '条件1（12h内IP切换）：' + (switches.length ? switches.map(s => s.from + ' → ' + s.to + '（' + s.hours + 'h）').join('；') : '未触发');
+  const condLine2 = '条件2（高风险地区）：' + (highRisk.length ? highRisk.map(r => r.country + '（' + r.ip + '）').join('、') : '未触发');
+
+  const text = [
+    'IP 风险分析报告  ' + new Date().toLocaleString('zh-CN'),
+    '='.repeat(60),
+    '解析方式：' + parseMethod + '  耗时：' + elapsed + 's',
+    '',
+    ['序号'.padEnd(5,' '),'IP 地址'.padEnd(18,' '),'登录时间'.padEnd(22,' '),'国家/地区'.padEnd(16,' '),'城市'.padEnd(14,' '),'风险'].join('  '),
+    '-'.repeat(60),
+    ...rows,
+    '',
+    '='.repeat(60),
+    '结论：' + vtitle,
+    vdetail,
+    '',
+    condLine1,
+    condLine2,
+    '触发条件数：' + triggered + ' / 2（自动检测）'
+  ].join('\n');
+
+  const btn  = document.querySelector('button[onclick="exportIPText()"]');
+  const orig = btn.textContent;
+
+  navigator.clipboard.writeText(text)
+    .then(() => { btn.textContent = '✓ 已复制'; setTimeout(() => btn.textContent = orig, 2000); })
+    .catch(() => {
+      // 降级：ClipboardItem API
+      try {
+        navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }) })]);
+        btn.textContent = '✓ 已复制'; setTimeout(() => btn.textContent = orig, 2000);
+      } catch {
+        // 最后降级：提示用户手动复制
+        btn.textContent = '复制失败，请手动复制';
+        setTimeout(() => btn.textContent = orig, 3000);
+      }
+    });
 }
 
 // ═══════════════════════════════════════════════
-// INIT & EVENT BINDING
+// 初始化 & 事件绑定
 // ═══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('apiHd').addEventListener('click', toggleApi);
   document.getElementById('apiSource').addEventListener('change', onSourceChange);
-  document.getElementById('proxyUrl').addEventListener('input', function(){validateProxyUrl(this.value);});
-  ['recharge','withdraw','spot','contract'].forEach(function(t){
-    document.getElementById('dz-'+t).addEventListener('click',function(){trig(t);});
-    document.getElementById('fi-'+t).addEventListener('change',function(){onFiles(t,this.files);});
-    const dz=document.getElementById('dz-'+t);
-    dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('ov');});
-    dz.addEventListener('dragleave',function(){dz.classList.remove('ov');});
-    dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('ov');onFiles(t,e.dataTransfer.files);});
+  document.getElementById('proxyUrl').addEventListener('input', function () { validateProxyUrl(this.value); });
+
+  // log_input 节流预览（防止大文本卡顿）
+  document.getElementById('log_input').addEventListener('input', previewIPs);
+
+  ['recharge', 'withdraw', 'spot', 'contract'].forEach(function (t) {
+    document.getElementById('dz-' + t).addEventListener('click', function () { trig(t); });
+    document.getElementById('fi-' + t).addEventListener('change', function () { onFiles(t, this.files); });
+    const dz = document.getElementById('dz-' + t);
+    dz.addEventListener('dragover',  function (e) { e.preventDefault(); dz.classList.add('ov'); });
+    dz.addEventListener('dragleave', function ()  { dz.classList.remove('ov'); });
+    dz.addEventListener('drop',      function (e) { e.preventDefault(); dz.classList.remove('ov'); onFiles(t, e.dataTransfer.files); });
   });
-  document.getElementById('fallBtn').addEventListener('click',fetchAll);
-  document.getElementById('addCoinBtn').addEventListener('click',addRate);
-  document.getElementById('calcBtn').addEventListener('click',calc);
-  document.getElementById('copyBtn').addEventListener('click',copyReport);
-  document.getElementById('resetBtn').addEventListener('click',resetAll);
+
+  document.getElementById('fallBtn').addEventListener('click', fetchAll);
+  document.getElementById('addCoinBtn').addEventListener('click', addRate);
+  document.getElementById('calcBtn').addEventListener('click', calc);
+  document.getElementById('copyBtn').addEventListener('click', copyReport);
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+
   renderRates();
 });
 
-// Click ripple effect
-document.addEventListener('click', function(e) {
-  const color='0,212,154';
-  const r1=document.createElement('div');
-  r1.style.cssText=`position:fixed;left:${e.clientX-10}px;top:${e.clientY-10}px;width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(${color},.9);pointer-events:none;z-index:9999;animation:ripple-out .65s cubic-bezier(.22,1,.36,1) forwards;`;
+// 点击涟漪效果（节流 150ms，防止高频 DOM 堆积）
+let _lastRipple = 0;
+document.addEventListener('click', function (e) {
+  const now = Date.now();
+  if (now - _lastRipple < 150) return;
+  _lastRipple = now;
+  const color = '0,212,154';
+  const r1 = document.createElement('div');
+  r1.style.cssText = `position:fixed;left:${e.clientX-10}px;top:${e.clientY-10}px;width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(${color},.9);pointer-events:none;z-index:9999;animation:ripple-out .65s cubic-bezier(.22,1,.36,1) forwards;`;
   document.body.appendChild(r1);
-  r1.addEventListener('animationend',()=>r1.remove());
-  setTimeout(()=>{ if(r1.isConnected) r1.remove(); }, 1000);
-  const r2=document.createElement('div');
-  r2.style.cssText=`position:fixed;left:${e.clientX-16}px;top:${e.clientY-16}px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(${color},.35);pointer-events:none;z-index:9999;animation:ripple-out 1s cubic-bezier(.22,1,.36,1) forwards;animation-delay:.08s;`;
+  r1.addEventListener('animationend', () => r1.remove());
+  setTimeout(() => { if (r1.isConnected) r1.remove(); }, 1000);
+  const r2 = document.createElement('div');
+  r2.style.cssText = `position:fixed;left:${e.clientX-16}px;top:${e.clientY-16}px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(${color},.35);pointer-events:none;z-index:9999;animation:ripple-out 1s cubic-bezier(.22,1,.36,1) forwards;animation-delay:.08s;`;
   document.body.appendChild(r2);
-  r2.addEventListener('animationend',()=>r2.remove());
-  setTimeout(()=>{ if(r2.isConnected) r2.remove(); }, 1500);
+  r2.addEventListener('animationend', () => r2.remove());
+  setTimeout(() => { if (r2.isConnected) r2.remove(); }, 1500);
 });
 </script>
 </body>
