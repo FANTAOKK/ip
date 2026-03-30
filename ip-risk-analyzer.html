@@ -1445,6 +1445,10 @@ async function queryIPInfo(ip, isV6) {
   if (!isV6 && !isValidIPv4(ip))  return { ip, cc: '', country: 'IP 格式非法', org: '', city: '', region: '' };
   if (_ipCache.has(ip)) return _ipCache.get(ip);
 
+// 内网/保留地址，跳过外部查询
+const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|0\.)/;
+if (!isV6 && PRIVATE_IP_RE.test(ip)) return { ip, cc: '', country: '内网地址', org: '', city: '', region: '', source: 'local' };
+
   const encodedIp = encodeURIComponent(ip);
 
   async function tryFetch(url) {
@@ -1456,38 +1460,45 @@ async function queryIPInfo(ip, isV6) {
     } catch { return null; } finally { clearTimeout(timer); }
   }
 
-  // 源1：本地代理
+ // 源1：本地代理（仅 IPv4）
+if (!isV6) {
   try {
     const d = await tryFetch('/api/ip/' + encodedIp);
-    if (d && (d.cc || d.country)) {
+    if (d && (d.cc || d.country) && (!d.cc || d.cc.length === 2)) {
       const r = { ip, cc: d.cc || '', country: d.country || '未知', org: d.org || '', city: d.city || '', region: d.region || '', source: 'local' };
       ipCacheSet(ip, r); return r;
     }
   } catch { /* 继续降级 */ }
+}
 
-  // 源2：freeipapi.com
+  // 源2：freeipapi.com（仅支持 IPv4）
+if (!isV6) {
   const d2 = await tryFetch('https://freeipapi.com/api/json/' + encodedIp);
-  if (d2 && d2.countryCode && d2.countryCode !== '-') {
+  if (d2 && d2.countryCode && d2.countryCode.length === 2 && d2.countryCode !== '-') {
     const r = { ip, cc: d2.countryCode, country: d2.countryName || '', city: d2.cityName || '', region: d2.regionName || '', org: '', source: 'freeipapi' };
     ipCacheSet(ip, r); return r;
   }
+}
 
-  // 源3：ipwho.is
-  const d3 = await tryFetch('https://ipwho.is/' + encodedIp);
-  if (d3 && d3.success && d3.country_code) {
-    const conn = d3.connection || {};
-    const r = { ip, cc: d3.country_code, country: d3.country || '', city: d3.city || '', region: d3.region || '', org: conn.isp || conn.org || '', source: 'ipwho.is' };
+// 源3：ipapi.co
+if (!isV6) {
+  const d3 = await tryFetch('https://ipapi.co/' + encodedIp + '/json/');
+  if (d3 && d3.country_code && d3.country_code.length === 2 && !d3.error) {
+    const r = { ip, cc: d3.country_code, country: d3.country_name || '', city: d3.city || '', region: d3.region || '', org: d3.org || '', source: 'ipapi.co' };
     ipCacheSet(ip, r); return r;
   }
+}
 
-  // 源4：ip-api.com
+// 源4：ip-api.com
+if (!isV6) {
   const d4 = await tryFetch('https://ip-api.com/json/' + encodedIp + '?fields=status,country,countryCode,city,regionName,org');
   if (d4 && d4.status === 'success') {
     const r = { ip, cc: d4.countryCode || '', country: d4.country || '', city: d4.city || '', region: d4.regionName || '', org: d4.org || '', source: 'ip-api' };
     ipCacheSet(ip, r); return r;
   }
+}
 
-  return { ip, cc: '', country: '查询失败', org: '', city: '', region: '' };
+return { ip, cc: '', country: isV6 ? 'IPv6 暂不支持归属查询' : '查询失败', org: '', city: '', region: '' };
 }
 
 /**
