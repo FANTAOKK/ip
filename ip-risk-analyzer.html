@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.coingecko.com https://pro-api.coingecko.com https://api.binance.com https://ipwho.is https://api.siliconflow.cn https://api.groq.com https://api.openai.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.coingecko.com https://pro-api.coingecko.com https://api.binance.com https://ipwho.is https://api.siliconflow.cn https://api.groq.com https://api.openai.com https://freeipapi.com https://ipwho.is https://ip-api.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
 <title>Risk Suite</title>
 <link rel="icon" href="logo.jpg">
 <style>
@@ -939,15 +939,32 @@ chips.appendChild(hint);
 
 async function queryIPInfo(ip, isV6) {
   if (isV6 && ip.includes('...')) return {ip,cc:'',country:'IPv6 截断，无法查询',org:'',city:'',region:'',v6:true};
+  const encodedIp = encodeURIComponent(ip);
+
+  // 源1：本地代理（部署时优先）
   try {
-    const res2 = await fetch('https://ipwho.is/'+ip);
-    if (res.ok) { const d=await res.json(); if (d.cc||d.country) return {ip,cc:d.cc||'',country:d.country||'未知',org:d.org||'',city:d.city||'',region:d.region||'',source:d.source||''}; }
+    const res = await fetch('/api/ip/'+encodedIp);
+    if (res.ok) { const d=await res.json(); if (d.cc||d.country) return {ip,cc:d.cc||'',country:d.country||'未知',org:d.org||'',city:d.city||'',region:d.region||'',source:d.source||'local'}; }
   } catch(e) {}
-  // Fallback: try ipwho.is directly (for when not running behind the local server)
+
+  // 源2：freeipapi.com
   try {
-    const res2 = await fetch('https://ipwho.is/'+encodeURIComponent(ip));
-    if (res2.ok) { const d=await res2.json(); if (d.success&&d.country_code) { const conn=d.connection||{}; return {ip,cc:d.country_code,country:d.country||'',city:d.city||'',region:d.region||'',org:conn.isp||conn.org||'',source:'ipwho.is'}; } }
+    const res = await fetch('https://freeipapi.com/api/json/'+encodedIp);
+    if (res.ok) { const d=await res.json(); if (d.countryCode&&d.countryCode!=='-') return {ip,cc:d.countryCode,country:d.countryName||'',city:d.cityName||'',region:d.regionName||'',org:'',source:'freeipapi'}; }
   } catch(e) {}
+
+  // 源3：ipwho.is
+  try {
+    const res = await fetch('https://ipwho.is/'+encodedIp);
+    if (res.ok) { const d=await res.json(); if (d.success&&d.country_code) { const conn=d.connection||{}; return {ip,cc:d.country_code,country:d.country||'',city:d.city||'',region:d.region||'',org:conn.isp||conn.org||'',source:'ipwho.is'}; } }
+  } catch(e) {}
+
+  // 源4：ip-api.com
+  try {
+    const res = await fetch('https://ip-api.com/json/'+encodedIp+'?fields=status,country,countryCode,city,regionName,org');
+    if (res.ok) { const d=await res.json(); if (d.status==='success') return {ip,cc:d.countryCode||'',country:d.country||'',city:d.city||'',region:d.regionName||'',org:d.org||'',source:'ip-api'}; }
+  } catch(e) {}
+
   return {ip,cc:'',country:'查询失败',org:'',city:'',region:''};
 }
 
