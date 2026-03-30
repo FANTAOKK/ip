@@ -129,6 +129,17 @@ textarea.ain{resize:vertical;min-height:130px;line-height:1.7}
 .ftag{font-size:10px;font-family:var(--mono);padding:1px 6px;border-radius:10px}
 .ftag.ok{background:var(--gd);color:var(--green)}.ftag.err{background:var(--rd);color:var(--red)}.ftag.loading{background:var(--ad);color:var(--amber)}
 
+/* ── HFT BADGE ── */
+.badge-hft{background:rgba(170,119,255,.15);color:var(--purple);border:1px solid rgba(170,119,255,.4);font-size:10px;font-family:var(--mono);font-weight:500;padding:1px 7px;border-radius:99px;white-space:nowrap}
+.hft-row td{background:rgba(170,119,255,.04) !important;border-left:2px solid rgba(170,119,255,.5)}
+
+/* ── HFT SUMMARY CARD ── */
+.hft-card{background:rgba(170,119,255,.07);border:1px solid rgba(170,119,255,.3);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px}
+.hft-card-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.hft-card-body{flex:1}
+.hft-card-title{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:3px}
+.hft-card-detail{font-size:11px;color:var(--t2);font-family:var(--mono);line-height:1.7}
+
 /* ── FILE DROPZONE ── */
 .dz{border:1px dashed var(--b2);border-radius:var(--rs);padding:13px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:10px}
 .dz:hover,.dz.ov{border-color:var(--green);background:var(--gd)}
@@ -192,13 +203,14 @@ input[type=file]{display:none}
 .rcrow:last-child{border-bottom:none}
 .rcrow .k{color:var(--t2)}.rcrow .v{font-family:var(--mono);font-weight:500}
 .v.pos{color:var(--green)}.v.neg{color:var(--red)}.v.neu{color:var(--tx)}
+.rcrow-sep{height:1px;background:var(--b2);margin:4px 0}
 .chart-container{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .chart-wrapper{display:flex;align-items:flex-end;justify-content:space-around;height:160px;padding-bottom:10px;border-bottom:1px solid var(--b2);gap:15px}
 
 /* ── DATA TABLES ── */
 .dtw{margin-bottom:20px}
 .dtc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden}
-.dthd{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--b1)}
+.dthd{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--b1);flex-wrap:wrap;gap:6px}
 .dthd-t{font-size:13px;font-weight:600}
 .dthd-c{font-family:var(--mono);font-size:10px;color:var(--t3)}
 .tsc{overflow-x:auto}
@@ -399,7 +411,7 @@ table.dt tr:hover td{background:var(--s2)}
   <div class="dtw"><div class="slabel">充值明细</div><div class="dtc"><div class="dthd"><span class="dthd-t">充值记录</span><span class="dthd-c" id="dct-rc">0 笔</span></div><div class="tsc"><table class="dt"><thead><tr><th>时间</th><th>用户ID</th><th>币种</th><th>充值金额</th><th>≈ USDT</th><th>状态</th></tr></thead><tbody id="dtb-rc"></tbody></table></div></div></div>
   <div class="dtw"><div class="slabel">提现明细</div><div class="dtc"><div class="dthd"><span class="dthd-t">提现记录</span><span class="dthd-c" id="dct-wd">0 笔</span></div><div class="tsc"><table class="dt"><thead><tr><th>时间</th><th>用户ID</th><th>币种</th><th>提现金额</th><th>手续费</th><th>≈ USDT</th><th>状态</th></tr></thead><tbody id="dtb-wd"></tbody></table></div></div></div>
   <div class="dtw"><div class="slabel">现货交易明细</div><div class="dtc"><div class="dthd"><span class="dthd-t">现货订单</span><span class="dthd-c" id="dct-sp">0 笔</span></div><div class="tsc"><table class="dt"><thead><tr><th>时间</th><th>类型</th><th>委托金额</th><th>成交数量</th><th>成交金额</th><th>成交均价</th></tr></thead><tbody id="dtb-sp"></tbody></table></div></div></div>
-  <div class="dtw"><div class="slabel">合约交易明细</div><div class="dtc"><div class="dthd"><span class="dthd-t">合约记录</span><span id="ct-fmt-label" style="font-size:10px;font-family:var(--mono);color:var(--t3)"></span><span class="dthd-c" id="dct-ct">0 笔</span></div><div class="tsc" id="ct-table-wrap"></div></div></div>
+  <div class="dtw"><div class="slabel">合约交易明细</div><div class="dtc"><div class="dthd"><span class="dthd-t">合约记录</span><span id="ct-fmt-label" style="font-size:10px;font-family:var(--mono);color:var(--t3)"></span><span id="ct-hft-label" style="font-size:10px;font-family:var(--mono);"></span><span class="dthd-c" id="dct-ct">0 笔</span></div><div class="tsc" id="ct-table-wrap"></div></div></div>
 </div>
 
 </div>
@@ -528,23 +540,33 @@ table.dt tr:hover td{background:var(--s2)}
 // 共用常量 & 工具函数
 // ═══════════════════════════════════════════════
 
-/** 严格 IPv4 正则，全局复用，防止各处校验不一致 */
 const IPV4_STRICT = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/;
-
-/** 时间格式正则：yyyy-mm-dd HH:MM:SS 或 yyyy/mm/dd HH:MM:SS */
 const TIME_STRICT = /^\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2}$/;
 
 function isValidIPv4(ip) {
   return typeof ip === 'string' && IPV4_STRICT.test(ip.trim());
 }
+function fmtCell(v) {
+  if (!v) return '—';
+  if (v instanceof Date) {
+    const pad = n => String(n).padStart(2, '0');
+    return v.getFullYear() + '-' + pad(v.getMonth()+1) + '-' + pad(v.getDate())
+      + ' ' + pad(v.getHours()) + ':' + pad(v.getMinutes()) + ':' + pad(v.getSeconds());
+  }
+  return String(v).slice(0, 16);
+}
 
-/**
- * 解析时间字符串为 Date 对象
- * 修复：统一将 "/" 转为 "-"，将空格转为 "T"，确保 Safari / Firefox 兼容
- */
 function parseTime(s) {
   if (!s) return null;
-  return new Date(s.replace(/\//g, '-').replace(' ', 'T'));
+  if (s instanceof Date) return isNaN(s.getTime()) ? null : s;
+  if (typeof s === 'number') {
+    // Excel 序列数字兜底：天数从 1900-01-01 算，需减去2（Excel有1900-02-29 bug）
+    const ms = (s - 25569) * 86400 * 1000;
+    const d = new Date(ms);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  const d = new Date(String(s).replace(/\//g, '-').replace(' ', 'T'));
+  return isNaN(d.getTime()) ? null : d;
 }
 
 function setStatus(t) {
@@ -582,18 +604,10 @@ async function checkFileSafe(file) {
   return { ok: true };
 }
 
-/**
- * 验证代理路径：必须是 / 开头的相对路径，禁止协议、路径穿越、空字节
- * 返回 true = 合法，false = 非法或为空
- */
 function validateProxyUrl(val) {
   const warn = document.getElementById('proxyWarn');
   const inp  = document.getElementById('proxyUrl');
-  if (!val) {
-    warn.style.display = 'none';
-    inp.style.borderColor = '';
-    return false;
-  }
+  if (!val) { warn.style.display = 'none'; inp.style.borderColor = ''; return false; }
   const bad = !val.startsWith('/')
     || /[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(val)
     || /\.\./.test(val)
@@ -652,6 +666,68 @@ function detectContractFmt(rows) {
   return 'flow';
 }
 
+/** ── NEW: 检测高频合约（开平仓时间差 < 5分钟）── */
+function isHFT(row) {
+  const openRaw  = row['创建时间'];
+  const closeRaw = row['更新时间'];
+  if (!openRaw || !closeRaw) return false;
+
+  // 直接是 Date 对象（cellDates:true 时）
+  const t1 = openRaw instanceof Date ? openRaw : parseTime(String(openRaw));
+  const t2 = closeRaw instanceof Date ? closeRaw : parseTime(String(closeRaw));
+
+  if (!t1 || !t2 || isNaN(t1) || isNaN(t2)) return false;
+
+  const diffMinutes = (t2 - t1) / 60000;
+  const hasClosed = row['平仓均价'] && parseFloat(row['平仓均价']) > 0;
+  return hasClosed && diffMinutes >= 0 && diffMinutes < 5;
+}
+
+/** ── NEW: 统计各合约品种盈亏（position格式） */
+function calcContractBySymbol(rows, fmt) {
+  const map = {}; // sym -> { p, f, fd, net }
+  rows.forEach(r => {
+    const sym = String(r['合约'] || r['币种'] || '未知');
+    if (!map[sym]) map[sym] = { p: 0, f: 0, fd: 0, net: 0 };
+    let p = 0, f = 0, fd = 0;
+    if (fmt === 'position') {
+      p  = parseFloat(r['平仓盈亏']) || 0;
+      f  = parseFloat(r['手续费'])   || 0;
+      fd = parseFloat(r['资金费'] ?? r['资金费用'] ?? 0) || 0;
+    } else if (fmt === 'order') {
+      if (r['订单状态'] === '完全成交' && r['仓位方向'] === '平仓') p = parseFloat(r['盈亏']) || 0;
+      f = parseFloat(r['手续费']) || 0;
+    } else {
+      const tp = String(r['类型'] || '');
+      const a  = parseFloat(r['金额']) || 0;
+      if (tp === '平仓盈亏') p = a;
+      else if (tp.includes('手续费')) f = a;
+      else if (tp === '资金费用' || tp === '资金费') fd = a;
+    }
+    map[sym].p  += p;
+    map[sym].f  += f;
+    map[sym].fd += fd;
+    map[sym].net += p + f + fd;
+  });
+  return map;
+}
+
+/** ── NEW: 统计现货各交易对盈亏 */
+function calcSpotBySymbol(rows) {
+  const map = {}; // sym -> { buy, sell }
+  rows.forEach(r => {
+    // 尝试从交易对字段提取，兜底用"USDT"
+    const pair = String(r['交易对'] || r['合约'] || r['币对'] || '');
+    const tp   = r['委托类型'] || r['类型'] || '';
+    const amt  = pAmt(r['成交金额']);
+    if (!pair) return;
+    if (!map[pair]) map[pair] = { buy: 0, sell: 0 };
+    if (tp === '买入') map[pair].buy  += amt;
+    else if (tp === '卖出') map[pair].sell += amt;
+  });
+  return map;
+}
+
 function toggleApi() { document.getElementById('apiHd').classList.toggle('open'); }
 
 function onSourceChange() {
@@ -684,7 +760,6 @@ async function fetchOne(i) {
         url = base + '?ids=' + encodeURIComponent(id) + '&vs_currencies=usd';
       } else if (src === 'coingecko_pro') {
         url = 'https://pro-api.coingecko.com/api/v3/simple/price?ids=' + encodeURIComponent(id) + '&vs_currencies=usd';
-        // 去除换行符，防止 Header Injection
         const key = document.getElementById('apiKey').value.replace(/[\r\n]/g, '').trim().slice(0, 256);
         if (key) hdrs['x-cg-pro-api-key'] = key;
       } else {
@@ -761,22 +836,16 @@ function renderRates() {
   tb.innerHTML = '';
   rates.forEach((r, i) => {
     const tr = document.createElement('tr');
-
-    // 币种代码
     const td1 = document.createElement('td');
     const inSym = document.createElement('input');
     inSym.className = 'cin'; inSym.style.width = '85px'; inSym.value = r.sym;
     inSym.addEventListener('input', function () { rates[i].sym = this.value.toUpperCase(); rates[i].st = ''; });
     td1.appendChild(inSym); tr.appendChild(td1);
-
-    // CoinGecko ID
     const td2 = document.createElement('td');
     const inId = document.createElement('input');
     inId.className = 'cin'; inId.style.width = '125px'; inId.value = r.id || ''; inId.placeholder = '如 bitcoin';
     inId.addEventListener('input', function () { rates[i].id = this.value.replace(/[^a-z0-9-]/gi, ''); });
     td2.appendChild(inId); tr.appendChild(td2);
-
-    // 汇率
     const td3 = document.createElement('td');
     const inRate = document.createElement('input');
     inRate.className = 'cin'; inRate.style.width = '115px'; inRate.value = String(r.rate || '');
@@ -784,8 +853,6 @@ function renderRates() {
     if (r.sym === 'USDT') inRate.readOnly = true;
     inRate.addEventListener('input', function () { rates[i].rate = parseFloat(this.value) || 0; rates[i].manual = true; });
     td3.appendChild(inRate); tr.appendChild(td3);
-
-    // 操作
     const td4 = document.createElement('td');
     td4.style.whiteSpace = 'nowrap';
     const btnQ = document.createElement('button');
@@ -797,8 +864,6 @@ function renderRates() {
     if (rates.length <= 1) btnRm.disabled = true;
     btnRm.addEventListener('click', () => rmRate(i));
     td4.appendChild(btnQ); td4.appendChild(btnRm); tr.appendChild(td4);
-
-    // 状态
     const td5 = document.createElement('td');
     const stMap  = { ok: '✓ 已更新', err: '✗ 查询失败', loading: '查询中…', '': '' };
     const clsMap = { ok: 'ok', err: 'err', loading: 'loading', '': '' };
@@ -806,7 +871,6 @@ function renderRates() {
     tag.className   = 'ftag ' + (clsMap[r.st] || '');
     tag.textContent = stMap[r.st] || '';
     td5.appendChild(tag); tr.appendChild(td5);
-
     tb.appendChild(tr);
   });
 }
@@ -833,7 +897,7 @@ function rdXL(f) {
     const rdr = new FileReader();
     rdr.onload = e => {
       try {
-        const wb = XLSX.read(e.target.result, { type: 'array' });
+        const wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
         const ws = wb.Sheets[wb.SheetNames[0]];
         res(XLSX.utils.sheet_to_json(ws, { defval: null }));
       } catch {
@@ -980,11 +1044,18 @@ function calc() {
   });
   const spPnl = spSell - spBuy;
 
+  // ── NEW: 现货按交易对统计
+  const spBySymbol = calcSpotBySymbol(D.spot);
+
   const { p: ctP, f: ctF, fd: ctFd, net: ctNet, fmt: ctFmt } = calcContract(D.contract);
+
+  // ── NEW: 合约按品种统计
+  const ctBySymbol = calcContractBySymbol(D.contract, ctFmt);
+
   const netFlow = rcT - wdT;
   const total   = netFlow + spPnl + ctNet;
 
-  _pnlReport = { bcR, bcW, rcT, wdT, wdF, spBuy, spSell, spPnl, ctP, ctF, ctFd, ctNet, ctFmt, netFlow, total };
+  _pnlReport = { bcR, bcW, rcT, wdT, wdF, spBuy, spSell, spPnl, spBySymbol, ctP, ctF, ctFd, ctNet, ctFmt, ctBySymbol, netFlow, total };
   renderRes(_pnlReport);
 
   document.getElementById('pnl-results').style.display    = 'block';
@@ -1010,6 +1081,11 @@ function mkRcRow(k, v, vc) {
   return div;
 }
 
+function mkRcSep() {
+  const div = document.createElement('div'); div.className = 'rcrow-sep';
+  return div;
+}
+
 function renderRes(r) {
   const tot = document.getElementById('r-total');
   tot.textContent = fmtS(r.total) + ' USDT';
@@ -1028,12 +1104,28 @@ function renderRes(r) {
   wdRows.appendChild(mkRcRow('手续费',   '-' + r.wdF.toFixed(4), 'neg'));
   wdRows.appendChild(mkRcRow('折算合计', r.wdT.toFixed(2) + ' U', 'neu'));
 
+  // ── MODIFIED: 现货 — 增加交易对维度
   svEl('r-sp-main', fmtS(r.spPnl) + ' USDT', colorCls(r.spPnl));
   const spRows = document.getElementById('r-sp-rows'); spRows.innerHTML = '';
   spRows.appendChild(mkRcRow('买入花费', '-' + r.spBuy.toFixed(2), 'neg'));
   spRows.appendChild(mkRcRow('卖出获得', '+' + r.spSell.toFixed(2), 'pos'));
   spRows.appendChild(mkRcRow('净盈亏',   fmtS(r.spPnl), colorCls(r.spPnl)));
+  // 按交易对细分（若有数据）
+  const spSymEntries = Object.entries(r.spBySymbol || {});
+  if (spSymEntries.length > 0) {
+    spRows.appendChild(mkRcSep());
+    const hd = document.createElement('div'); hd.className = 'rcrow';
+    const hk = document.createElement('span'); hk.className = 'k'; hk.style.cssText = 'font-size:10px;color:var(--t3);letter-spacing:.5px';
+    hk.textContent = '交易对明细';
+    hd.appendChild(hk); hd.appendChild(document.createElement('span'));
+    spRows.appendChild(hd);
+    spSymEntries.forEach(([sym, d]) => {
+      const net = d.sell - d.buy;
+      spRows.appendChild(mkRcRow(sym, (net >= 0 ? '+' : '') + net.toFixed(2), colorCls(net)));
+    });
+  }
 
+  // ── MODIFIED: 合约 — 增加品种维度
   svEl('r-ct-main', fmtS(r.ctNet) + ' USDT', colorCls(r.ctNet));
   const ctRows = document.getElementById('r-ct-rows'); ctRows.innerHTML = '';
   const fmtHint = document.createElement('div'); fmtHint.className = 'rcrow';
@@ -1045,9 +1137,23 @@ function renderRes(r) {
   ctRows.appendChild(mkRcRow('手续费',   r.ctF.toFixed(4), 'neg'));
   ctRows.appendChild(mkRcRow('资金费',   fmtS(r.ctFd, 4), colorCls(r.ctFd)));
   ctRows.appendChild(mkRcRow('净盈亏',   fmtS(r.ctNet), colorCls(r.ctNet)));
+  // 按品种细分
+  const ctSymEntries = Object.entries(r.ctBySymbol || {});
+  if (ctSymEntries.length > 0) {
+    ctRows.appendChild(mkRcSep());
+    const hd2 = document.createElement('div'); hd2.className = 'rcrow';
+    const hk2 = document.createElement('span'); hk2.className = 'k'; hk2.style.cssText = 'font-size:10px;color:var(--t3);letter-spacing:.5px';
+    hk2.textContent = '品种明细';
+    hd2.appendChild(hk2); hd2.appendChild(document.createElement('span'));
+    ctRows.appendChild(hd2);
+    // 按净盈亏排序，亏损靠前
+    ctSymEntries.sort((a, b) => a[1].net - b[1].net).forEach(([sym, d]) => {
+      ctRows.appendChild(mkRcRow(sym, (d.net >= 0 ? '+' : '') + d.net.toFixed(4), colorCls(d.net)));
+    });
+  }
 
   const fmtLbl = document.getElementById('ct-fmt-label');
-  if (fmtLbl) fmtLbl.textContent = r.ctFmt === 'position' ? '仓位格式' : '流水格式';
+  if (fmtLbl) fmtLbl.textContent = r.ctFmt === 'position' ? '仓位格式 · ' : '流水格式 · ';
 
   renderDtRC(); renderDtWD(); renderDtSP(); renderDtCT();
 }
@@ -1151,26 +1257,123 @@ function renderDtSP() {
 function renderDtCT() {
   document.getElementById('dct-ct').textContent = D.contract.length + ' 笔';
   const wrap = document.getElementById('ct-table-wrap'); wrap.innerHTML = '';
+
   if (!D.contract.length) {
     wrap.innerHTML = '<table class="dt"><tbody><tr><td colspan="6" class="erow">无数据</td></tr></tbody></table>';
+    // 清空HFT标签
+    const hftLbl = document.getElementById('ct-hft-label');
+    if (hftLbl) hftLbl.innerHTML = '';
     return;
   }
-  const fmt   = detectContractFmt(D.contract);
+
+  const fmt = detectContractFmt(D.contract);
+
+  // ── NEW: 统计高频合约
+  let hftCount = 0;
+  if (fmt === 'position') {
+    D.contract.forEach(r => { if (isHFT(r)) hftCount++; });
+  }
+
+  // 更新HFT标签
+  const hftLbl = document.getElementById('ct-hft-label');
+  if (hftLbl) {
+    hftLbl.innerHTML = '';
+    if (hftCount > 0) {
+      const b = document.createElement('span');
+      b.className = 'badge-hft';
+      b.textContent = '⚡ 高频 ' + hftCount + ' 笔';
+      b.style.marginLeft = '6px';
+      hftLbl.appendChild(b);
+    }
+  }
+
+  // ── NEW: 若有HFT，在表格上方渲染高频摘要卡片
+  if (hftCount > 0 && fmt === 'position') {
+    const hftRows = D.contract.filter(r => isHFT(r));
+    const hftSymMap = {};
+    hftRows.forEach(r => {
+      const sym = String(r['合约'] || '未知');
+      if (!hftSymMap[sym]) hftSymMap[sym] = { count: 0, pnl: 0, minSecs: Infinity };
+      hftSymMap[sym].count++;
+      hftSymMap[sym].pnl += parseFloat(r['平仓盈亏']) || 0;
+      const t1 = r['创建时间'] instanceof Date ? r['创建时间'] : parseTime(String(r['创建时间']));
+      const t2 = r['更新时间'] instanceof Date ? r['更新时间'] : parseTime(String(r['更新时间']));
+      if (t1 && t2) {
+        const secs = (t2 - t1) / 1000;
+        if (secs < hftSymMap[sym].minSecs) hftSymMap[sym].minSecs = secs;
+      }
+    });
+
+    const card = document.createElement('div'); card.className = 'hft-card';
+    const icon = document.createElement('div'); icon.className = 'hft-card-icon'; icon.textContent = '⚡';
+    const body = document.createElement('div'); body.className = 'hft-card-body';
+    const title = document.createElement('div'); title.className = 'hft-card-title';
+    title.textContent = '检测到 ' + hftCount + ' 笔高频合约（开平仓 < 5分钟）';
+    body.appendChild(title);
+    const detail = document.createElement('div'); detail.className = 'hft-card-detail';
+    const lines = Object.entries(hftSymMap).map(([sym, d]) => {
+      const minStr = d.minSecs === Infinity ? '' : '，最短 ' + (d.minSecs < 60 ? d.minSecs.toFixed(0) + 's' : (d.minSecs / 60).toFixed(1) + 'min');
+      const pnlStr = (d.pnl >= 0 ? '+' : '') + d.pnl.toFixed(4) + ' U';
+      return sym + '  ' + d.count + '笔' + minStr + '  盈亏 ' + pnlStr;
+    });
+    detail.textContent = lines.join('\n');
+    body.appendChild(detail);
+    card.appendChild(icon); card.appendChild(body);
+    wrap.appendChild(card);
+  }
+
   const table = document.createElement('table'); table.className = 'dt';
   const thead = document.createElement('thead'); const htr = document.createElement('tr');
   const headers = fmt === 'position'
-    ? ['创建时间','用户','合约','方向','杠杆','仓位(张)','开仓均价','平仓均价','平仓盈亏','手续费','资金费','累计盈亏','状态']
+    ? ['创建时间','更新时间','用户','合约','方向','杠杆','仓位(张)','开仓均价','平仓均价','平仓盈亏','手续费','资金费','累计盈亏','状态']
     : fmt === 'order'
     ? ['创建时间','用户','合约','仓位方向','合约方向','成交数量','成交均价','盈亏','手续费','状态']
     : ['时间','UID','类型','金额','币种'];
   headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; htr.appendChild(th); });
   thead.appendChild(htr); table.appendChild(thead);
   const tbody = document.createElement('tbody');
+
   D.contract.forEach(r => {
     const tr = document.createElement('tr');
+    const hft = fmt === 'position' && isHFT(r);
+    if (hft) tr.classList.add('hft-row');
+
     if (fmt === 'position') {
       const pnl = parseFloat(r['平仓盈亏']) || 0;
-      tr.appendChild(mkTd(String(r['创建时间'] || '').slice(0, 16), 'color:var(--t2)'));
+      // 计算持仓时长
+      const t1 = parseTime(String(r['创建时间'] || ''));
+      const t2 = parseTime(String(r['更新时间'] || ''));
+      let durStr = '—';
+      if (t1 && t2 && !isNaN(t1) && !isNaN(t2)) {
+        const secs = Math.round((t2 - t1) / 1000);
+        if (secs < 60) durStr = secs + 's';
+        else if (secs < 3600) durStr = Math.floor(secs / 60) + 'min' + (secs % 60 > 0 ? (secs % 60) + 's' : '');
+        else durStr = (secs / 3600).toFixed(1) + 'h';
+      }
+
+      tr.appendChild(mkTd(fmtCell(r['创建时间']), 'color:var(--t2)'));
+
+      // 更新时间列 + 高频标记
+      const tdClose = document.createElement('td');
+      tdClose.style.cssText = 'white-space:nowrap;vertical-align:middle;padding:8px 12px;border-bottom:1px solid var(--b1)';
+      const closeTimeSpan = document.createElement('span');
+      closeTimeSpan.style.cssText = 'color:var(--t2);font-size:12px';
+      closeTimeSpan.textContent = fmtCell(r['更新时间']);
+      tdClose.appendChild(closeTimeSpan);
+      if (hft) {
+        const hftBadge = document.createElement('span');
+        hftBadge.className = 'badge-hft';
+        hftBadge.style.cssText = 'margin-left:5px';
+        hftBadge.textContent = '⚡' + durStr;
+        tdClose.appendChild(hftBadge);
+      } else if (durStr !== '—') {
+        const durSpan = document.createElement('span');
+        durSpan.style.cssText = 'margin-left:5px;font-size:10px;color:var(--t3);font-family:var(--mono)';
+        durSpan.textContent = durStr;
+        tdClose.appendChild(durSpan);
+      }
+      tr.appendChild(tdClose);
+
       tr.appendChild(mkTd(r['用户UID'], 'font-family:var(--mono);color:var(--t3)'));
       tr.appendChild(mkTd(r['合约'], 'font-family:var(--mono)'));
       tr.appendChild(mkTd(null, null, { cls: r['方向'] === '买入' ? 't-buy' : 't-sell', text: r['方向'] || '—' }));
@@ -1187,7 +1390,7 @@ function renderDtCT() {
       const pnl = parseFloat(r['盈亏']) || 0;
       const fee = parseFloat(r['手续费']) || 0;
       const isClosed = r['仓位方向'] === '平仓' && r['订单状态'] === '完全成交';
-      tr.appendChild(mkTd(String(r['创建时间'] || '').slice(0, 16), 'color:var(--t2)'));
+      tr.appendChild(mkTd(fmtCell(r['创建时间']), 'color:var(--t2)'));
       tr.appendChild(mkTd(r['用户'], 'font-family:var(--mono);color:var(--t3)'));
       tr.appendChild(mkTd(r['合约'], 'font-family:var(--mono)'));
       tr.appendChild(mkTd(null, null, { cls: r['仓位方向'] === '平仓' ? 't-sell' : 't-buy', text: r['仓位方向'] || '—' }));
@@ -1219,6 +1422,19 @@ function copyReport() {
   if (!_pnlReport) return;
   const r = _pnlReport;
   const rlines = rates.map(x => '  ' + x.sym + ': ' + x.rate + ' USDT').join('\n');
+
+  // 现货品种汇总
+  const spSymLines = Object.entries(r.spBySymbol || {}).map(([sym, d]) => {
+    const net = d.sell - d.buy;
+    return '    ' + sym + ': ' + (net >= 0 ? '+' : '') + net.toFixed(2);
+  }).join('\n');
+
+  // 合约品种汇总
+  const ctSymLines = Object.entries(r.ctBySymbol || {})
+    .sort((a, b) => a[1].net - b[1].net)
+    .map(([sym, d]) => '    ' + sym + ': ' + (d.net >= 0 ? '+' : '') + d.net.toFixed(4))
+    .join('\n');
+
   const txt = [
     '═══════ 盈亏计算报告 ═══════',
     '汇率配置：', rlines, '',
@@ -1233,12 +1449,14 @@ function copyReport() {
     '【现货交易】',
     '  买入花费: -' + r.spBuy.toFixed(2) + ' USDT',
     '  卖出获得: +' + r.spSell.toFixed(2) + ' USDT',
-    '  现货净盈亏: ' + fmtS(r.spPnl) + ' USDT', '',
+    '  现货净盈亏: ' + fmtS(r.spPnl) + ' USDT',
+    ...(spSymLines ? ['  交易对明细:', spSymLines] : []), '',
     '【合约交易】（' + (r.ctFmt === 'position' ? '仓位格式' : '流水格式') + '）',
     '  平仓盈亏: ' + fmtS(r.ctP) + ' USDT',
     '  手续费: ' + r.ctF.toFixed(4) + ' USDT',
     '  资金费: ' + fmtS(r.ctFd, 4) + ' USDT',
-    '  合约净盈亏: ' + fmtS(r.ctNet) + ' USDT', '',
+    '  合约净盈亏: ' + fmtS(r.ctNet) + ' USDT',
+    ...(ctSymLines ? ['  品种明细:', ctSymLines] : []), '',
     '【综合净盈亏】',
     '  充提净额: ' + fmtS(r.netFlow) + ' USDT',
     '  现货盈亏: ' + fmtS(r.spPnl) + ' USDT',
@@ -1272,7 +1490,6 @@ function resetAll() {
 // IP 风险分析工具
 // ═══════════════════════════════════════════════
 
-/** 运行时从 UI 读取，支持动态配置 */
 function getHighRiskCC() {
   return document.getElementById('cfg_high_risk').value
     .split(',').map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]{2}$/.test(s));
@@ -1282,7 +1499,6 @@ function getFiveCC() {
     .split(',').map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]{2}$/.test(s));
 }
 
-/** IP 归属地缓存（最多500条，LRU 简化版：超限时清空重建） */
 const _ipCache     = new Map();
 const IP_CACHE_MAX = 500;
 
@@ -1291,13 +1507,8 @@ function ipCacheSet(ip, val) {
   _ipCache.set(ip, val);
 }
 
-/** 最后一次分析的数据层快照，供导出使用 */
 let _lastIPReport = null;
 
-/**
- * 清洗 AI 返回的记录数组
- * 使用共用 IPV4_STRICT / TIME_STRICT 防止注入
- */
 function sanitizeAIRecords(records) {
   if (!Array.isArray(records)) return [];
   return records
@@ -1309,10 +1520,8 @@ function sanitizeAIRecords(records) {
     .filter(r => r.ip !== null);
 }
 
-/** 本地正则提取 IP 记录（使用严格 IPv4 正则，避免 999.x.x.x 误匹配） */
 function extractRecordsLocal(text) {
   const timeRe = /(\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2})/g;
-  // 使用与 IPV4_STRICT 等价的捕获组正则，保证一致性
   const ipv4Re = /\b((25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d))\b/g;
   const ipv6Re = /\b([0-9a-fA-F]{4}:[0-9a-fA-F]{4}(?::[0-9a-fA-F]{0,4})*)/g;
   const lines  = text.split('\n').map(l => l.trim()).filter(Boolean);
@@ -1332,7 +1541,6 @@ function extractRecordsLocal(text) {
     if (records.length) return records;
   }
 
-  // 无行结构时，按位置关联时间
   const times   = [...text.matchAll(timeRe)].map(m => ({ val: m[1], pos: m.index }));
   const cleaned = text.replace(timeRe, m => 'X'.repeat(m.length));
   const records = [];
@@ -1348,7 +1556,6 @@ function extractRecordsLocal(text) {
   return records;
 }
 
-/** 验证 AI endpoint：必须是 HTTPS 公网地址，禁止私网/本地回环 */
 const PRIVATE_HOST_RE = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|::1|fc00:|fd[0-9a-f]{2}:)/i;
 function validateAIEndpoint(url) {
   try {
@@ -1359,20 +1566,15 @@ function validateAIEndpoint(url) {
   } catch { return false; }
 }
 
-/** AI 兜底解析，含 Header Injection 防护与 8s 超时 */
 async function extractRecordsClaude(text, apiKey) {
   const rawEndpoint = (document.getElementById('ai_endpoint')?.value || '').trim()
     || 'https://api.siliconflow.cn/v1/chat/completions';
   if (!validateAIEndpoint(rawEndpoint)) throw new Error('AI 接口地址不合法，必须是 HTTPS 公网地址');
-
-  // 防 Header Injection：去除换行符，截断至合理长度
   const safeKey   = apiKey.replace(/[\r\n]/g, '').trim().slice(0, 256);
   const safeModel = (document.getElementById('ai_model')?.value || '').replace(/[\r\n]/g, '').trim().slice(0, 128)
     || 'Qwen/Qwen2.5-7B-Instruct';
-
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), 8000);
-
   try {
     const res = await fetch(rawEndpoint, {
       method:  'POST',
@@ -1402,7 +1604,6 @@ async function extractRecordsClaude(text, apiKey) {
   }
 }
 
-/** 节流版 previewIPs，防止大量文本输入时卡主线程 */
 let _previewTimer = null;
 function previewIPs() {
   clearTimeout(_previewTimer);
@@ -1436,18 +1637,13 @@ function previewIPs() {
   }, 300);
 }
 
-/**
- * 查询单个 IP 归属地
- * 含严格格式校验 + 5s 超时 + 四源降级
- */
 async function queryIPInfo(ip, isV6) {
   if (isV6 && ip.includes('...')) return { ip, cc: '', country: 'IPv6 截断，无法查询', org: '', city: '', region: '', v6: true };
   if (!isV6 && !isValidIPv4(ip))  return { ip, cc: '', country: 'IP 格式非法', org: '', city: '', region: '' };
   if (_ipCache.has(ip)) return _ipCache.get(ip);
 
-// 内网/保留地址，跳过外部查询
-const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|0\.)/;
-if (!isV6 && PRIVATE_IP_RE.test(ip)) return { ip, cc: '', country: '内网地址', org: '', city: '', region: '', source: 'local' };
+  const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|0\.)/;
+  if (!isV6 && PRIVATE_IP_RE.test(ip)) return { ip, cc: '', country: '内网地址', org: '', city: '', region: '', source: 'local' };
 
   const encodedIp = encodeURIComponent(ip);
 
@@ -1460,51 +1656,43 @@ if (!isV6 && PRIVATE_IP_RE.test(ip)) return { ip, cc: '', country: '内网地址
     } catch { return null; } finally { clearTimeout(timer); }
   }
 
- // 源1：本地代理（仅 IPv4）
-if (!isV6) {
-  try {
-    const d = await tryFetch('/api/ip/' + encodedIp);
-    if (d && (d.cc || d.country) && (!d.cc || d.cc.length === 2)) {
-      const r = { ip, cc: d.cc || '', country: d.country || '未知', org: d.org || '', city: d.city || '', region: d.region || '', source: 'local' };
+  if (!isV6) {
+    try {
+      const d = await tryFetch('/api/ip/' + encodedIp);
+      if (d && (d.cc || d.country) && (!d.cc || d.cc.length === 2)) {
+        const r = { ip, cc: d.cc || '', country: d.country || '未知', org: d.org || '', city: d.city || '', region: d.region || '', source: 'local' };
+        ipCacheSet(ip, r); return r;
+      }
+    } catch { }
+  }
+
+  if (!isV6) {
+    const d2 = await tryFetch('https://freeipapi.com/api/json/' + encodedIp);
+    if (d2 && d2.countryCode && d2.countryCode.length === 2 && d2.countryCode !== '-') {
+      const r = { ip, cc: d2.countryCode, country: d2.countryName || '', city: d2.cityName || '', region: d2.regionName || '', org: '', source: 'freeipapi' };
       ipCacheSet(ip, r); return r;
     }
-  } catch { /* 继续降级 */ }
-}
-
-  // 源2：freeipapi.com（仅支持 IPv4）
-if (!isV6) {
-  const d2 = await tryFetch('https://freeipapi.com/api/json/' + encodedIp);
-  if (d2 && d2.countryCode && d2.countryCode.length === 2 && d2.countryCode !== '-') {
-    const r = { ip, cc: d2.countryCode, country: d2.countryName || '', city: d2.cityName || '', region: d2.regionName || '', org: '', source: 'freeipapi' };
-    ipCacheSet(ip, r); return r;
   }
-}
 
-// 源3：ipapi.co
-if (!isV6) {
-  const d3 = await tryFetch('https://ipapi.co/' + encodedIp + '/json/');
-  if (d3 && d3.country_code && d3.country_code.length === 2 && !d3.error) {
-    const r = { ip, cc: d3.country_code, country: d3.country_name || '', city: d3.city || '', region: d3.region || '', org: d3.org || '', source: 'ipapi.co' };
-    ipCacheSet(ip, r); return r;
+  if (!isV6) {
+    const d3 = await tryFetch('https://ipapi.co/' + encodedIp + '/json/');
+    if (d3 && d3.country_code && d3.country_code.length === 2 && !d3.error) {
+      const r = { ip, cc: d3.country_code, country: d3.country_name || '', city: d3.city || '', region: d3.region || '', org: d3.org || '', source: 'ipapi.co' };
+      ipCacheSet(ip, r); return r;
+    }
   }
-}
 
-// 源4：ip-api.com
-if (!isV6) {
-  const d4 = await tryFetch('https://ip-api.com/json/' + encodedIp + '?fields=status,country,countryCode,city,regionName,org');
-  if (d4 && d4.status === 'success') {
-    const r = { ip, cc: d4.countryCode || '', country: d4.country || '', city: d4.city || '', region: d4.regionName || '', org: d4.org || '', source: 'ip-api' };
-    ipCacheSet(ip, r); return r;
+  if (!isV6) {
+    const d4 = await tryFetch('https://ip-api.com/json/' + encodedIp + '?fields=status,country,countryCode,city,regionName,org');
+    if (d4 && d4.status === 'success') {
+      const r = { ip, cc: d4.countryCode || '', country: d4.country || '', city: d4.city || '', region: d4.regionName || '', org: d4.org || '', source: 'ip-api' };
+      ipCacheSet(ip, r); return r;
+    }
   }
+
+  return { ip, cc: '', country: isV6 ? 'IPv6 暂不支持归属查询' : '查询失败', org: '', city: '', region: '' };
 }
 
-return { ip, cc: '', country: isV6 ? 'IPv6 暂不支持归属查询' : '查询失败', org: '', city: '', region: '' };
-}
-
-/**
- * 12小时内IP切换检测
- * 修复：使用 parseTime() 统一时间解析，兼容 Safari / Firefox
- */
 function check12hSwitch(records, FIVE_CC) {
   const withTime = records
     .filter(r => r.time && parseTime(r.time))
@@ -1558,7 +1746,6 @@ async function runAnalysis() {
   const text = document.getElementById('log_input').value.trim();
   if (!text) { setIPError('请粘贴登录记录后再分析'); return; }
 
-  // 运行时读取风控配置
   const HIGH_RISK_CC = getHighRiskCC();
   const FIVE_CC      = getFiveCC();
   const claudeKey    = document.getElementById('claude_key').value.trim();
@@ -1619,7 +1806,6 @@ async function runAnalysis() {
   let triggered = 0; if (c1) triggered++; if (c2) triggered++;
   const uniqueCountries = [...new Set(enriched.map(r => r.country))].join('、');
 
-  // metrics
   const metricsEl = document.getElementById('metrics'); metricsEl.innerHTML = '';
   [
     { label: 'IP 数量',   value: String(enriched.length),   cls: '' },
@@ -1634,7 +1820,6 @@ async function runAnalysis() {
     val.textContent = m.value; card.appendChild(lbl); card.appendChild(val); metricsEl.appendChild(card);
   });
 
-  // 构建切换映射
   const switchMap = new Map();
   const addSwitch = (key, peer, peerTime, hours) => {
     if (!switchMap.has(key)) switchMap.set(key, []);
@@ -1647,7 +1832,6 @@ async function runAnalysis() {
     if (fromRec) addSwitch(fromRec.ip + '|' + fromRec.time, s.to, s.time, s.hours);
   });
 
-  // 渲染表格
   const tbody = document.getElementById('ip_tbody'); tbody.innerHTML = '';
   enriched.forEach((r, i) => {
     const isV6     = r.v6 === true;
@@ -1696,7 +1880,6 @@ async function runAnalysis() {
     tbody.appendChild(tr);
   });
 
-  // 行点击：打开 ipinfo.io（仅合法 IPv4）
   tbody.querySelectorAll('tr').forEach(tr => {
     tr.addEventListener('click', () => {
       const ip = tr.dataset.ip || '';
@@ -1705,7 +1888,6 @@ async function runAnalysis() {
     });
   });
 
-  // 裁决面板
   const MANUAL_CHECK_ITEMS = [
     '条件3：近72小时内是否更改安全项？（登入密码 / 资金密码 / 邮箱 / 手机号）',
     '条件4：本次提币是否使用从未使用过的新地址？'
@@ -1793,7 +1975,6 @@ async function runAnalysis() {
   document.getElementById('query_time').textContent = '· 解析：' + parseMethod + ' · 耗时 ' + elapsed + 's';
   document.getElementById('ip-results').style.display = 'block';
 
-  // 保存数据层快照
   _lastIPReport = { enriched, vtitle, vdetail, switches, highRisk, triggered, parseMethod, elapsed, HIGH_RISK_CC, FIVE_CC };
 
   setIPLoading(false);
@@ -1801,7 +1982,6 @@ async function runAnalysis() {
   setTimeout(() => document.getElementById('ip-results').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
 }
 
-/** 导出报告（从数据层生成，不依赖 DOM） */
 function exportIPText() {
   if (!_lastIPReport) return;
   const { enriched, vtitle, vdetail, switches, highRisk, triggered, parseMethod, elapsed, HIGH_RISK_CC, FIVE_CC } = _lastIPReport;
@@ -1847,12 +2027,10 @@ function exportIPText() {
   navigator.clipboard.writeText(text)
     .then(() => { btn.textContent = '✓ 已复制'; setTimeout(() => btn.textContent = orig, 2000); })
     .catch(() => {
-      // 降级：ClipboardItem API
       try {
         navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }) })]);
         btn.textContent = '✓ 已复制'; setTimeout(() => btn.textContent = orig, 2000);
       } catch {
-        // 最后降级：提示用户手动复制
         btn.textContent = '复制失败，请手动复制';
         setTimeout(() => btn.textContent = orig, 3000);
       }
@@ -1866,8 +2044,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('apiHd').addEventListener('click', toggleApi);
   document.getElementById('apiSource').addEventListener('change', onSourceChange);
   document.getElementById('proxyUrl').addEventListener('input', function () { validateProxyUrl(this.value); });
-
-  // log_input 节流预览（防止大文本卡顿）
   document.getElementById('log_input').addEventListener('input', previewIPs);
 
   ['recharge', 'withdraw', 'spot', 'contract'].forEach(function (t) {
@@ -1888,7 +2064,7 @@ document.addEventListener('DOMContentLoaded', function () {
   renderRates();
 });
 
-// 点击涟漪效果（节流 150ms，防止高频 DOM 堆积）
+// 点击涟漪效果
 let _lastRipple = 0;
 document.addEventListener('click', function (e) {
   const now = Date.now();
