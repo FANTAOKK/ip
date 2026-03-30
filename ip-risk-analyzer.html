@@ -430,6 +430,7 @@ table.dt tr:hover td{background:var(--s2)}
       <label>API Key <span style="color:var(--t3);font-weight:400">（本地正则优先，无法识别时AI兜底）</span></label>
       <input type="password" class="ain" id="claude_key" placeholder="sk-...">
       <div class="input-hint">推荐：<a href="https://siliconflow.cn" target="_blank">硅基流动</a>（免费）· 支持任意 OpenAI 兼容接口</div>
+      <div class="anote" style="color:var(--amber);margin-top:6px">⚠仅在本地浏览器内使用，不会上传至任何服务器。建议使用权限最小的临时 Key。</div>
     </div>
     <div class="afield">
       <label>模型名称 <span style="color:var(--t3);font-weight:400">（留空用默认）</span></label>
@@ -568,7 +569,7 @@ function validateProxyUrl(val) {
   const warn = document.getElementById('proxyWarn');
   const inp  = document.getElementById('proxyUrl');
   const hasScheme = /[a-zA-Z][a-zA-Z0-9+\-.]*:\/\//.test(val);
-  const notRelative = val.length > 0 && !val.startsWith('/');
+  const notRelative = val.length === 0 || !val.startsWith('/');
   const hasTraversal = /\.\./.test(val);
   const hasNullByte = val.includes('\0');
   const bad = hasScheme || notRelative || hasTraversal || hasNullByte;
@@ -870,6 +871,7 @@ function resetAll() {
 // ═══════════════════════════════════════════════
 const HIGH_RISK_CC  = ['IN','PK','BD','NG'];
 const FIVE_CC       = ['CN','HK','TW','SG','MO'];
+const _ipCache      = new Map();
 
 function extractRecordsLocal(text) {
   const timeRe = /(\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2})/g;
@@ -928,7 +930,11 @@ async function extractRecordsClaude(text, apiKey) {
 
   const raw   = data.choices?.[0]?.message?.content||'';
   const clean = raw.replace(/```json|```/g,'').trim();
-  return sanitizeAIRecords(JSON.parse(clean).records||[]);
+  try {
+    return sanitizeAIRecords(JSON.parse(clean).records||[]);
+  } catch {
+    throw new Error('AI 返回格式不合法，请重试或切换本地解析模式');
+  }
 }
 
 function previewIPs() {
@@ -956,33 +962,35 @@ chips.appendChild(hint);
 
 async function queryIPInfo(ip, isV6) {
   if (isV6 && ip.includes('...')) return {ip,cc:'',country:'IPv6 截断，无法查询',org:'',city:'',region:'',v6:true};
+  if (_ipCache.has(ip)) return _ipCache.get(ip);
   const encodedIp = encodeURIComponent(ip);
 
   // 源1：本地代理（部署时优先）
   try {
     const res = await fetch('/api/ip/'+encodedIp);
-    if (res.ok) { const d=await res.json(); if (d.cc||d.country) return {ip,cc:d.cc||'',country:d.country||'未知',org:d.org||'',city:d.city||'',region:d.region||'',source:d.source||'local'}; }
+    if (res.ok) { const d=await res.json(); if (d.cc||d.country) { const r={ip,cc:d.cc||'',country:d.country||'未知',org:d.org||'',city:d.city||'',region:d.region||'',source:d.source||'local'}; _ipCache.set(ip,r); return r; } }
   } catch(e) {}
 
   // 源2：freeipapi.com
   try {
     const res = await fetch('https://freeipapi.com/api/json/'+encodedIp);
-    if (res.ok) { const d=await res.json(); if (d.countryCode&&d.countryCode!=='-') return {ip,cc:d.countryCode,country:d.countryName||'',city:d.cityName||'',region:d.regionName||'',org:'',source:'freeipapi'}; }
+    if (res.ok) { const d=await res.json(); if (d.countryCode&&d.countryCode!=='-') { const r={ip,cc:d.countryCode,country:d.countryName||'',city:d.cityName||'',region:d.regionName||'',org:'',source:'freeipapi'}; _ipCache.set(ip,r); return r; } }
   } catch(e) {}
 
   // 源3：ipwho.is
   try {
     const res = await fetch('https://ipwho.is/'+encodedIp);
-    if (res.ok) { const d=await res.json(); if (d.success&&d.country_code) { const conn=d.connection||{}; return {ip,cc:d.country_code,country:d.country||'',city:d.city||'',region:d.region||'',org:conn.isp||conn.org||'',source:'ipwho.is'}; } }
+    if (res.ok) { const d=await res.json(); if (d.success&&d.country_code) { const conn=d.connection||{}; const r={ip,cc:d.country_code,country:d.country||'',city:d.city||'',region:d.region||'',org:conn.isp||conn.org||'',source:'ipwho.is'}; _ipCache.set(ip,r); return r; } }
   } catch(e) {}
 
   // 源4：ip-api.com
   try {
     const res = await fetch('https://ip-api.com/json/'+encodedIp+'?fields=status,country,countryCode,city,regionName,org');
-    if (res.ok) { const d=await res.json(); if (d.status==='success') return {ip,cc:d.countryCode||'',country:d.country||'',city:d.city||'',region:d.regionName||'',org:d.org||'',source:'ip-api'}; }
+    if (res.ok) { const d=await res.json(); if (d.status==='success') { const r={ip,cc:d.countryCode||'',country:d.country||'',city:d.city||'',region:d.regionName||'',org:d.org||'',source:'ip-api'}; _ipCache.set(ip,r); return r; } }
   } catch(e) {}
 
-  return {ip,cc:'',country:'查询失败',org:'',city:'',region:''};
+  const failed = {ip,cc:'',country:'查询失败',org:'',city:'',region:''};
+  return failed;
 }
 
 function check12hSwitch(records) {
@@ -1204,12 +1212,15 @@ document.addEventListener('click', function(e) {
   const color='0,212,154';
   const r1=document.createElement('div');
   r1.style.cssText=`position:fixed;left:${e.clientX-10}px;top:${e.clientY-10}px;width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(${color},.9);pointer-events:none;z-index:9999;animation:ripple-out .65s cubic-bezier(.22,1,.36,1) forwards;`;
-  document.body.appendChild(r1); r1.addEventListener('animationend',()=>r1.remove());
+  document.body.appendChild(r1);
+  r1.addEventListener('animationend',()=>r1.remove());
+  setTimeout(()=>{ if(r1.isConnected) r1.remove(); }, 1000);
   const r2=document.createElement('div');
   r2.style.cssText=`position:fixed;left:${e.clientX-16}px;top:${e.clientY-16}px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(${color},.35);pointer-events:none;z-index:9999;animation:ripple-out 1s cubic-bezier(.22,1,.36,1) forwards;animation-delay:.08s;`;
-  document.body.appendChild(r2); r2.addEventListener('animationend',()=>r2.remove());
+  document.body.appendChild(r2);
+  r2.addEventListener('animationend',()=>r2.remove());
+  setTimeout(()=>{ if(r2.isConnected) r2.remove(); }, 1500);
 });
 </script>
 </body>
 </html>
-
