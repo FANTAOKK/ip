@@ -594,6 +594,7 @@ function detectContractFmt(rows) {
   if (!rows||!rows.length) return 'flow';
   const keys = Object.keys(rows[0]);
   if (keys.includes('平仓盈亏')&&keys.includes('手续费')&&(keys.includes('资金费')||keys.includes('资金费用'))) return 'position';
+  if (keys.includes('仓位方向')&&keys.includes('订单状态')&&keys.includes('盈亏')) return 'order';
   return 'flow';
 }
 
@@ -727,6 +728,7 @@ function refreshPanel(t) {
 function calcContract(rows) {
   const fmt=detectContractFmt(rows); let p=0,f=0,fd=0;
   if (fmt==='position') { rows.forEach(r=>{p+=parseFloat(r['平仓盈亏'])||0;f+=parseFloat(r['手续费'])||0;fd+=parseFloat(r['资金费']??r['资金费用']??0)||0;}); }
+  else if (fmt==='order') { rows.forEach(r=>{ if(r['订单状态']==='完全成交'&&r['仓位方向']==='平仓'){p+=parseFloat(r['盈亏'])||0;} f+=parseFloat(r['手续费'])||0; }); }
   else { rows.forEach(r=>{const tp=String(r['类型']||'');const a=parseFloat(r['金额'])||0;if(tp==='平仓盈亏')p+=a;else if(tp.includes('手续费'))f+=a;else if(tp==='资金费用'||tp==='资金费')fd+=a;}); }
   return {p,f,fd,net:p+f+fd,fmt};
 }
@@ -817,13 +819,28 @@ function renderDtCT(){
   if(!D.contract.length){const t=document.createElement('table');t.className='dt';const tb=document.createElement('tbody');const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=6;td.className='erow';td.textContent='无数据';tr.appendChild(td);tb.appendChild(tr);t.appendChild(tb);wrap.appendChild(t);return;}
   const fmt=detectContractFmt(D.contract);const table=document.createElement('table');table.className='dt';
   const thead=document.createElement('thead');const htr=document.createElement('tr');
-  const headers=fmt==='position'?['创建时间','用户UID','合约','方向','杠杆','仓位(张)','开仓均价','平仓均价','平仓盈亏','手续费','资金费','累计盈亏','仓位状态']:['时间','UID','类型','金额','币种'];
+  const headers=fmt==='position'?['创建时间','用户','合约','仓位方向','合约方向','成交数量','成交均价','盈亏','手续费','状态','创建时间']:fmt==='order'?['创建时间','用户','合约','仓位方向','合约方向','成交数量','成交均价','盈亏','手续费','状态']:['时间','UID','类型','金额','币种'];
   headers.forEach(h=>{const th=document.createElement('th');th.textContent=h;htr.appendChild(th);});thead.appendChild(htr);table.appendChild(thead);
   const tbody=document.createElement('tbody');
   D.contract.forEach(r=>{
     const tr=document.createElement('tr');
     if(fmt==='position'){const pnl=parseFloat(r['平仓盈亏'])||0;tr.appendChild(mkTd(String(r['创建时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['用户UID'],'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(r['合约'],'font-family:var(--mono)'));tr.appendChild(mkTd(null,null,{cls:r['方向']==='买入'?'t-buy':'t-sell',text:r['方向']||'—'}));tr.appendChild(mkTd((r['杠杆']||'—')+'x','font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(r['仓位(张)']??r['已平仓位(张)'],'font-family:var(--mono)'));tr.appendChild(mkTd(parseFloat(r['开仓均价']||0).toFixed(6),'font-family:var(--mono);color:var(--t2)'));tr.appendChild(mkTd(parseFloat(r['平仓均价']||0).toFixed(6),'font-family:var(--mono);color:var(--t2)'));tr.appendChild(mkTd((pnl>=0?'+':'')+pnl.toFixed(4),'font-family:var(--mono);font-weight:500;color:'+(pnl>=0?'var(--green)':'var(--red)')));tr.appendChild(mkTd(parseFloat(r['手续费']||0).toFixed(4),'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(parseFloat(r['资金费']??r['资金费用']??0).toFixed(4),'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(parseFloat(r['累计盈亏']||0).toFixed(4),'font-family:var(--mono);font-weight:500;color:var(--blue)'));tr.appendChild(mkTd(r['仓位状态'],'font-size:10px;color:var(--t3)'));}
-    else{const tp=r['类型']||'',a=parseFloat(r['金额'])||0;let tc='t-neu';if(tp==='平仓盈亏')tc=a>=0?'t-buy':'t-sell';else if(tp.includes('手续费')||tp==='资金费用'||tp==='资金费')tc='t-fee';else if(tp==='转入')tc='t-in';else if(tp==='转出')tc='t-out';tr.appendChild(mkTd(String(r['时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['UID'],'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(null,null,{cls:tc,text:tp||'—'}));tr.appendChild(mkTd((a>=0?'+':'')+a.toFixed(4),'font-family:var(--mono);color:'+(a>=0?'var(--green)':'var(--red)')));tr.appendChild(mkTd(normC(r['币种']||'USDT'),'font-family:var(--mono);color:var(--t3)'));}
+    else if(fmt==='order'){
+  const pnl=parseFloat(r['盈亏'])||0;
+  const fee=parseFloat(r['手续费'])||0;
+  const isClosed=r['仓位方向']==='平仓'&&r['订单状态']==='完全成交';
+  tr.appendChild(mkTd(String(r['创建时间']||'').slice(0,16),'color:var(--t2)'));
+  tr.appendChild(mkTd(r['用户'],'font-family:var(--mono);color:var(--t3)'));
+  tr.appendChild(mkTd(r['合约'],'font-family:var(--mono)'));
+  tr.appendChild(mkTd(r['仓位方向'],null,{cls:r['仓位方向']==='平仓'?'t-sell':'t-buy',text:r['仓位方向']||'—'}));
+  tr.appendChild(mkTd(r['合约方向'],null,{cls:r['合约方向']==='买入'?'t-buy':'t-sell',text:r['合约方向']||'—'}));
+  tr.appendChild(mkTd(r['成交数量'],'font-family:var(--mono)'));
+  tr.appendChild(mkTd(parseFloat(r['成交均价']||0).toFixed(6),'font-family:var(--mono);color:var(--t2)'));
+  tr.appendChild(mkTd(isClosed?(pnl>=0?'+':'')+pnl.toFixed(4):'—','font-family:var(--mono);font-weight:500;color:'+(pnl>=0?'var(--green)':'var(--red)')));
+  tr.appendChild(mkTd(fee.toFixed(4),'font-family:var(--mono);color:var(--t3)'));
+  tr.appendChild(mkTd(r['订单状态'],'font-size:10px;color:var(--t3)'));
+}
+else{const tp=r['类型']||'',a=parseFloat(r['金额'])||0;let tc='t-neu';if(tp==='平仓盈亏')tc=a>=0?'t-buy':'t-sell';else if(tp.includes('手续费')||tp==='资金费用'||tp==='资金费')tc='t-fee';else if(tp==='转入')tc='t-in';else if(tp==='转出')tc='t-out';tr.appendChild(mkTd(String(r['时间']||'').slice(0,16),'color:var(--t2)'));tr.appendChild(mkTd(r['UID'],'font-family:var(--mono);color:var(--t3)'));tr.appendChild(mkTd(null,null,{cls:tc,text:tp||'—'}));tr.appendChild(mkTd((a>=0?'+':'')+a.toFixed(4),'font-family:var(--mono);color:'+(a>=0?'var(--green)':'var(--red)')));tr.appendChild(mkTd(normC(r['币种']||'USDT'),'font-family:var(--mono);color:var(--t3)'));}
     tbody.appendChild(tr);
   });
   table.appendChild(tbody); wrap.appendChild(table);
