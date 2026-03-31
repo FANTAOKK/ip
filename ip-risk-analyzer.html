@@ -9,35 +9,78 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg:#0a0a0e;
-  --s1:#111116;
-  --s2:#16161c;
-  --s3:#1c1c24;
-  --b1:#222230;
-  --b2:#2c2c3c;
-  --b3:#38384c;
-  --tx:#e8e8f4;
-  --t2:#8888a8;
-  --t3:#44445c;
-  --green:#00d49a;
-  --gd:rgba(0,212,154,.1);
-  --gm:rgba(0,212,154,.25);
-  --red:#ff5566;
-  --rd:rgba(255,85,102,.1);
-  --amber:#ffaa00;
-  --ad:rgba(255,170,0,.1);
-  --blue:#6699ff;
-  --bd:rgba(102,153,255,.1);
-  --purple:#aa77ff;
-  --pd:rgba(170,119,255,.1);
+  --bg:#161720;     
+  --s1:#1e2030;      
+  --s2:#252840;      
+  --s3:#2c2f48;       
+  --b1:#363855;       
+  --b2:#424460;        
+  --b3:#505270;       
+  --tx:#e8e8f4;       
+  --t2:#9898b8;        
+  --t3:#606080;        
+  --green:#9be554;
+  --gd:rgba(155,229,84,.08);
+  --gm:rgba(155,229,84,.18);
+  --red:#e05570;
+  --rd:rgba(224,85,112,.08);
+  --amber:#d4920a;
+  --ad:rgba(212,146,10,.08);
+  --blue:#5580e0;
+  --bd:rgba(85,128,224,.08);
+  --purple:#9066d4;
+  --pd:rgba(144,102,212,.08);
   --mono:'DM Mono',monospace;
   --sans:'Noto Sans SC',sans-serif;
   --r:10px;
   --rs:6px;
 }
+[data-theme="light"] {
+  --bg:#f0f2f8;
+  --s1:#ffffff;
+  --s2:#f5f6fc;
+  --s3:#eceef8;
+  --b1:#dde0f0;
+  --b2:#c8ccde;
+  --b3:#a0a4c0;
+  --tx:#0e0f22;
+  --t2:#2e3050;
+  --t3:#606280;
+  --green:#9be554;
+  --gd:rgba(155,229,84,.08);
+  --gm:rgba(155,229,84,.18);
+  --red:#c43355;
+  --rd:rgba(196,51,85,.08);
+  --amber:#b87800;
+  --ad:rgba(184,120,0,.08);
+  --blue:#3a60cc;
+  --bd:rgba(58,96,204,.08);
+  --purple:#7044bb;
+  --pd:rgba(112,68,187,.08);
+}
+
+[data-theme="light"] body::before { opacity:.3; }
+[data-theme="light"] body::after  { opacity:.4; }
+
+[data-theme="light"] .topbar {
+  background:rgba(240,242,248,.92);
+  border-color:#dde0f0;
+}
+
+[data-theme="light"] .panel,
+[data-theme="light"] .api-panel,
+[data-theme="light"] .rp,
+[data-theme="light"] .ip-card,
+[data-theme="light"] .ai-card,
+[data-theme="light"] .rc,
+[data-theme="light"] .metric,
+[data-theme="light"] .dtc,
+[data-theme="light"] .chart-container {
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
 
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sans);background:var(--bg);color:var(--tx);font-size:13px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);font-size:13px;font-weight:400;line-height:1.6;min-height:100vh;overflow-x:hidden}
 
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.6}
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(102,153,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(102,153,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
@@ -179,7 +222,7 @@ input[type=file]{display:none}
 /* ── ACTION ROW ── */
 .arow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:28px}
 .bcalc{background:var(--green);color:#041510;border:none;border-radius:var(--r);padding:11px 28px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:.15s;letter-spacing:.3px}
-.bcalc:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,212,154,.25)}
+.bcalc:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 4px 20px rgba(155,229,84,.25)}
 .bcopy,.breset{background:none;border:1px solid var(--b2);border-radius:var(--r);padding:10px 18px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:.15s}
 .bcopy{color:var(--tx)}.bcopy:hover{background:var(--s2)}
 .breset{color:var(--t2)}.breset:hover{color:var(--tx)}
@@ -332,6 +375,7 @@ table.dt tr:hover td{background:var(--s2)}
       <span class="tab-dot"></span>IP 风险分析
     </button>
   </div>
+  <button onclick="toggleTheme()" id="themeBtn" style="background:none;border:1px solid var(--b2);border-radius:20px;padding:4px 14px;font-size:12px;color:var(--t2);cursor:pointer;font-family:var(--sans);transition:.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--b2)';this.style.color='var(--t2)'">🌙 暗色</button>
   <div class="topbar-status">
     <span class="status-dot"></span>
     <span id="topTxt">就绪</span>
@@ -383,7 +427,19 @@ table.dt tr:hover td{background:var(--s2)}
   <div class="panel"><div class="phd"><div class="picon" style="background:var(--ad);color:var(--amber)">⚡</div><div><div class="ptitle">合约交易</div></div><div class="pct" id="ct-contract">0 条</div></div>
     <div class="pbody"><div class="dz" id="dz-contract"><div class="dz-txt">点击上传 / 拖拽文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-contract" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-contract"></div><div id="ct-fmt-badge"></div><div class="psum" id="sum-contract"></div></div></div>
 </div>
-
+<div class="slabel">高频合约配置</div>
+<div class="panel" style="margin-bottom:22px">
+  <div class="phd">
+    <div class="picon" style="background:var(--pd);color:var(--purple)">⚡</div>
+    <div><div class="ptitle">高频合约阈值</div></div>
+  </div>
+  <div class="pbody" style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:12px;color:var(--t2)">开平仓时间差小于</span>
+    <input class="ain" id="hft_threshold" type="number" min="1" max="60" step="1" value="5" style="width:80px">
+    <span style="font-size:12px;color:var(--t2)">分钟，标记为高频</span>
+    <span style="font-size:11px;color:var(--t3);font-family:var(--mono)">（默认5分钟）</span>
+  </div>
+</div>
 <div class="slabel">币种汇率</div>
 <div class="rp">
   <div class="rp-top"><div class="rp-title">汇率配置 <span style="font-size:11px;color:var(--t3);font-weight:400;margin-left:6px">上传文件后自动识别币种</span></div><button class="fall" id="fallBtn">批量查询当前价格</button></div>
@@ -678,9 +734,10 @@ function isHFT(row) {
 
   if (!t1 || !t2 || isNaN(t1) || isNaN(t2)) return false;
 
+  const threshold = parseFloat(document.getElementById('hft_threshold')?.value) || 5;
   const diffMinutes = (t2 - t1) / 60000;
   const hasClosed = row['平仓均价'] && parseFloat(row['平仓均价']) > 0;
-  return hasClosed && diffMinutes >= 0 && diffMinutes < 5;
+  return hasClosed && diffMinutes >= 0 && diffMinutes < threshold;
 }
 
 /** ── NEW: 统计各合约品种盈亏（position格式） */
@@ -696,7 +753,7 @@ function calcContractBySymbol(rows, fmt) {
       fd = parseFloat(r['资金费'] ?? r['资金费用'] ?? 0) || 0;
     } else if (fmt === 'order') {
       if (r['订单状态'] === '完全成交' && r['仓位方向'] === '平仓') p = parseFloat(r['盈亏']) || 0;
-      f = parseFloat(r['手续费']) || 0;
+      f = -Math.abs(parseFloat(r['手续费']) || 0);
     } else {
       const tp = String(r['类型'] || '');
       const a  = parseFloat(r['金额']) || 0;
@@ -943,7 +1000,7 @@ function calcContract(rows) {
   } else if (fmt === 'order') {
     rows.forEach(r => {
       if (r['订单状态'] === '完全成交' && r['仓位方向'] === '平仓') p += parseFloat(r['盈亏']) || 0;
-      f += parseFloat(r['手续费']) || 0;
+      f -= Math.abs(parseFloat(r['手续费']) || 0);
     });
   } else {
     rows.forEach(r => {
@@ -1378,7 +1435,7 @@ function renderDtCT() {
       tr.appendChild(mkTd(r['合约'], 'font-family:var(--mono)'));
       tr.appendChild(mkTd(null, null, { cls: r['方向'] === '买入' ? 't-buy' : 't-sell', text: r['方向'] || '—' }));
       tr.appendChild(mkTd((r['杠杆'] || '—') + 'x', 'font-family:var(--mono);color:var(--t3)'));
-      tr.appendChild(mkTd(r['仓位(张)'] ?? r['已平仓位(张)'], 'font-family:var(--mono)'));
+      tr.appendChild(mkTd(r['已平仓位(张)'] || r['仓位(张)'], 'font-family:var(--mono)'));
       tr.appendChild(mkTd(parseFloat(r['开仓均价'] || 0).toFixed(6), 'font-family:var(--mono);color:var(--t2)'));
       tr.appendChild(mkTd(parseFloat(r['平仓均价'] || 0).toFixed(6), 'font-family:var(--mono);color:var(--t2)'));
       tr.appendChild(mkTd((pnl >= 0 ? '+' : '') + pnl.toFixed(4), 'font-family:var(--mono);font-weight:500;color:' + (pnl >= 0 ? 'var(--green)' : 'var(--red)')));
@@ -2082,6 +2139,28 @@ document.addEventListener('click', function (e) {
   r2.addEventListener('animationend', () => r2.remove());
   setTimeout(() => { if (r2.isConnected) r2.remove(); }, 1500);
 });
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙 暗色' : '☀️ 亮色';
+  try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch {}
+}
+
+// 初始化时读取偏好
+(function(){
+  try {
+    const saved = localStorage.getItem('theme');
+    const prefer = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    if (prefer === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      // 等DOM加载后再改按钮文字
+      document.addEventListener('DOMContentLoaded', function(){
+        const btn = document.getElementById('themeBtn');
+        if (btn) btn.textContent = '☀️ 亮色';
+      });
+    }
+  } catch {}
+})();
 </script>
 </body>
 </html>
