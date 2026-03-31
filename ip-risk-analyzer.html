@@ -577,7 +577,7 @@ table.dt tr:hover td{background:var(--s2)}
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px">
     <span class="source-note"><span class="source-dot"></span>归属地：freeipapi.com / ipwho.is / ip-api.com 实时查询 <span id="query_time"></span></span>
     <span style="display:flex;gap:8px">
-      <button onclick="exportIPText()" class="export-btn">📋 复制报告</button>
+      <button onclick="exportIPText()" id="exportBtn" class="export-btn">📋 复制报告</button>
       <button onclick="window.print()" class="export-btn">🖨 保存 PDF</button>
     </span>
   </div>
@@ -734,7 +734,7 @@ function isHFT(row) {
 
   if (!t1 || !t2 || isNaN(t1) || isNaN(t2)) return false;
 
-  const threshold = parseFloat(document.getElementById('hft_threshold')?.value) || 5;
+  const threshold = Math.min(Math.max(parseFloat(document.getElementById('hft_threshold')?.value) || 5, 1), 1440);
   const diffMinutes = (t2 - t1) / 60000;
   const hasClosed = row['平仓均价'] && parseFloat(row['平仓均价']) > 0;
   return hasClosed && diffMinutes >= 0 && diffMinutes < threshold;
@@ -1651,8 +1651,9 @@ async function extractRecordsClaude(text, apiKey) {
     const data  = await res.json();
     const raw   = data.choices?.[0]?.message?.content || '';
     const clean = raw.replace(/```json|```/g, '').trim();
+    if (clean.length > 50000) throw new Error('AI 返回内容过长');
     try {
-      return sanitizeAIRecords(JSON.parse(clean).records || []);
+     return sanitizeAIRecords(JSON.parse(clean).records || []);
     } catch {
       throw new Error('AI 返回格式不合法，请重试');
     }
@@ -2078,7 +2079,7 @@ function exportIPText() {
     '触发条件数：' + triggered + ' / 2（自动检测）'
   ].join('\n');
 
-  const btn  = document.querySelector('button[onclick="exportIPText()"]');
+  const btn = document.getElementById('exportBtn');
   const orig = btn.textContent;
 
   navigator.clipboard.writeText(text)
