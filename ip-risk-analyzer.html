@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'https://api.ip.sb; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.coingecko.com https://pro-api.coingecko.com https://api.binance.com https://api.siliconflow.cn https://api.groq.com https://api.openai.com https://freeipapi.com https://ipwho.is https://ip-api.com https://ipapi.co https://api.ip.sb; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
 <title>Risk Suite</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
@@ -105,20 +105,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .tab-btn:nth-child(2) .tab-dot{background:var(--blue)}
 .topbar-status{font-family:var(--mono);font-size:11px;color:var(--t3);margin-left:16px;display:flex;align-items:center;gap:6px;flex-shrink:0}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2.4s ease-in-out infinite}
-
-
 .page{display:none;animation:fadeIn .25s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
-
 .wrap{max-width:1320px;margin:0 auto;padding:28px 24px}
-
-
 .slabel{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .slabel::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--b2),transparent)}
-
-
 .panel{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
 .panel:hover{border-color:var(--b2)}
 .phd{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--b1)}
@@ -126,12 +118,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .ptitle{font-size:13px;font-weight:600}
 .pct{font-family:var(--mono);font-size:10px;color:var(--t3);margin-left:auto}
 .pbody{padding:14px 16px}
-
-
 .pg{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:22px}
 @media(max-width:700px){.pg{grid-template-columns:1fr}}
-
-
 .api-panel{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);margin-bottom:22px}
 .api-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;cursor:pointer;user-select:none;border-radius:var(--r);transition:.15s}
 .api-hd:hover{background:var(--s2)}
@@ -147,16 +135,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .afield{display:flex;flex-direction:column;gap:5px}
 .afield label{font-size:11px;color:var(--t2);font-family:var(--mono)}
 .anote{font-size:11px;color:var(--t3);font-family:var(--mono);line-height:1.7}
-
-
 .ain,.cin{background:var(--s2);border:1px solid var(--b2);border-radius:var(--rs);padding:7px 11px;font-size:12px;font-family:var(--mono);color:var(--tx);outline:none;width:100%;transition:.15s}
 .ain:focus,.cin:focus{border-color:var(--blue);background:var(--s3)}
 .ain::placeholder,.cin::placeholder{color:var(--t3)}
 .cin[readonly]{color:var(--t3);background:var(--s1)}
 .sec-warn{background:#2a1a0a;border:1px solid rgba(255,170,0,.35);border-radius:var(--rs);padding:6px 10px;font-size:11px;color:var(--amber);font-family:var(--mono);margin-top:8px;display:none}
 textarea.ain{resize:vertical;min-height:130px;line-height:1.7}
-
-
 .pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10px;font-family:var(--mono);font-weight:500}
 .pill-g{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:500;font-family:var(--mono);white-space:nowrap}
@@ -171,21 +155,15 @@ textarea.ain{resize:vertical;min-height:130px;line-height:1.7}
 .t-fee{background:#28241a;color:#a08030}.t-neu{background:var(--s3);color:var(--t2)}
 .ftag{font-size:10px;font-family:var(--mono);padding:1px 6px;border-radius:10px}
 .ftag.ok{background:var(--gd);color:var(--green)}.ftag.err{background:var(--rd);color:var(--red)}.ftag.loading{background:var(--ad);color:var(--amber)}
-
-
 .badge-hft{background:rgba(170,119,255,.15);color:var(--purple);border:1px solid rgba(170,119,255,.4);font-size:10px;font-family:var(--mono);font-weight:500;padding:1px 7px;border-radius:99px;white-space:nowrap}
 .hft-row td{background:rgba(170,119,255,.04) !important;border-left:2px solid rgba(170,119,255,.5)}
-
-
 .hft-card{background:rgba(170,119,255,.07);border:1px solid rgba(170,119,255,.3);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px}
 .hft-card-icon{font-size:16px;flex-shrink:0;margin-top:1px}
 .hft-card-body{flex:1}
 .hft-card-title{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:3px}
 .hft-card-detail{font-size:11px;color:var(--t2);font-family:var(--mono);line-height:1.7}
-
-
 .dz{border:1px dashed var(--b2);border-radius:var(--rs);padding:13px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:10px}
-.dz:hover,.dz.ov{border-color:var(--green);background:var(--gd)}
+.dz:hover{border-color:var(--green);background:var(--gd)}
 .dz-txt{font-size:12px;color:var(--t2)}.dz-txt span{color:var(--green)}
 input[type=file]{display:none}
 .chips{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
@@ -202,8 +180,6 @@ input[type=file]{display:none}
 .fmt-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:10px;font-family:var(--mono);margin-top:6px}
 .fmt-flow{background:var(--bd);color:var(--blue);border:1px solid rgba(102,153,255,.3)}
 .fmt-pos{background:var(--ad);color:var(--amber);border:1px solid rgba(255,170,0,.3)}
-
-
 .rp{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:16px 18px;margin-bottom:22px}
 .rp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
 .rp-title{font-size:13px;font-weight:600}
@@ -216,10 +192,8 @@ input[type=file]{display:none}
 .fone:disabled{opacity:.3;cursor:not-allowed}
 .rmcoin{background:none;border:none;color:var(--t3);cursor:pointer;font-size:15px;padding:0 3px}
 .rmcoin:hover{color:var(--red)}
-.addcoin{background:none;border:1px dashed var(--b2);color:var(--t3);border-radius:var(--rs);padding:5px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;margin-top:8px;transition:.15s;width:100%}
+.addcoin{background:none;border:1px dashed var(--b2);color:var(--t3);border-radius:var(--rs);padding:5px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;margin-top:8px;transition:.15px;width:100%}
 .addcoin:hover{border-color:var(--green);color:var(--green)}
-
-
 .arow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:28px}
 .bcalc{background:var(--green);color:#041510;border:none;border-radius:var(--r);padding:11px 28px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:.15s;letter-spacing:.3px}
 .bcalc:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 4px 20px rgba(155,229,84,.25)}
@@ -229,8 +203,6 @@ input[type=file]{display:none}
 .fall{background:var(--bd);border:1px solid var(--blue);color:var(--blue);border-radius:var(--rs);padding:6px 14px;font-size:12px;font-family:var(--mono);cursor:pointer;transition:.15s}
 .fall:hover{background:var(--blue);color:#fff}
 .fall:disabled{opacity:.4;cursor:not-allowed}
-
-
 #pnl-results{display:none}
 .rpg{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
 @media(max-width:700px){.rpg{grid-template-columns:1fr}}
@@ -249,8 +221,6 @@ input[type=file]{display:none}
 .rcrow-sep{height:1px;background:var(--b2);margin:4px 0}
 .chart-container{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .chart-wrapper{display:flex;align-items:flex-end;justify-content:space-around;height:160px;padding-bottom:10px;border-bottom:1px solid var(--b2);gap:15px}
-
-
 .dtw{margin-bottom:20px}
 .dtc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden}
 .dthd{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--b1);flex-wrap:wrap;gap:6px}
@@ -263,8 +233,6 @@ table.dt td{padding:8px 12px;border-bottom:1px solid var(--b1);white-space:nowra
 table.dt tr:last-child td{border-bottom:none}
 table.dt tr:hover td{background:var(--s2)}
 .erow{text-align:center;padding:28px;color:var(--t3);font-size:12px}
-
-
 .ip-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;margin-bottom:16px;transition:border-color .2s}
 .ip-card:hover{border-color:var(--b2)}
 .ip-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;min-height:0}
@@ -291,8 +259,6 @@ table.dt tr:hover td{background:var(--s2)}
 .metric-label{font-size:11px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
 .metric-value{font-size:22px;font-weight:600;line-height:1;font-family:var(--mono)}
 .metric-value.ok{color:var(--green)}.metric-value.warn{color:var(--amber)}.metric-value.danger{color:var(--red)}
-
-
 .verdict{border-radius:var(--r);padding:20px 22px;margin-top:16px;border:1px solid}
 .verdict-pass{background:rgba(0,212,154,.06);border-color:rgba(0,212,154,.3)}
 .verdict-watch{background:rgba(255,170,0,.06);border-color:rgba(255,170,0,.3)}
@@ -322,8 +288,6 @@ table.dt tr:hover td{background:var(--s2)}
 .suggestion-box strong{color:var(--tx)}
 .switch-note{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .switch-detail{font-size:11px;color:var(--t2);line-height:1.6;font-family:var(--mono);padding-left:2px}
-
-
 .td-ip{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:500}
 .td-time{font-family:var(--mono);font-size:11px;color:var(--t2);white-space:nowrap}
 .td-country{font-weight:500}
@@ -335,30 +299,22 @@ table.dt tr:hover td{background:var(--s2)}
 .source-dot{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block}
 .export-btn{background:transparent;border:1px solid var(--b2);border-radius:6px;padding:5px 14px;font-size:12px;color:var(--t2);cursor:pointer;font-family:var(--sans);transition:.2s}
 .export-btn:hover{border-color:var(--green);color:var(--green)}
-
-
 .ai-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;margin-bottom:22px}
 .ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 @media(max-width:600px){.ai-grid{grid-template-columns:1fr}}
-
-
 .divline{height:1px;background:var(--b1);margin:24px 0}
 .input-hint{font-size:11px;color:var(--t3);font-family:var(--mono);line-height:1.5;margin-top:4px}
 .input-hint a{color:var(--green);text-decoration:none}
 .input-hint a:hover{text-decoration:underline}
-
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--s1)}
 ::-webkit-scrollbar-thumb{background:var(--b3);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--t3)}
-
 @keyframes ripple-out{0%{transform:scale(0);opacity:.9}40%{opacity:.6}100%{transform:scale(1);opacity:0}}
 </style>
 </head>
 <body>
 <div class="shell">
-
-
 <div class="topbar">
   <div class="logo">
   <img src="logo.jpg" style="width:28px; height:28px; border-radius:7px;"><div>
@@ -382,10 +338,8 @@ table.dt tr:hover td{background:var(--s2)}
   </div>
 </div>
 
-<!-- PAGE: PNL -->
 <div class="page active" id="page-pnl">
 <div class="wrap">
-
 <div class="slabel">价格接口配置</div>
 <div class="api-panel">
   <div class="api-hd" id="apiHd">
@@ -419,30 +373,18 @@ table.dt tr:hover td{background:var(--s2)}
 <div class="slabel">数据上传</div>
 <div class="pg">
   <div class="panel"><div class="phd"><div class="picon" style="background:var(--gd);color:var(--green)">↓</div><div><div class="ptitle">充值统计</div></div><div class="pct" id="ct-recharge">0 条</div></div>
-    <div class="pbody"><div class="dz" id="dz-recharge"><div class="dz-txt">点击上传 / 拖拽文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-recharge" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-recharge"></div><div class="psum" id="sum-recharge"></div></div></div>
+    <div class="pbody"><div class="dz" id="dz-recharge"><div class="dz-txt">点击上传文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-recharge" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-recharge"></div><div class="psum" id="sum-recharge"></div></div></div>
   <div class="panel"><div class="phd"><div class="picon" style="background:var(--rd);color:var(--red)">↑</div><div><div class="ptitle">提现统计</div></div><div class="pct" id="ct-withdraw">0 条</div></div>
-    <div class="pbody"><div class="dz" id="dz-withdraw"><div class="dz-txt">点击上传 / 拖拽文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-withdraw" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-withdraw"></div><div class="psum" id="sum-withdraw"></div></div></div>
+    <div class="pbody"><div class="dz" id="dz-withdraw"><div class="dz-txt">点击上传文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-withdraw" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-withdraw"></div><div class="psum" id="sum-withdraw"></div></div></div>
   <div class="panel"><div class="phd"><div class="picon" style="background:var(--bd);color:var(--blue)">◈</div><div><div class="ptitle">现货交易</div></div><div class="pct" id="ct-spot">0 条</div></div>
-    <div class="pbody"><div class="dz" id="dz-spot"><div class="dz-txt">点击上传 / 拖拽文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-spot" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-spot"></div><div class="psum" id="sum-spot"></div></div></div>
+    <div class="pbody"><div class="dz" id="dz-spot"><div class="dz-txt">点击上传文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-spot" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-spot"></div><div class="psum" id="sum-spot"></div></div></div>
   <div class="panel"><div class="phd"><div class="picon" style="background:var(--ad);color:var(--amber)">⚡</div><div><div class="ptitle">合约交易</div></div><div class="pct" id="ct-contract">0 条</div></div>
-    <div class="pbody"><div class="dz" id="dz-contract"><div class="dz-txt">点击上传 / 拖拽文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-contract" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-contract"></div><div id="ct-fmt-badge"></div><div class="psum" id="sum-contract"></div></div></div>
+    <div class="pbody"><div class="dz" id="dz-contract"><div class="dz-txt">点击上传文件<br><span>.xls · .xlsx · .csv</span></div><input type="file" id="fi-contract" multiple accept=".xls,.xlsx,.csv"></div><div class="chips" id="chips-contract"></div><div id="ct-fmt-badge"></div><div class="psum" id="sum-contract"></div></div></div>
 </div>
-<div class="slabel">高频合约配置</div>
-<div class="panel" style="margin-bottom:22px">
-  <div class="phd">
-    <div class="picon" style="background:var(--pd);color:var(--purple)">⚡</div>
-    <div><div class="ptitle">高频合约阈值</div></div>
-  </div>
-  <div class="pbody" style="display:flex;align-items:center;gap:12px">
-    <span style="font-size:12px;color:var(--t2)">开平仓时间差小于</span>
-    <input class="ain" id="hft_threshold" type="number" min="1" max="60" step="1" value="5" style="width:80px">
-    <span style="font-size:12px;color:var(--t2)">分钟，标记为高频</span>
-    <span style="font-size:11px;color:var(--t3);font-family:var(--mono)">（默认5分钟）</span>
-  </div>
-</div>
+
 <div class="slabel">币种汇率</div>
 <div class="rp">
-  <div class="rp-top"><div class="rp-title">汇率配置 <span style="font-size:11px;color:var(--t3);font-weight:400;margin-left:6px">上传文件后自动识别币种</span></div><button class="fall" id="fallBtn">批量查询当前价格</button></div>
+  <div class="rp-top"><div class="rp-title">汇率配置 <span style="font-size:11px;color:var(--t3);font-weight:400;margin-left:6px">手动添加所需币种</span></div><button class="fall" id="fallBtn">批量查询当前价格</button></div>
   <table class="rtable"><thead><tr><th>币种代码</th><th>CoinGecko ID</th><th style="min-width:130px">1单位 = USDT</th><th>操作</th><th>状态</th></tr></thead><tbody id="rateBody"></tbody></table>
   <button class="addcoin" id="addCoinBtn">+ 手动添加币种</button>
 </div>
@@ -473,7 +415,7 @@ table.dt tr:hover td{background:var(--s2)}
 </div>
 </div><!-- /page-pnl -->
 
-
+<!-- PAGE: IP -->
 <div class="page" id="page-ip">
 <div class="wrap">
 
@@ -592,7 +534,6 @@ table.dt tr:hover td{background:var(--s2)}
 <script>
 'use strict';
 
-
 const IPV4_STRICT = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/;
 const TIME_STRICT = /^\d{4}[-/]\d{2}[-/]\d{2}[T ]\d{2}:\d{2}:\d{2}$/;
 
@@ -613,7 +554,6 @@ function parseTime(s) {
   if (!s) return null;
   if (s instanceof Date) return isNaN(s.getTime()) ? null : s;
   if (typeof s === 'number') {
-
     const ms = (s - 25569) * 86400 * 1000;
     const d = new Date(ms);
     return isNaN(d.getTime()) ? null : d;
@@ -626,7 +566,6 @@ function setStatus(t) {
   document.getElementById('topTxt').textContent = t;
 }
 
-
 function switchTab(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -635,47 +574,8 @@ function switchTab(name) {
 }
 
 
-const FILE_TYPE_RULES = [
-  { type: 'recharge', keywords: ['充值统计'] },
-  { type: 'withdraw', keywords: ['提现统计'] },
-  { type: 'spot',     keywords: ['订单详情列表'] },
-  { type: 'contract', keywords: ['仓位查询导出', '资金流水列表导出', '用户资产导出', '导出委托记录'] },
-];
-
-function detectFileType(filename) {
-  const name = filename.replace(/\.[^/.]+$/, '');
-  for (const rule of FILE_TYPE_RULES) {
-    if (rule.keywords.some(kw => name.includes(kw))) return rule.type;
-  }
-  return null;
-}
-
-function showManualTypeModal(file, callback) {
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
-  const box = document.createElement('div');
-  box.style.cssText = 'background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:24px 28px;min-width:320px;max-width:420px';
-  box.innerHTML = `
-    <div style="font-size:14px;font-weight:600;margin-bottom:6px">无法识别文件类型</div>
-    <div style="font-size:12px;color:var(--t2);font-family:var(--mono);margin-bottom:16px;word-break:break-all">${file.name}</div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:8px">请手动选择上传到哪个区域：</div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px" id="modal-type-btns">
-      ${[['recharge','充值统计','var(--green)'],['withdraw','提现统计','var(--red)'],['spot','现货交易','var(--blue)'],['contract','合约交易','var(--amber)']].map(([t,l,c])=>
-        `<button data-type="${t}" style="background:none;border:1px solid var(--b2);border-radius:var(--rs);padding:9px 14px;font-size:12px;color:var(--t2);cursor:pointer;text-align:left;transition:.15s;font-family:var(--sans)" onmouseover="this.style.borderColor='${c}';this.style.color='${c}'" onmouseout="this.style.borderColor='var(--b2)';this.style.color='var(--t2)'">${l}</button>`
-      ).join('')}
-    </div>
-    <button id="modal-cancel" style="background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;font-family:var(--sans)">跳过此文件</button>
-  `;
-  overlay.appendChild(box);
-  document.body.appendChild(overlay);
-  box.querySelectorAll('[data-type]').forEach(btn => {
-    btn.addEventListener('click', () => { overlay.remove(); callback(btn.dataset.type); });
-  });
-  document.getElementById('modal-cancel').addEventListener('click', () => { overlay.remove(); callback(null); });
-}
 const ALLOWED_EXTS = new Set(['.xls', '.xlsx', '.csv']);
 const MAGIC = { xlsx: [0x50, 0x4B, 0x03, 0x04], xls: [0xD0, 0xCF, 0x11, 0xE0] };
-
 async function checkFileSafe(file) {
   const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
   if (!ALLOWED_EXTS.has(ext)) return { ok: false, reason: '不支持的文件类型: ' + ext };
@@ -716,14 +616,14 @@ const GID = {
   ADA:'cardano', DOGE:'dogecoin', AVAX:'avalanche-2', MATIC:'matic-network',
   DOT:'polkadot', LTC:'litecoin', LINK:'chainlink', UNI:'uniswap', DAI:'dai',
   USDC:'usd-coin', TRX:'tron', SHIB:'shiba-inu', TON:'the-open-network', USDT:'tether',
-  SOLUSDT:'solana',   // 交易对名 → 底层币
+  SOLUSDT:'solana',
   BTCUSDT:'bitcoin',
   ETHUSDT:'ethereum',
   BNBUSDT:'binancecoin',
-  USDTARB:'tether',   // Arbitrum链USDT = USDT
-  USDTBSC:'tether',   // BSC链USDT
-  USDTTRC:'tether',   // TRC20 USDT
-  USDTERC:'tether',   // ERC20 USDT
+  USDTARB:'tether',
+  USDTBSC:'tether',
+  USDTTRC:'tether',
+  USDTERC:'tether',
 };
 
 function fmtS(n, d = 2) { return (n >= 0 ? '+' : '') + n.toFixed(d); }
@@ -762,25 +662,22 @@ function detectContractFmt(rows) {
   return 'flow';
 }
 
+const HFT_THRESHOLD_MINUTES = 5;
 
 function isHFT(row) {
   const openRaw  = row['创建时间'];
   const closeRaw = row['更新时间'];
   if (!openRaw || !closeRaw) return false;
-
   const t1 = openRaw instanceof Date ? openRaw : parseTime(String(openRaw));
   const t2 = closeRaw instanceof Date ? closeRaw : parseTime(String(closeRaw));
-
   if (!t1 || !t2 || isNaN(t1) || isNaN(t2)) return false;
-
-  const threshold = Math.min(Math.max(parseFloat(document.getElementById('hft_threshold')?.value) || 5, 1), 1440);
   const diffMinutes = (t2 - t1) / 60000;
   const hasClosed = row['平仓均价'] && parseFloat(row['平仓均价']) > 0;
-  return hasClosed && diffMinutes >= 0 && diffMinutes < threshold;
+  return hasClosed && diffMinutes >= 0 && diffMinutes < HFT_THRESHOLD_MINUTES;
 }
 
 function calcContractBySymbol(rows, fmt) {
-  const map = {}; // sym -> { p, f, fd, net }
+  const map = {};
   rows.forEach(r => {
     const sym = String(r['合约'] || r['币种'] || '未知');
     if (!map[sym]) map[sym] = { p: 0, f: 0, fd: 0, net: 0 };
@@ -814,16 +711,13 @@ function calcSpotBySymbol(rows) {
     if (tp !== '买入' && tp !== '卖出') return;
     const amt = pAmt(String(r['成交金额'] || ''));
     if (!amt) return;
-
     const qtyRaw = String(r['委托数量'] || r['成交数量'] || '');
     const symMatch = qtyRaw.match(/[A-Za-z]+/);
     let sym = symMatch ? normC(symMatch[0]) : 'USDT';
-
     if (sym === 'USDT') {
       const orderMatch = String(r['委托金额'] || '').match(/[A-Za-z]+/);
       sym = orderMatch ? normC(orderMatch[0]) : 'USDT';
     }
-
     const pair = sym === 'USDT' ? '稳定币互换' : sym + '/USDT';
     if (!map[pair]) map[pair] = { buy: 0, sell: 0 };
     if (tp === '买入') map[pair].buy  += amt;
@@ -989,16 +883,10 @@ async function onFiles(t, files) {
     if (FN[t].find(x => x.name === f.name)) continue;
     const check = await checkFileSafe(f);
     if (!check.ok) { setStatus('⚠ ' + check.reason); alert('文件被拒绝：' + check.reason); continue; }
-
-    const detected = detectFileType(f.name);
-    const target = detected || await new Promise(res => showManualTypeModal(f, res));
-    if (!target) continue; 
-
     const rows = await rdXL(f);
-    if (rows.length) { D[target].push(...rows); FN[target].push({ name: f.name, cnt: rows.length }); }
-    refreshPanel(target);
+    if (rows.length) { D[t].push(...rows); FN[t].push({ name: f.name, cnt: rows.length }); }
+    refreshPanel(t);
   }
-  autoCoins();
 }
 
 function rdXL(f) {
@@ -1115,41 +1003,26 @@ function renderPSum(t) {
   el.appendChild(frag);
 }
 
-function autoCoins() {
-  const found = new Set(['USDT']);
-  [...D.recharge, ...D.withdraw].forEach(r => { const c = normC(r['币种']); if (c) found.add(c); });
-  D.contract.forEach(r => { const c = normC(r['币种'] || ''); if (c) found.add(c); });
-  found.forEach(sym => {
-    if (!rates.find(x => x.sym.toUpperCase() === sym)) {
-      const isU = sym === 'USDT';
-      // 检测稳定币变种：以USDT开头或结尾的非标准代码，默认汇率=1
-const isStable = sym === 'USDT' || sym.endsWith('USDT') || sym.startsWith('USDT');
-rates.push({ sym, id: GID[sym] || sym.toLowerCase(), rate: isStable ? 1 : 0, manual: isStable, st: '' });
-    }
-  });
-  renderRates();
-}
-
 function calc() {
- const bcR = {}, bcRraw = {}; let rcT = 0;
-D.recharge.forEach(r => {
-  const raw = String(r['币种'] || '').toUpperCase().trim().replace(/\b(BEP20|TRC20|ERC20|ARB|BSC)\b/g,'').trim() || 'USDT';
-  const c = normC(r['币种']); const a = pAmt(r['充值金额']);
-  bcR[c] = (bcR[c] || 0) + a;
-  bcRraw[raw] = (bcRraw[raw] || 0) + a;
-  const u = toU(a, c); if (u !== null) rcT += u;
-});
+  const bcR = {}, bcRraw = {}; let rcT = 0;
+  D.recharge.forEach(r => {
+    const raw = String(r['币种'] || '').toUpperCase().trim().replace(/\b(BEP20|TRC20|ERC20|ARB|BSC)\b/g,'').trim() || 'USDT';
+    const c = normC(r['币种']); const a = pAmt(r['充值金额']);
+    bcR[c] = (bcR[c] || 0) + a;
+    bcRraw[raw] = (bcRraw[raw] || 0) + a;
+    const u = toU(a, c); if (u !== null) rcT += u;
+  });
 
- const bcW = {}, bcWraw = {}; let wdT = 0, wdF = 0;
-D.withdraw.forEach(r => {
-  const raw = String(r['币种'] || '').toUpperCase().trim().replace(/\b(BEP20|TRC20|ERC20|ARB|BSC)\b/g,'').trim() || 'USDT';
-  const c = normC(r['币种']); const a = pAmt(r['提现金额']); const fe = pAmt(r['手续费']);
-  bcW[c] = (bcW[c] || 0) + a;
-  bcWraw[raw] = (bcWraw[raw] || 0) + a;
-  const u = toU(a, c); if (u !== null) wdT += u;
-  wdF += fe;
-});
-wdT += wdF;
+  const bcW = {}, bcWraw = {}; let wdT = 0, wdF = 0;
+  D.withdraw.forEach(r => {
+    const raw = String(r['币种'] || '').toUpperCase().trim().replace(/\b(BEP20|TRC20|ERC20|ARB|BSC)\b/g,'').trim() || 'USDT';
+    const c = normC(r['币种']); const a = pAmt(r['提现金额']); const fe = pAmt(r['手续费']);
+    bcW[c] = (bcW[c] || 0) + a;
+    bcWraw[raw] = (bcWraw[raw] || 0) + a;
+    const u = toU(a, c); if (u !== null) wdT += u;
+    wdF += fe;
+  });
+  wdT += wdF;
 
   let spBuy = 0, spSell = 0;
   D.spot.forEach(r => {
@@ -1158,17 +1031,15 @@ wdT += wdF;
     else if (tp === '卖出') spSell += pAmt(r['成交金额']);
   });
   const spPnl = spSell - spBuy;
-
   const spBySymbol = calcSpotBySymbol(D.spot);
 
   const { p: ctP, f: ctF, fd: ctFd, net: ctNet, fmt: ctFmt } = calcContract(D.contract);
-
   const ctBySymbol = calcContractBySymbol(D.contract, ctFmt);
 
   const netFlow = rcT - wdT;
   const total   = netFlow + spPnl + ctNet;
 
- _pnlReport = { bcR, bcRraw, bcW, bcWraw, rcT, wdT, wdF, spBuy, spSell, spPnl, spBySymbol, ctP, ctF, ctFd, ctNet, ctFmt, ctBySymbol, netFlow, total };
+  _pnlReport = { bcR, bcRraw, bcW, bcWraw, rcT, wdT, wdF, spBuy, spSell, spPnl, spBySymbol, ctP, ctF, ctFd, ctNet, ctFmt, ctBySymbol, netFlow, total };
   renderRes(_pnlReport);
 
   document.getElementById('pnl-results').style.display    = 'block';
@@ -1209,31 +1080,28 @@ function renderRes(r) {
   svEl('r-rc-main', r.rcT.toFixed(2) + ' USDT', 'neu');
   const rcRows = document.getElementById('r-rc-rows'); rcRows.innerHTML = '';
   Object.entries(r.bcR).forEach(([c, v]) => {
-  // 找出归并到这个币种的原始币种列表
-  const merged = Object.entries(r.bcRraw || {}).filter(([raw]) => normC(raw) === c && raw !== c);
-  if (merged.length > 0) {
-    // 有合并项，先列出明细
-    merged.forEach(([raw, mv]) => rcRows.appendChild(mkRcRow('  ' + raw, '+' + mv.toFixed(4), 'neu')));
-    // 如果原始里也有同名的单独加
-    if (r.bcRraw[c]) merged.unshift([c, r.bcRraw[c]]);
-    rcRows.appendChild(mkRcRow('↳ ' + c + ' 合计', '+' + v.toFixed(4), 'pos'));
-  } else {
-    rcRows.appendChild(mkRcRow(c, '+' + v.toFixed(4), 'neu'));
-  }
-});
-rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
+    const merged = Object.entries(r.bcRraw || {}).filter(([raw]) => normC(raw) === c && raw !== c);
+    if (merged.length > 0) {
+      merged.forEach(([raw, mv]) => rcRows.appendChild(mkRcRow('  ' + raw, '+' + mv.toFixed(4), 'neu')));
+      if (r.bcRraw[c]) merged.unshift([c, r.bcRraw[c]]);
+      rcRows.appendChild(mkRcRow('↳ ' + c + ' 合计', '+' + v.toFixed(4), 'pos'));
+    } else {
+      rcRows.appendChild(mkRcRow(c, '+' + v.toFixed(4), 'neu'));
+    }
+  });
+  rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
 
   svEl('r-wd-main', r.wdT.toFixed(2) + ' USDT', 'neu');
   const wdRows = document.getElementById('r-wd-rows'); wdRows.innerHTML = '';
   Object.entries(r.bcW).forEach(([c, v]) => {
-  const merged = Object.entries(r.bcWraw || {}).filter(([raw]) => normC(raw) === c && raw !== c);
-  if (merged.length > 0) {
-    merged.forEach(([raw, mv]) => wdRows.appendChild(mkRcRow('  ' + raw, '-' + mv.toFixed(4), 'neu')));
-    wdRows.appendChild(mkRcRow('↳ ' + c + ' 合计', '-' + v.toFixed(4), 'neg'));
-  } else {
-    wdRows.appendChild(mkRcRow(c, '-' + v.toFixed(4), 'neu'));
-  }
-});
+    const merged = Object.entries(r.bcWraw || {}).filter(([raw]) => normC(raw) === c && raw !== c);
+    if (merged.length > 0) {
+      merged.forEach(([raw, mv]) => wdRows.appendChild(mkRcRow('  ' + raw, '-' + mv.toFixed(4), 'neu')));
+      wdRows.appendChild(mkRcRow('↳ ' + c + ' 合计', '-' + v.toFixed(4), 'neg'));
+    } else {
+      wdRows.appendChild(mkRcRow(c, '-' + v.toFixed(4), 'neu'));
+    }
+  });
   wdRows.appendChild(mkRcRow('手续费',   '-' + r.wdF.toFixed(4), 'neg'));
   wdRows.appendChild(mkRcRow('折算合计', r.wdT.toFixed(2) + ' U', 'neu'));
 
@@ -1242,7 +1110,6 @@ rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
   spRows.appendChild(mkRcRow('买入花费', '-' + r.spBuy.toFixed(2), 'neg'));
   spRows.appendChild(mkRcRow('卖出获得', '+' + r.spSell.toFixed(2), 'pos'));
   spRows.appendChild(mkRcRow('净盈亏',   fmtS(r.spPnl), colorCls(r.spPnl)));
-
   const spSymEntries = Object.entries(r.spBySymbol || {});
   if (spSymEntries.length > 0) {
     spRows.appendChild(mkRcSep());
@@ -1268,7 +1135,6 @@ rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
   ctRows.appendChild(mkRcRow('手续费',   r.ctF.toFixed(4), 'neg'));
   ctRows.appendChild(mkRcRow('资金费',   fmtS(r.ctFd, 4), colorCls(r.ctFd)));
   ctRows.appendChild(mkRcRow('净盈亏',   fmtS(r.ctNet), colorCls(r.ctNet)));
-
   const ctSymEntries = Object.entries(r.ctBySymbol || {});
   if (ctSymEntries.length > 0) {
     ctRows.appendChild(mkRcSep());
@@ -1277,7 +1143,6 @@ rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
     hk2.textContent = '品种明细';
     hd2.appendChild(hk2); hd2.appendChild(document.createElement('span'));
     ctRows.appendChild(hd2);
-    
     ctSymEntries.sort((a, b) => a[1].net - b[1].net).forEach(([sym, d]) => {
       ctRows.appendChild(mkRcRow(sym, (d.net >= 0 ? '+' : '') + d.net.toFixed(4), colorCls(d.net)));
     });
@@ -1391,7 +1256,6 @@ function renderDtCT() {
 
   if (!D.contract.length) {
     wrap.innerHTML = '<table class="dt"><tbody><tr><td colspan="6" class="erow">无数据</td></tr></tbody></table>';
-
     const hftLbl = document.getElementById('ct-hft-label');
     if (hftLbl) hftLbl.innerHTML = '';
     return;
@@ -1404,7 +1268,6 @@ function renderDtCT() {
     D.contract.forEach(r => { if (isHFT(r)) hftCount++; });
   }
 
-  // 更新HFT标签
   const hftLbl = document.getElementById('ct-hft-label');
   if (hftLbl) {
     hftLbl.innerHTML = '';
@@ -1549,10 +1412,15 @@ function copyReport() {
   if (!_pnlReport) return;
   const r = _pnlReport;
 
+  const rateLines = rates.map(x => '  ' + x.sym + ': ' + x.rate + ' USDT');
+
   const rcLines = [];
+  Object.entries(r.bcRraw || {}).forEach(([raw, v]) => {
+    if (normC(raw) !== 'USDT') rcLines.push('  ' + raw + ': +' + v.toFixed(4));
+  });
   const rcUsdtTotal = Object.entries(r.bcRraw || {})
     .filter(([raw]) => normC(raw) === 'USDT')
-    .reduce((sum, [, v]) => sum + v, 0);
+    .reduce((s, [, v]) => s + v, 0);
   const rcUsdtVariants = Object.entries(r.bcRraw || {}).filter(([raw]) => normC(raw) === 'USDT');
   if (rcUsdtVariants.length === 1) {
     rcLines.push('  USDT: +' + rcUsdtTotal.toFixed(2));
@@ -1560,15 +1428,15 @@ function copyReport() {
     rcUsdtVariants.forEach(([raw, v]) => rcLines.push('  ' + raw + ': +' + v.toFixed(2)));
     rcLines.push('  USDT 合计: +' + rcUsdtTotal.toFixed(2));
   }
-  Object.entries(r.bcRraw || {}).forEach(([raw, v]) => {
-    if (normC(raw) === 'USDT') return;
-    rcLines.push('  ' + raw + ': +' + v.toFixed(4));
-  });
 
+  // 提现明细
   const wdLines = [];
+  Object.entries(r.bcWraw || {}).forEach(([raw, v]) => {
+    if (normC(raw) !== 'USDT') wdLines.push('  ' + raw + ': -' + v.toFixed(4));
+  });
   const wdUsdtTotal = Object.entries(r.bcWraw || {})
     .filter(([raw]) => normC(raw) === 'USDT')
-    .reduce((sum, [, v]) => sum + v, 0);
+    .reduce((s, [, v]) => s + v, 0);
   const wdUsdtVariants = Object.entries(r.bcWraw || {}).filter(([raw]) => normC(raw) === 'USDT');
   if (wdUsdtVariants.length === 1) {
     wdLines.push('  USDT: -' + wdUsdtTotal.toFixed(2));
@@ -1576,66 +1444,56 @@ function copyReport() {
     wdUsdtVariants.forEach(([raw, v]) => wdLines.push('  ' + raw + ': -' + v.toFixed(2)));
     wdLines.push('  USDT 合计: -' + wdUsdtTotal.toFixed(2));
   }
-  Object.entries(r.bcWraw || {}).forEach(([raw, v]) => {
-    if (normC(raw) === 'USDT') return;
-    wdLines.push('  ' + raw + ': -' + v.toFixed(4));
-  });
 
   const spLines = Object.entries(r.spBySymbol || {}).map(([sym, d]) => {
     const net = d.sell - d.buy;
     return '  ' + sym + ': ' + (net >= 0 ? '+' : '') + net.toFixed(2) + ' U';
   });
   if (!spLines.length) spLines.push('  净盈亏: ' + (r.spPnl >= 0 ? '+' : '') + r.spPnl.toFixed(2) + ' U');
-
+  
   const ctLines = Object.entries(r.ctBySymbol || {})
     .sort((a, b) => a[1].net - b[1].net)
     .map(([sym, d]) => '  ' + sym + ': ' + (d.net >= 0 ? '+' : '') + d.net.toFixed(4) + ' U');
   if (!ctLines.length) ctLines.push('  净盈亏: ' + (r.ctNet >= 0 ? '+' : '') + r.ctNet.toFixed(4) + ' U');
 
-  const uidSet = new Set();
-  [...D.recharge, ...D.withdraw].forEach(r => {
-    const uid = r['用户ID'] || r['UID'] || r['uid'] || '';
-    if (uid) uidSet.add(String(uid).trim());
-  });
-  const uidStr = uidSet.size ? [...uidSet].join(' / ') : '';
-
-  const rcUsdtSum = Object.entries(r.bcRraw || {})
-    .filter(([raw]) => normC(raw) === 'USDT')
-    .reduce((sum, [, v]) => sum + v, 0);
-  const rcOthers = Object.entries(r.bcRraw || {})
-    .filter(([raw]) => normC(raw) !== 'USDT')
-    .map(([raw, v]) => v.toFixed(2) + raw)
-    .join(' / ');
-  const rcStr = (rcUsdtSum ? rcUsdtSum.toFixed(2) + 'U' : '') + (rcOthers ? (rcUsdtSum ? ' / ' : '') + rcOthers : '') || '0';
-
-  const wdUsdtSum2 = Object.entries(r.bcWraw || {})
-    .filter(([raw]) => normC(raw) === 'USDT')
-    .reduce((sum, [, v]) => sum + v, 0);
-  const wdOthers = Object.entries(r.bcWraw || {})
-    .filter(([raw]) => normC(raw) !== 'USDT')
-    .map(([raw, v]) => v.toFixed(2) + raw)
-    .join(' / ');
-  const wdStr = (wdUsdtSum2 ? wdUsdtSum2.toFixed(2) + 'U' : '') + (wdOthers ? (wdUsdtSum2 ? ' / ' : '') + wdOthers : '') || '0';
-
-  // 现货：所有交易对盈亏合并一行
-  const spStr = (r.spPnl >= 0 ? '+' : '') + r.spPnl.toFixed(2) + 'U';
-
-  const ctStr = Object.entries(r.ctBySymbol || {}).map(([sym, d]) => {
-    return (d.net >= 0 ? '+' : '') + d.net.toFixed(2) + 'U(' + sym + ')';
-  }).join(' / ') || (r.ctNet ? (r.ctNet >= 0 ? '+' : '') + r.ctNet.toFixed(2) + 'U' : '0');
+  const sep = '═══════════════════════════';
+  const divLine = '  ─────────────────────────';
 
   const txt = [
-    'UID(名字)：' + uidStr,
-    '归属：',
-    '现提金额：',
-    '充值金额：' + rcStr,
-    '历史提币金额：' + wdStr,
-    '提币通道：',
-    '现货交易：' + spStr,
-    '合约交易：' + ctStr,
-    '余额：',
-    '节点：',
-    '地址：',
+    sep + ' 盈亏计算报告 ' + sep,
+    '汇率配置:',
+    ...rateLines,
+    '',
+    '【充值】',
+    ...rcLines,
+    '  折算合计: ' + r.rcT.toFixed(2) + ' USDT',
+    '',
+    '【提现】',
+    ...wdLines,
+    '  手续费: -' + r.wdF.toFixed(4) + ' USDT',
+    '  折算合计: ' + r.wdT.toFixed(2) + ' USDT',
+    '  充提净额: ' + (r.netFlow >= 0 ? '+' : '') + r.netFlow.toFixed(2) + ' USDT',
+    '',
+    '【现货交易】',
+    '  买入花费:   ' + (-r.spBuy).toFixed(2) + ' USDT',
+    '  卖出获得:   +' + r.spSell.toFixed(2) + ' USDT',
+    '  现货净盈亏: ' + (r.spPnl >= 0 ? '+' : '') + r.spPnl.toFixed(2) + ' USDT',
+    ...(spLines.length > 1 || (spLines.length === 1 && !spLines[0].includes('净盈亏')) ? ['  交易对明细:', ...spLines] : []),
+    '',
+    '【合约交易】(' + (r.ctFmt === 'position' ? '仓位格式' : '流水格式') + ')',
+    '  平仓盈亏:   ' + (r.ctP >= 0 ? '+' : '') + r.ctP.toFixed(4) + ' USDT',
+    '  手续费:     ' + r.ctF.toFixed(4) + ' USDT',
+    '  资金费:     ' + (r.ctFd >= 0 ? '+' : '') + r.ctFd.toFixed(4) + ' USDT',
+    '  合约净盈亏: ' + (r.ctNet >= 0 ? '+' : '') + r.ctNet.toFixed(2) + ' USDT',
+    ...(ctLines.length > 1 || (ctLines.length === 1 && !ctLines[0].includes('净盈亏')) ? ['  品种明细:', ...ctLines] : []),
+    '',
+    '【综合净盈亏】',
+    '  充提净额: ' + (r.netFlow >= 0 ? '+' : '') + r.netFlow.toFixed(2) + ' USDT',
+    '  现货盈亏: ' + (r.spPnl >= 0 ? '+' : '') + r.spPnl.toFixed(2) + ' USDT',
+    '  合约盈亏: ' + (r.ctNet >= 0 ? '+' : '') + r.ctNet.toFixed(2) + ' USDT',
+    divLine,
+    '  综合净盈亏: ' + (r.total >= 0 ? '+' : '') + r.total.toFixed(2) + ' USDT',
+    sep + sep + '═══',
   ].join('\n');
 
   navigator.clipboard.writeText(txt).then(() => {
@@ -1698,13 +1556,11 @@ function extractRecordsLocal(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const records = [];
 
-
   let i = 0;
   const used = new Set();
   while (i < lines.length) {
     const tMatch = lines[i].match(timeRe);
     if (tMatch) {
-      // 在接下来3行内找IP
       for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
         if (used.has(j)) continue;
         const v4 = lines[j].match(ipv4Re);
@@ -1776,7 +1632,7 @@ async function extractRecordsClaude(text, apiKey) {
     const clean = raw.replace(/```json|```/g, '').trim();
     if (clean.length > 50000) throw new Error('AI 返回内容过长');
     try {
-     return sanitizeAIRecords(JSON.parse(clean).records || []);
+      return sanitizeAIRecords(JSON.parse(clean).records || []);
     } catch {
       throw new Error('AI 返回格式不合法，请重试');
     }
@@ -1820,11 +1676,10 @@ function previewIPs() {
 
 async function queryIPInfo(ip, isV6) {
   if (isV6 && ip.includes('...')) return { ip, cc: '', country: 'IPv6 截断，无法查询', org: '', city: '', region: '', v6: true };
-
   if (!isV6 && !isValidIPv4(ip))  return { ip, cc: '', country: 'IP 格式非法', org: '', city: '', region: '' };
   if (_ipCache.has(ip)) return _ipCache.get(ip);
 
- const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|0\.|240\.|241\.|242\.|243\.|244\.|245\.|246\.|247\.|248\.|249\.|250\.|251\.|252\.|253\.|254\.|255\.)/;
+  const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|0\.|240\.|241\.|242\.|243\.|244\.|245\.|246\.|247\.|248\.|249\.|250\.|251\.|252\.|253\.|254\.|255\.)/;
   if (!isV6 && PRIVATE_IP_RE.test(ip)) return { ip, cc: '', country: '内网地址', org: '', city: '', region: '', source: 'local' };
 
   const encodedIp = encodeURIComponent(ip);
@@ -2246,10 +2101,6 @@ document.addEventListener('DOMContentLoaded', function () {
   ['recharge', 'withdraw', 'spot', 'contract'].forEach(function (t) {
     document.getElementById('dz-' + t).addEventListener('click', function () { trig(t); });
     document.getElementById('fi-' + t).addEventListener('change', function () { onFiles(t, this.files); });
-    const dz = document.getElementById('dz-' + t);
-    dz.addEventListener('dragover',  function (e) { e.preventDefault(); dz.classList.add('ov'); });
-    dz.addEventListener('dragleave', function ()  { dz.classList.remove('ov'); });
-    dz.addEventListener('drop',      function (e) { e.preventDefault(); dz.classList.remove('ov'); onFiles(t, e.dataTransfer.files); });
   });
 
   document.getElementById('fallBtn').addEventListener('click', fetchAll);
@@ -2278,6 +2129,7 @@ document.addEventListener('click', function (e) {
   r2.addEventListener('animationend', () => r2.remove());
   setTimeout(() => { if (r2.isConnected) r2.remove(); }, 1500);
 });
+
 function toggleTheme() {
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
