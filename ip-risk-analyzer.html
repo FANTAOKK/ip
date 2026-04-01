@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.coingecko.com https://pro-api.coingecko.com https://api.binance.com https://api.siliconflow.cn https://api.groq.com https://api.openai.com https://freeipapi.com https://ipwho.is https://ip-api.com https://ipapi.co https://api.ip.sb; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'https://api.ip.sb; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none';">
 <title>Risk Suite</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
@@ -642,7 +642,45 @@ function switchTab(name) {
 // ═══════════════════════════════════════════════
 // PNL 工具
 // ═══════════════════════════════════════════════
+// ── 文件名自动分类规则 ──
+const FILE_TYPE_RULES = [
+  { type: 'recharge', keywords: ['充值统计'] },
+  { type: 'withdraw', keywords: ['提现统计'] },
+  { type: 'spot',     keywords: ['订单详情列表'] },
+  { type: 'contract', keywords: ['仓位查询导出', '资金流水列表导出', '用户资产导出', '导出委托记录'] },
+];
 
+function detectFileType(filename) {
+  const name = filename.replace(/\.[^/.]+$/, '');
+  for (const rule of FILE_TYPE_RULES) {
+    if (rule.keywords.some(kw => name.includes(kw))) return rule.type;
+  }
+  return null;
+}
+
+function showManualTypeModal(file, callback) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  const box = document.createElement('div');
+  box.style.cssText = 'background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:24px 28px;min-width:320px;max-width:420px';
+  box.innerHTML = `
+    <div style="font-size:14px;font-weight:600;margin-bottom:6px">无法识别文件类型</div>
+    <div style="font-size:12px;color:var(--t2);font-family:var(--mono);margin-bottom:16px;word-break:break-all">${file.name}</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:8px">请手动选择上传到哪个区域：</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px" id="modal-type-btns">
+      ${[['recharge','充值统计','var(--green)'],['withdraw','提现统计','var(--red)'],['spot','现货交易','var(--blue)'],['contract','合约交易','var(--amber)']].map(([t,l,c])=>
+        `<button data-type="${t}" style="background:none;border:1px solid var(--b2);border-radius:var(--rs);padding:9px 14px;font-size:12px;color:var(--t2);cursor:pointer;text-align:left;transition:.15s;font-family:var(--sans)" onmouseover="this.style.borderColor='${c}';this.style.color='${c}'" onmouseout="this.style.borderColor='var(--b2)';this.style.color='var(--t2)'">${l}</button>`
+      ).join('')}
+    </div>
+    <button id="modal-cancel" style="background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;font-family:var(--sans)">跳过此文件</button>
+  `;
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  box.querySelectorAll('[data-type]').forEach(btn => {
+    btn.addEventListener('click', () => { overlay.remove(); callback(btn.dataset.type); });
+  });
+  document.getElementById('modal-cancel').addEventListener('click', () => { overlay.remove(); callback(null); });
+}
 const ALLOWED_EXTS = new Set(['.xls', '.xlsx', '.csv']);
 const MAGIC = { xlsx: [0x50, 0x4B, 0x03, 0x04], xls: [0xD0, 0xCF, 0x11, 0xE0] };
 
@@ -685,7 +723,15 @@ const GID = {
   BTC:'bitcoin', ETH:'ethereum', BNB:'binancecoin', SOL:'solana', XRP:'ripple',
   ADA:'cardano', DOGE:'dogecoin', AVAX:'avalanche-2', MATIC:'matic-network',
   DOT:'polkadot', LTC:'litecoin', LINK:'chainlink', UNI:'uniswap', DAI:'dai',
-  USDC:'usd-coin', TRX:'tron', SHIB:'shiba-inu', TON:'the-open-network', USDT:'tether'
+  USDC:'usd-coin', TRX:'tron', SHIB:'shiba-inu', TON:'the-open-network', USDT:'tether',
+  SOLUSDT:'solana',   // 交易对名 → 底层币
+  BTCUSDT:'bitcoin',
+  ETHUSDT:'ethereum',
+  BNBUSDT:'binancecoin',
+  USDTARB:'tether',   // Arbitrum链USDT = USDT
+  USDTBSC:'tether',   // BSC链USDT
+  USDTTRC:'tether',   // TRC20 USDT
+  USDTERC:'tether',   // ERC20 USDT
 };
 
 function fmtS(n, d = 2) { return (n >= 0 ? '+' : '') + n.toFixed(d); }
@@ -699,7 +745,11 @@ function pAmt(v) {
 
 function normC(s) {
   let u = String(s || '').toUpperCase().trim();
-  u = u.replace(/\b(BEP20|TRC20|ERC20)\b/g, '').trim();
+  u = u.replace(/\b(BEP20|TRC20|ERC20|ARB|BSC|ETH)\b/g, '').trim();
+  // 所有稳定币变种归一化为 USDT
+  if (u === 'USDC' || u === 'BUSD' || u === 'DAI' || u === 'TUSD' || u === 'FDUSD') return 'USDT';
+  // 以USDT开头或结尾的交易对/链上变种，全部归为USDT
+  if (u.startsWith('USDT') || u.endsWith('USDT')) return 'USDT';
   return u || 'USDT';
 }
 
@@ -771,13 +821,26 @@ function calcContractBySymbol(rows, fmt) {
 
 /** ── NEW: 统计现货各交易对盈亏 */
 function calcSpotBySymbol(rows) {
-  const map = {}; // sym -> { buy, sell }
+  const map = {};
   rows.forEach(r => {
-    // 尝试从交易对字段提取，兜底用"USDT"
-    const pair = String(r['交易对'] || r['合约'] || r['币对'] || '');
-    const tp   = r['委托类型'] || r['类型'] || '';
-    const amt  = pAmt(r['成交金额']);
-    if (!pair) return;
+    const tp  = String(r['委托类型'] || r['类型'] || '');
+    if (tp !== '买入' && tp !== '卖出') return;
+    const amt = pAmt(String(r['成交金额'] || ''));
+    if (!amt) return;
+
+    // 从成交数量提取币种
+    const qtyRaw = String(r['委托数量'] || r['成交数量'] || '');
+    const symMatch = qtyRaw.match(/[A-Za-z]+/);
+    let sym = symMatch ? normC(symMatch[0]) : 'USDT';
+
+    // 成交数量字段是USDT格式时（如"37.84USDT"），改查委托金额字段
+    if (sym === 'USDT') {
+      const orderMatch = String(r['委托金额'] || '').match(/[A-Za-z]+/);
+      sym = orderMatch ? normC(orderMatch[0]) : 'USDT';
+    }
+
+    // sym仍是USDT说明是纯稳定币互换，单独归一组也统计进去
+    const pair = sym === 'USDT' ? '稳定币互换' : sym + '/USDT';
     if (!map[pair]) map[pair] = { buy: 0, sell: 0 };
     if (tp === '买入') map[pair].buy  += amt;
     else if (tp === '卖出') map[pair].sell += amt;
@@ -942,10 +1005,16 @@ async function onFiles(t, files) {
     if (FN[t].find(x => x.name === f.name)) continue;
     const check = await checkFileSafe(f);
     if (!check.ok) { setStatus('⚠ ' + check.reason); alert('文件被拒绝：' + check.reason); continue; }
+
+    // 自动识别文件类型，识别失败时弹窗让用户选
+    const detected = detectFileType(f.name);
+    const target = detected || await new Promise(res => showManualTypeModal(f, res));
+    if (!target) continue; // 用户点了跳过
+
     const rows = await rdXL(f);
-    if (rows.length) { D[t].push(...rows); FN[t].push({ name: f.name, cnt: rows.length }); }
+    if (rows.length) { D[target].push(...rows); FN[target].push({ name: f.name, cnt: rows.length }); }
+    refreshPanel(target);
   }
-  refreshPanel(t);
   autoCoins();
 }
 
@@ -1055,7 +1124,7 @@ function renderPSum(t) {
     sp.className   = 'fmt-badge ' + (fmt === 'position' ? 'fmt-pos' : 'fmt-flow');
     sp.textContent = (fmt === 'position' ? '⚡' : '≋') + ' 已识别：' + (fmt === 'position' ? '仓位格式' : '流水格式');
     badge.appendChild(sp);
-    frag.appendChild(mkRow('平仓盈亏', (p  >= 0 ? '+' : '') + p.toFixed(4),  colorCls(p)));
+    frag.appendChild(mkRow('平仓盈亏', (p >= 0 ? '+' : '') + p.toFixed(4), colorCls(p)));
     frag.appendChild(mkRow('手续费',   f.toFixed(4), 'neg'));
     frag.appendChild(mkRow('资金费',   (fd >= 0 ? '+' : '') + fd.toFixed(4), colorCls(fd)));
     frag.appendChild(mkRow('净盈亏',   (net >= 0 ? '+' : '') + net.toFixed(4), colorCls(net)));
@@ -1070,28 +1139,34 @@ function autoCoins() {
   found.forEach(sym => {
     if (!rates.find(x => x.sym.toUpperCase() === sym)) {
       const isU = sym === 'USDT';
-      rates.push({ sym, id: GID[sym] || sym.toLowerCase(), rate: isU ? 1 : 0, manual: isU, st: '' });
+      // 检测稳定币变种：以USDT开头或结尾的非标准代码，默认汇率=1
+const isStable = sym === 'USDT' || sym.endsWith('USDT') || sym.startsWith('USDT');
+rates.push({ sym, id: GID[sym] || sym.toLowerCase(), rate: isStable ? 1 : 0, manual: isStable, st: '' });
     }
   });
   renderRates();
 }
 
 function calc() {
-  const bcR = {}; let rcT = 0;
-  D.recharge.forEach(r => {
-    const c = normC(r['币种']); const a = pAmt(r['充值金额']);
-    bcR[c] = (bcR[c] || 0) + a;
-    const u = toU(a, c); if (u !== null) rcT += u;
-  });
+ const bcR = {}, bcRraw = {}; let rcT = 0;
+D.recharge.forEach(r => {
+  const raw = String(r['币种'] || '').toUpperCase().trim().replace(/\b(BEP20|TRC20|ERC20|ARB|BSC)\b/g,'').trim() || 'USDT';
+  const c = normC(r['币种']); const a = pAmt(r['充值金额']);
+  bcR[c] = (bcR[c] || 0) + a;
+  bcRraw[raw] = (bcRraw[raw] || 0) + a;
+  const u = toU(a, c); if (u !== null) rcT += u;
+});
 
-  const bcW = {}; let wdT = 0, wdF = 0;
-  D.withdraw.forEach(r => {
-    const c = normC(r['币种']); const a = pAmt(r['提现金额']); const fe = pAmt(r['手续费']);
-    bcW[c] = (bcW[c] || 0) + a;
-    const u = toU(a, c); if (u !== null) wdT += u;
-    wdF += fe;
-  });
-  wdT += wdF;
+ const bcW = {}, bcWraw = {}; let wdT = 0, wdF = 0;
+D.withdraw.forEach(r => {
+  const raw = String(r['币种'] || '').toUpperCase().trim().replace(/\b(BEP20|TRC20|ERC20|ARB|BSC)\b/g,'').trim() || 'USDT';
+  const c = normC(r['币种']); const a = pAmt(r['提现金额']); const fe = pAmt(r['手续费']);
+  bcW[c] = (bcW[c] || 0) + a;
+  bcWraw[raw] = (bcWraw[raw] || 0) + a;
+  const u = toU(a, c); if (u !== null) wdT += u;
+  wdF += fe;
+});
+wdT += wdF;
 
   let spBuy = 0, spSell = 0;
   D.spot.forEach(r => {
@@ -1112,7 +1187,7 @@ function calc() {
   const netFlow = rcT - wdT;
   const total   = netFlow + spPnl + ctNet;
 
-  _pnlReport = { bcR, bcW, rcT, wdT, wdF, spBuy, spSell, spPnl, spBySymbol, ctP, ctF, ctFd, ctNet, ctFmt, ctBySymbol, netFlow, total };
+ _pnlReport = { bcR, bcRraw, bcW, bcWraw, rcT, wdT, wdF, spBuy, spSell, spPnl, spBySymbol, ctP, ctF, ctFd, ctNet, ctFmt, ctBySymbol, netFlow, total };
   renderRes(_pnlReport);
 
   document.getElementById('pnl-results').style.display    = 'block';
@@ -1152,12 +1227,32 @@ function renderRes(r) {
 
   svEl('r-rc-main', r.rcT.toFixed(2) + ' USDT', 'neu');
   const rcRows = document.getElementById('r-rc-rows'); rcRows.innerHTML = '';
-  Object.entries(r.bcR).forEach(([c, v]) => rcRows.appendChild(mkRcRow(c, '+' + v.toFixed(4), 'neu')));
-  rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
+  Object.entries(r.bcR).forEach(([c, v]) => {
+  // 找出归并到这个币种的原始币种列表
+  const merged = Object.entries(r.bcRraw || {}).filter(([raw]) => normC(raw) === c && raw !== c);
+  if (merged.length > 0) {
+    // 有合并项，先列出明细
+    merged.forEach(([raw, mv]) => rcRows.appendChild(mkRcRow('  ' + raw, '+' + mv.toFixed(4), 'neu')));
+    // 如果原始里也有同名的单独加
+    if (r.bcRraw[c]) merged.unshift([c, r.bcRraw[c]]);
+    rcRows.appendChild(mkRcRow('↳ ' + c + ' 合计', '+' + v.toFixed(4), 'pos'));
+  } else {
+    rcRows.appendChild(mkRcRow(c, '+' + v.toFixed(4), 'neu'));
+  }
+});
+rcRows.appendChild(mkRcRow('折算合计', r.rcT.toFixed(2) + ' U', 'neu'));
 
   svEl('r-wd-main', r.wdT.toFixed(2) + ' USDT', 'neu');
   const wdRows = document.getElementById('r-wd-rows'); wdRows.innerHTML = '';
-  Object.entries(r.bcW).forEach(([c, v]) => wdRows.appendChild(mkRcRow(c, '-' + v.toFixed(4), 'neu')));
+  Object.entries(r.bcW).forEach(([c, v]) => {
+  const merged = Object.entries(r.bcWraw || {}).filter(([raw]) => normC(raw) === c && raw !== c);
+  if (merged.length > 0) {
+    merged.forEach(([raw, mv]) => wdRows.appendChild(mkRcRow('  ' + raw, '-' + mv.toFixed(4), 'neu')));
+    wdRows.appendChild(mkRcRow('↳ ' + c + ' 合计', '-' + v.toFixed(4), 'neg'));
+  } else {
+    wdRows.appendChild(mkRcRow(c, '-' + v.toFixed(4), 'neu'));
+  }
+});
   wdRows.appendChild(mkRcRow('手续费',   '-' + r.wdF.toFixed(4), 'neg'));
   wdRows.appendChild(mkRcRow('折算合计', r.wdT.toFixed(2) + ' U', 'neu'));
 
@@ -1478,50 +1573,104 @@ function renderDtCT() {
 function copyReport() {
   if (!_pnlReport) return;
   const r = _pnlReport;
-  const rlines = rates.map(x => '  ' + x.sym + ': ' + x.rate + ' USDT').join('\n');
 
-  // 现货品种汇总
-  const spSymLines = Object.entries(r.spBySymbol || {}).map(([sym, d]) => {
+  // 充值：USDT类单独汇总，其他币种逐个列出
+  const rcLines = [];
+  const rcUsdtTotal = Object.entries(r.bcRraw || {})
+    .filter(([raw]) => normC(raw) === 'USDT')
+    .reduce((sum, [, v]) => sum + v, 0);
+  const rcUsdtVariants = Object.entries(r.bcRraw || {}).filter(([raw]) => normC(raw) === 'USDT');
+  if (rcUsdtVariants.length === 1) {
+    rcLines.push('  USDT: +' + rcUsdtTotal.toFixed(2));
+  } else if (rcUsdtVariants.length > 1) {
+    rcUsdtVariants.forEach(([raw, v]) => rcLines.push('  ' + raw + ': +' + v.toFixed(2)));
+    rcLines.push('  USDT 合计: +' + rcUsdtTotal.toFixed(2));
+  }
+  Object.entries(r.bcRraw || {}).forEach(([raw, v]) => {
+    if (normC(raw) === 'USDT') return;
+    rcLines.push('  ' + raw + ': +' + v.toFixed(4));
+  });
+
+  // 提现：同上
+  const wdLines = [];
+  const wdUsdtTotal = Object.entries(r.bcWraw || {})
+    .filter(([raw]) => normC(raw) === 'USDT')
+    .reduce((sum, [, v]) => sum + v, 0);
+  const wdUsdtVariants = Object.entries(r.bcWraw || {}).filter(([raw]) => normC(raw) === 'USDT');
+  if (wdUsdtVariants.length === 1) {
+    wdLines.push('  USDT: -' + wdUsdtTotal.toFixed(2));
+  } else if (wdUsdtVariants.length > 1) {
+    wdUsdtVariants.forEach(([raw, v]) => wdLines.push('  ' + raw + ': -' + v.toFixed(2)));
+    wdLines.push('  USDT 合计: -' + wdUsdtTotal.toFixed(2));
+  }
+  Object.entries(r.bcWraw || {}).forEach(([raw, v]) => {
+    if (normC(raw) === 'USDT') return;
+    wdLines.push('  ' + raw + ': -' + v.toFixed(4));
+  });
+
+  // 现货：交易对盈亏
+  const spLines = Object.entries(r.spBySymbol || {}).map(([sym, d]) => {
     const net = d.sell - d.buy;
-    return '    ' + sym + ': ' + (net >= 0 ? '+' : '') + net.toFixed(2);
-  }).join('\n');
+    return '  ' + sym + ': ' + (net >= 0 ? '+' : '') + net.toFixed(2) + ' U';
+  });
+  if (!spLines.length) spLines.push('  净盈亏: ' + (r.spPnl >= 0 ? '+' : '') + r.spPnl.toFixed(2) + ' U');
 
-  // 合约品种汇总
-  const ctSymLines = Object.entries(r.ctBySymbol || {})
+  // 合约：品种盈亏
+  const ctLines = Object.entries(r.ctBySymbol || {})
     .sort((a, b) => a[1].net - b[1].net)
-    .map(([sym, d]) => '    ' + sym + ': ' + (d.net >= 0 ? '+' : '') + d.net.toFixed(4))
-    .join('\n');
+    .map(([sym, d]) => '  ' + sym + ': ' + (d.net >= 0 ? '+' : '') + d.net.toFixed(4) + ' U');
+  if (!ctLines.length) ctLines.push('  净盈亏: ' + (r.ctNet >= 0 ? '+' : '') + r.ctNet.toFixed(4) + ' U');
+
+  // 自动提取 UID
+  const uidSet = new Set();
+  [...D.recharge, ...D.withdraw].forEach(r => {
+    const uid = r['用户ID'] || r['UID'] || r['uid'] || '';
+    if (uid) uidSet.add(String(uid).trim());
+  });
+  const uidStr = uidSet.size ? [...uidSet].join(' / ') : '';
+
+  // 充值合计（USDT类合并，其他币种括号注明）
+  const rcUsdtSum = Object.entries(r.bcRraw || {})
+    .filter(([raw]) => normC(raw) === 'USDT')
+    .reduce((sum, [, v]) => sum + v, 0);
+  const rcOthers = Object.entries(r.bcRraw || {})
+    .filter(([raw]) => normC(raw) !== 'USDT')
+    .map(([raw, v]) => v.toFixed(2) + raw)
+    .join(' / ');
+  const rcStr = (rcUsdtSum ? rcUsdtSum.toFixed(2) + 'U' : '') + (rcOthers ? (rcUsdtSum ? ' / ' : '') + rcOthers : '') || '0';
+
+  // 提现合计
+  const wdUsdtSum2 = Object.entries(r.bcWraw || {})
+    .filter(([raw]) => normC(raw) === 'USDT')
+    .reduce((sum, [, v]) => sum + v, 0);
+  const wdOthers = Object.entries(r.bcWraw || {})
+    .filter(([raw]) => normC(raw) !== 'USDT')
+    .map(([raw, v]) => v.toFixed(2) + raw)
+    .join(' / ');
+  const wdStr = (wdUsdtSum2 ? wdUsdtSum2.toFixed(2) + 'U' : '') + (wdOthers ? (wdUsdtSum2 ? ' / ' : '') + wdOthers : '') || '0';
+
+  // 现货：所有交易对盈亏合并一行
+  const spStr = (r.spPnl >= 0 ? '+' : '') + r.spPnl.toFixed(2) + 'U';
+
+  // 合约：所有品种盈亏合并一行
+  const ctStr = Object.entries(r.ctBySymbol || {}).map(([sym, d]) => {
+    return (d.net >= 0 ? '+' : '') + d.net.toFixed(2) + 'U(' + sym + ')';
+  }).join(' / ') || (r.ctNet ? (r.ctNet >= 0 ? '+' : '') + r.ctNet.toFixed(2) + 'U' : '0');
 
   const txt = [
-    '═══════ 盈亏计算报告 ═══════',
-    '汇率配置：', rlines, '',
-    '【充值】',
-    ...Object.entries(r.bcR).map(([c, v]) => '  ' + c + ': +' + v.toFixed(4)),
-    '  折算合计: ' + r.rcT.toFixed(2) + ' USDT', '',
-    '【提现】',
-    ...Object.entries(r.bcW).map(([c, v]) => '  ' + c + ': -' + v.toFixed(4)),
-    '  手续费: -' + r.wdF.toFixed(4) + ' USDT',
-    '  折算合计: ' + r.wdT.toFixed(2) + ' USDT',
-    '  充提净额: ' + fmtS(r.netFlow) + ' USDT', '',
-    '【现货交易】',
-    '  买入花费: -' + r.spBuy.toFixed(2) + ' USDT',
-    '  卖出获得: +' + r.spSell.toFixed(2) + ' USDT',
-    '  现货净盈亏: ' + fmtS(r.spPnl) + ' USDT',
-    ...(spSymLines ? ['  交易对明细:', spSymLines] : []), '',
-    '【合约交易】（' + (r.ctFmt === 'position' ? '仓位格式' : '流水格式') + '）',
-    '  平仓盈亏: ' + fmtS(r.ctP) + ' USDT',
-    '  手续费: ' + r.ctF.toFixed(4) + ' USDT',
-    '  资金费: ' + fmtS(r.ctFd, 4) + ' USDT',
-    '  合约净盈亏: ' + fmtS(r.ctNet) + ' USDT',
-    ...(ctSymLines ? ['  品种明细:', ctSymLines] : []), '',
-    '【综合净盈亏】',
-    '  充提净额: ' + fmtS(r.netFlow) + ' USDT',
-    '  现货盈亏: ' + fmtS(r.spPnl) + ' USDT',
-    '  合约盈亏: ' + fmtS(r.ctNet) + ' USDT',
-    '  ─────────────────────',
-    '  综合净盈亏: ' + fmtS(r.total) + ' USDT',
-    '═══════════════════════════'
+    'UID(名字)：' + uidStr,
+    '归属：',
+    '现提金额：',
+    '充值金额：' + rcStr,
+    '历史提币金额：' + wdStr,
+    '提币通道：',
+    '现货交易：' + spStr,
+    '合约交易：' + ctStr,
+    '余额：',
+    '节点：',
+    '地址：',
   ].join('\n');
+
   navigator.clipboard.writeText(txt).then(() => {
     setStatus('已复制');
     setTimeout(() => setStatus('就绪'), 2000);
